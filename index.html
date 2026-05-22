@@ -4,8 +4,350 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NutriAndré</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, serif; }
+input, button, textarea { font-family: Georgia, serif; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+</style>
 </head>
 <body>
-<h1 style="color:#C9A84C;font-family:Georgia;padding:40px">NutriAndré funcionando ✓</h1>
-</body>
-</html>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef, useEffect } = React;
+
+const THEMES = {
+  dark: { bg:"#0D1B2A",bgMid:"#1A2E42",bgLight:"#243B55",gold:"#C9A84C",goldDim:"#8A6E2F",text:"#F0EAD6",muted:"#7A8FA8",success:"#4CAF7D",danger:"#E07B7B",info:"#4A9ECC",border:"#243B55",cardBg:"#1A2E42" },
+  light: { bg:"#FAF8F5",bgMid:"#FFFFFF",bgLight:"#F3EEE7",gold:"#8A5E1E",goldDim:"#C9A84C",text:"#1A1A1A",muted:"#7A7A7A",success:"#2E7D52",danger:"#C0392B",info:"#1E6B99",border:"#E2D9CC",cardBg:"#FFFFFF" }
+};
+
+const store = {
+  get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set: (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+const todayStr = () => new Date().toISOString().slice(0,10);
+
+const DEFAULT_PATIENTS = {
+  preslavia: {
+    id:"preslavia",name:"Preslavia Colares Aguiar",initials:"PC",
+    goal:"Perda de gordura + massa muscular",kcal:1600,
+    period:"Maio e Junho · 2026",waterGoal:2500,
+    note:"Mounjaro (tirzepatida) — uso semanal. Treino de manhã antes das 12h.",
+    supplements:[
+      {name:"Whey Protein",dose:"1 scoop (30g) em 200ml leite desnatado",times:["08:30","16:00"],brand:"Growth / Dux / Optimum"},
+      {name:"Creatina Monoidratada",dose:"5g em água ou junto com o whey",times:["08:30"],brand:"Growth Creapure / Dux Creapure"}
+    ],
+    plan:[
+      {meal:"Café da manhã",time:"08:30",options:[
+        {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Iogurte grego YoPRO 1 pote (100g)","Banana fatiada (80g) + aveia 1 col. sopa"]},
+        {label:"Opção 2",items:["Whey Protein 1 scoop em 200ml leite desnatado","Pão integral 2 fatias (50g)","Ovo mexido 1 un.","Queijo Coalho 1 fatia (20g)"]},
+        {label:"Opção 3",items:["Café com leite em pó desnatado","Iogurte grego 1 pote (100g)","Mamão papaya 1 fatia (150g)"]}
+      ]},
+      {meal:"Pré-treino",time:"08:30",note:"30–40 min antes",options:[
+        {label:"Opção 1",items:["Banana 1 un. média (100g)"]},
+        {label:"Opção 2",items:["Banana (60g)","Mel puro 1 col. sopa (15g)"]},
+        {label:"Opção 3",items:["Suco de uva integral 1 copo (200ml)"]}
+      ]},
+      {meal:"Almoço",time:"13:00",options:[
+        {label:"Opção 1",items:["Frango grelhado 130g","Arroz branco 2 col. (90g)","Feijão carioca 1 concha (80g)","Salada de folhas com tomate"]},
+        {label:"Opção 2",items:["Tilápia grelhada 150g","Arroz branco 2 col. (90g)","Brócolis no vapor 100g"]},
+        {label:"Opção 3",items:["Carne moída refogada 120g","Batata-doce cozida 120g","Salada à vontade"]}
+      ]},
+      {meal:"Lanche da tarde",time:"16:00",options:[
+        {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Maçã (130g)"]},
+        {label:"Opção 2",items:["Iogurte grego (160g)","Mamão papaya (150g)"]},
+        {label:"Opção 3",items:["Iogurte grego (100g)","Granola sem açúcar 1 col. sopa","Banana (80g)"]}
+      ]},
+      {meal:"Jantar",time:"20:00",options:[
+        {label:"Opção 1",items:["Omelete de frango — 2 ovos + 50g frango + 20g mussarela light","Salada com azeite à vontade"]},
+        {label:"Opção 2",items:["Frango grelhado ao limão 120g","Legumes salteados 150g"]},
+        {label:"Opção 3",items:["Sopa de frango com legumes (350g)"]}
+      ]}
+    ]
+  }
+};
+
+function getCreds() { return store.get("credenciais") || { nutri:{senha:"andre2024",role:"nutri"}, preslavia:{senha:"preslavia123",role:"patient"} }; }
+function setCreds(c) { store.set("credenciais",c); }
+
+function Btn({children,onClick,variant="primary",style={},T,disabled}) {
+  const bg=variant==="primary"?T.gold:variant==="danger"?T.danger:"transparent";
+  const col=variant==="primary"?"#0D1B2A":variant==="danger"?"#fff":T.gold;
+  const bor=variant==="ghost"?`1px solid ${T.gold}`:"none";
+  return <button onClick={onClick} disabled={disabled} style={{background:bg,color:col,border:bor,borderRadius:10,padding:"10px 18px",fontSize:13,fontWeight:700,cursor:disabled?"not-allowed":"pointer",fontFamily:"monospace",letterSpacing:0.5,opacity:disabled?0.5:1,...style}}>{children}</button>;
+}
+
+function Input({value,onChange,placeholder,type="text",style={},T,onKeyDown}) {
+  return <input value={value} onChange={onChange} placeholder={placeholder} type={type} onKeyDown={onKeyDown} style={{background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"11px 14px",color:T.text,fontSize:14,outline:"none",width:"100%",boxSizing:"border-box",...style}} onFocus={e=>e.target.style.borderColor=T.gold} onBlur={e=>e.target.style.borderColor=T.border}/>;
+}
+
+function Label({children,T}) {
+  return <p style={{margin:"0 0 6px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>{children}</p>;
+}
+
+function Card({children,style={},T}) {
+  return <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,position:"relative",overflow:"hidden",...style}}><div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:T.gold}}/>{children}</div>;
+}
+
+function PlanTab({patient,T}) {
+  return (
+    <div style={{padding:"0 14px 80px"}}>
+      {patient.note && <div style={{background:T.bgLight,borderLeft:`3px solid ${T.gold}`,borderRadius:10,padding:"10px 14px",marginBottom:14}}><p style={{margin:0,fontSize:12,color:T.muted,fontStyle:"italic"}}>💊 {patient.note}</p></div>}
+      {patient.plan.map((meal,i)=><MealCard key={i} meal={meal} T={T}/>)}
+    </div>
+  );
+}
+
+function MealCard({meal,T}) {
+  const [open,setOpen]=useState(false);
+  const [sel,setSel]=useState(0);
+  const multi=meal.options.length>1;
+  const cur=meal.options[sel];
+  return (
+    <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,marginBottom:11,overflow:"hidden"}}>
+      <div style={{padding:"13px 16px 10px",cursor:multi?"pointer":"default"}} onClick={()=>multi&&setOpen(!open)}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>{meal.time}</p>
+            <h3 style={{margin:"2px 0 0",color:T.text,fontSize:15,fontWeight:700}}>{meal.meal}</h3>
+            {meal.note&&<p style={{margin:"2px 0 0",fontSize:11,color:T.muted,fontStyle:"italic"}}>{meal.note}</p>}
+          </div>
+          {multi&&<span style={{color:T.gold,fontSize:16,display:"inline-block",transform:open?"rotate(180deg)":"none",transition:"0.2s"}}>▾</span>}
+        </div>
+      </div>
+      {(open||!multi)&&(
+        <div style={{padding:"0 16px 13px"}}>
+          {multi&&<div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>{meal.options.map((o,i)=><button key={i} onClick={()=>setSel(i)} style={{padding:"3px 10px",borderRadius:20,fontSize:10,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${sel===i?T.gold:T.border}`,background:sel===i?T.gold:"transparent",color:sel===i?"#0D1B2A":T.muted,fontWeight:sel===i?700:400}}>{o.label}</button>)}</div>}
+          <ul style={{margin:0,paddingLeft:18}}>{cur.items.map((item,i)=><li key={i} style={{color:T.muted,fontSize:13,marginBottom:3}}>{item}</li>)}</ul>
+        </div>
+      )}
+      {!open&&multi&&<p style={{margin:"0 16px 10px",fontSize:11,color:T.muted,fontFamily:"monospace"}}>{meal.options.length} opções · toque para ver</p>}
+    </div>
+  );
+}
+
+function TodayTab({patient,T}) {
+  const ck=`hoje_${patient.id}_${todayStr()}`;
+  const wk=`agua_${patient.id}_${todayStr()}`;
+  const [checked,setChecked]=useState(()=>store.get(ck)||{});
+  const [water,setWater]=useState(()=>store.get(wk)||0);
+  function toggle(m){const n={...checked,[m]:!checked[m]};setChecked(n);store.set(ck,n);}
+  function addWater(ml){const n=Math.min(water+ml,patient.waterGoal+1000);setWater(n);store.set(wk,n);}
+  const done=patient.plan.filter(m=>checked[m.meal]).length;
+  const pct=Math.round((done/patient.plan.length)*100);
+  const wpct=Math.min(Math.round((water/patient.waterGoal)*100),100);
+  return (
+    <div style={{padding:"0 14px 80px"}}>
+      <div style={{display:"flex",gap:10,marginBottom:14}}>
+        {[{label:"Refeições",value:`${done}/${patient.plan.length}`,pct,color:pct===100?T.success:T.gold},{label:"Água",value:`${(water/1000).toFixed(1)}L`,pct:wpct,color:wpct>=100?T.success:T.info}].map((s,i)=>(
+          <div key={i} style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,padding:"10px 12px"}}>
+            <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
+            <p style={{margin:"0 0 6px",fontSize:15,color:s.color,fontWeight:700,fontFamily:"monospace"}}>{s.value}</p>
+            <div style={{height:4,background:T.bgLight,borderRadius:2,overflow:"hidden"}}><div style={{width:`${s.pct}%`,height:"100%",background:s.color,borderRadius:2,transition:"width .4s"}}/></div>
+          </div>
+        ))}
+      </div>
+      {patient.plan.map((meal)=>(
+        <div key={meal.meal} onClick={()=>toggle(meal.meal)} style={{display:"flex",alignItems:"center",gap:12,background:checked[meal.meal]?`${T.success}18`:T.bgMid,border:`1px solid ${checked[meal.meal]?T.success:T.border}`,borderRadius:12,padding:"12px 14px",cursor:"pointer",marginBottom:10,transition:"all .2s"}}>
+          <div style={{width:22,height:22,borderRadius:"50%",flexShrink:0,border:`2px solid ${checked[meal.meal]?T.success:T.border}`,background:checked[meal.meal]?T.success:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff"}}>{checked[meal.meal]?"✓":""}</div>
+          <div style={{flex:1}}>
+            <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:1,textTransform:"uppercase"}}>{meal.time}</p>
+            <p style={{margin:"1px 0 0",fontSize:14,color:checked[meal.meal]?T.muted:T.text,textDecoration:checked[meal.meal]?"line-through":"none"}}>{meal.meal}</p>
+          </div>
+        </div>
+      ))}
+      <Card T={T} style={{marginTop:18,padding:"14px 18px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+          <p style={{margin:0,fontSize:13,color:T.text,fontWeight:700}}>💧 Hidratação</p>
+          <p style={{margin:0,fontSize:22,color:water>=patient.waterGoal?T.success:T.gold,fontFamily:"monospace",fontWeight:700}}>{(water/1000).toFixed(1)}L</p>
+        </div>
+        <div style={{height:8,background:T.bgLight,borderRadius:4,overflow:"hidden",marginBottom:12}}><div style={{width:`${wpct}%`,height:"100%",background:water>=patient.waterGoal?T.success:T.info,borderRadius:4,transition:"width .4s"}}/></div>
+        <div style={{display:"flex",gap:8}}>
+          {[200,300,500].map(ml=><button key={ml} onClick={()=>addWater(ml)} style={{flex:1,padding:"8px 0",background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:8,color:T.text,fontSize:13,cursor:"pointer",fontFamily:"monospace"}}>+{ml}ml</button>)}
+          <button onClick={()=>{setWater(0);store.set(wk,0);}} style={{padding:"8px 12px",background:"transparent",border:`1px solid ${T.danger}`,borderRadius:8,color:T.danger,fontSize:12,cursor:"pointer"}}>↺</button>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function EvolucaoTab({patient,T}) {
+  const key=`peso_${patient.id}`;
+  const [entries,setEntries]=useState(()=>store.get(key)||[]);
+  const [wInput,setWInput]=useState("");
+  function add(){const v=parseFloat(wInput.replace(",","."));if(isNaN(v)||v<30||v>300)return;const n=[...entries,{date:todayStr(),weight:v}].sort((a,b)=>a.date.localeCompare(b.date));setEntries(n);store.set(key,n);setWInput("");}
+  function remove(i){const n=entries.filter((_,idx)=>idx!==i);setEntries(n);store.set(key,n);}
+  const last=entries[entries.length-1];
+  const first=entries[0];
+  const diff=entries.length>1?(last.weight-first.weight).toFixed(1):null;
+  return (
+    <div style={{padding:"0 14px 80px"}}>
+      {entries.length>0&&<div style={{display:"flex",gap:10,marginBottom:14}}>{[{label:"Atual",value:`${last.weight} kg`},{label:"Inicial",value:`${first.weight} kg`},{label:"Variação",value:diff?`${diff>0?"+":""}${diff} kg`:"—",color:Number(diff)<0?T.success:T.danger}].map((s,i)=><div key={i} style={{flex:1,background:T.bgMid,borderRadius:10,padding:"10px 12px",border:`1px solid ${T.border}`}}><p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p><p style={{margin:"3px 0 0",color:s.color||T.text,fontSize:14,fontWeight:700}}>{s.value}</p></div>)}</div>}
+      <Card T={T} style={{marginBottom:14,padding:"14px 16px"}}>
+        <Label T={T}>Registrar peso</Label>
+        <div style={{display:"flex",gap:8,margin:"8px 0"}}>
+          <Input value={wInput} onChange={e=>setWInput(e.target.value)} placeholder="Ex: 68.5" type="number" T={T} style={{flex:1}} onKeyDown={e=>e.key==="Enter"&&add()}/>
+          <span style={{display:"flex",alignItems:"center",color:T.muted,fontSize:14,fontFamily:"monospace"}}>kg</span>
+        </div>
+        <Btn onClick={add} T={T} style={{width:"100%"}}>+ Registrar</Btn>
+      </Card>
+      {[...entries].reverse().map((e,i)=>(
+        <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",background:T.bgMid,borderRadius:10,padding:"10px 14px",marginBottom:8,border:`1px solid ${T.border}`}}>
+          <div><p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{e.date}</p><p style={{margin:"2px 0 0",fontSize:16,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{e.weight} kg</p></div>
+          <button onClick={()=>remove(entries.length-1-i)} style={{background:"none",border:"none",color:T.muted,cursor:"pointer",fontSize:16}}>✕</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SupsTab({patient,T}) {
+  const key=`sups_${patient.id}_${todayStr()}`;
+  const [taken,setTaken]=useState(()=>store.get(key)||{});
+  function toggle(id){const n={...taken,[id]:!taken[id]};setTaken(n);store.set(key,n);}
+  return (
+    <div style={{padding:"0 14px 80px"}}>
+      {patient.supplements.map((s,i)=>s.times.map((t,j)=>{
+        const id=`${i}_${j}`;const done=taken[id];
+        return <div key={id} onClick={()=>toggle(id)} style={{display:"flex",alignItems:"center",gap:12,background:done?`${T.success}18`:T.bgMid,border:`1px solid ${done?T.success:T.border}`,borderRadius:12,padding:"12px 14px",cursor:"pointer",marginBottom:10,transition:"all .2s"}}>
+          <div style={{width:22,height:22,borderRadius:"50%",flexShrink:0,border:`2px solid ${done?T.success:T.border}`,background:done?T.success:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff"}}>{done?"✓":""}</div>
+          <div style={{flex:1}}><p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:1,textTransform:"uppercase"}}>{t}</p><p style={{margin:"2px 0 0",fontSize:14,color:done?T.muted:T.text,fontWeight:700,textDecoration:done?"line-through":"none"}}>{s.name}</p><p style={{margin:"1px 0 0",fontSize:12,color:T.muted}}>{s.dose}</p></div>
+        </div>;
+      }))}
+    </div>
+  );
+}
+
+async function callClaude(messages,system="") {
+  const body={model:"claude-sonnet-4-20250514",max_tokens:1000,messages};
+  if(system)body.system=system;
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await r.json();
+  return d.content?.find(b=>b.type==="text")?.text||"";
+}
+
+function ChatTab({patient,T}) {
+  const [msgs,setMsgs]=useState([{role:"assistant",content:`Oi, ${patient.name.split(" ")[0]}! 👋 Sou a IA do Dr. André Aragão. Como posso te ajudar hoje?`}]);
+  const [input,setInput]=useState("");
+  const [loading,setLoading]=useState(false);
+  const bottomRef=useRef();
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
+  const planSummary=patient.plan.map(m=>`${m.meal}: ${m.options[0].items.slice(0,2).join(", ")}`).join(" | ");
+  async function send(){
+    const text=input.trim();if(!text||loading)return;
+    setInput("");const next=[...msgs,{role:"user",content:text}];setMsgs(next);setLoading(true);
+    const system=`Você é a IA do nutricionista André Aragão. Paciente: ${patient.name}. Objetivo: ${patient.goal}. ${patient.kcal} kcal/dia. Plano: ${planSummary}. Responda em português, direto e empático. Máximo 3 parágrafos.`;
+    const reply=await callClaude(next.map(m=>({role:m.role,content:m.content})),system);
+    setMsgs(p=>[...p,{role:"assistant",content:reply}]);setLoading(false);
+  }
+  return (
+    <div style={{display:"flex",flexDirection:"column",height:"calc(100vh - 130px)"}}>
+      <div style={{flex:1,overflowY:"auto",padding:"0 14px 10px"}}>
+        {msgs.map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",marginBottom:10}}><div style={{maxWidth:"80%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none"}}>{m.content}</div></div>)}
+        {loading&&<div style={{display:"flex",marginBottom:10}}><div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:"16px 16px 16px 4px",padding:"12px 16px",display:"flex",gap:4}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:T.muted,animation:`bounce 1.2s ${i*0.2}s infinite`}}/>)}</div></div>}
+        <div ref={bottomRef}/>
+      </div>
+      <div style={{padding:"10px 14px",borderTop:`1px solid ${T.border}`,background:T.bg,display:"flex",gap:8}}>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Pergunte sobre seu plano..." style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:24,padding:"10px 16px",color:T.text,fontSize:14,outline:"none"}} onFocus={e=>e.target.style.borderColor=T.gold} onBlur={e=>e.target.style.borderColor=T.border}/>
+        <button onClick={send} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:"50%",background:input.trim()?T.gold:T.bgLight,border:"none",color:input.trim()?"#0D1B2A":T.muted,fontSize:18,cursor:input.trim()?"pointer":"default",transition:"all .2s",flexShrink:0}}>→</button>
+      </div>
+    </div>
+  );
+}
+
+const PATIENT_TABS=[
+  {id:"plano",label:"Plano",icon:"📋"},
+  {id:"hoje",label:"Hoje",icon:"✅"},
+  {id:"evolucao",label:"Evolução",icon:"📈"},
+  {id:"sups",label:"Supl.",icon:"💊"},
+  {id:"chat",label:"Chat IA",icon:"💬"}
+];
+
+function App() {
+  const [theme,setTheme]=useState(()=>store.get("theme")||"light");
+  const [loginNome,setLoginNome]=useState("");
+  const [loginSenha,setLoginSenha]=useState("");
+  const [role,setRole]=useState(null);
+  const [patient,setPatient]=useState(null);
+  const [error,setError]=useState("");
+  const [tab,setTab]=useState("plano");
+  const T=THEMES[theme];
+
+  function toggleTheme(){const n=theme==="dark"?"light":"dark";setTheme(n);store.set("theme",n);}
+
+  function handleLogin(){
+    const key=loginNome.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s/g,"");
+    const creds=getCreds();const cred=creds[key];
+    if(cred&&loginSenha!==cred.senha){setError("Senha incorreta.");return;}
+    if(key==="nutri"||key==="andrearagao"){setRole("nutri");return;}
+    const found=DEFAULT_PATIENTS[key];
+    if(found){setPatient(found);setRole("patient");setError("");}
+    else setError("Usuário não encontrado.");
+  }
+
+  function logout(){setRole(null);setPatient(null);setLoginNome("");setLoginSenha("");setTab("plano");}
+
+  if(!role) return (
+    <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,position:"relative"}}>
+      <button onClick={toggleTheme} style={{position:"absolute",top:20,right:20,background:"none",border:`1px solid ${T.border}`,borderRadius:20,padding:"6px 12px",color:T.muted,cursor:"pointer",fontSize:13}}>{theme==="dark"?"☀️ Claro":"🌙 Escuro"}</button>
+      <div style={{width:"100%",maxWidth:360}}>
+        <div style={{textAlign:"center",marginBottom:40}}>
+          <h1 style={{color:T.gold,fontSize:28,fontWeight:400,letterSpacing:2}}>André Aragão</h1>
+          <p style={{color:T.muted,fontSize:12,fontFamily:"monospace",letterSpacing:3,textTransform:"uppercase",marginTop:4}}>Nutricionista · CRN 11-16678</p>
+        </div>
+        <div style={{background:T.bgMid,borderRadius:20,padding:"32px 28px",border:`1px solid ${T.border}`}}>
+          <h2 style={{margin:"0 0 20px",color:T.text,fontSize:18,fontWeight:500,textAlign:"center"}}>Meu Plano Alimentar</h2>
+          <div style={{marginBottom:10}}><Input value={loginNome} onChange={e=>setLoginNome(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Usuário (ex: preslavia)" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
+          <div style={{marginBottom:14}}><Input value={loginSenha} onChange={e=>setLoginSenha(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Senha" type="password" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
+          {error&&<p style={{color:T.danger,fontSize:12,margin:"0 0 12px",fontFamily:"monospace"}}>⚠ {error}</p>}
+          <button onClick={handleLogin} style={{width:"100%",padding:"14px",borderRadius:12,background:theme==="dark"?`linear-gradient(135deg, ${T.gold}, #A67C2E)`:"#1A1A1A",border:"none",color:"#FFFFFF",fontSize:15,fontWeight:600,cursor:"pointer"}}>Entrar →</button>
+        </div>
+        <p style={{textAlign:"center",marginTop:16,color:T.muted,fontSize:11,fontFamily:"monospace"}}>preslavia / preslavia123</p>
+      </div>
+    </div>
+  );
+
+  if(role==="nutri") return (
+    <div style={{minHeight:"100vh",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center",padding:40}}>
+        <h2 style={{color:T.gold}}>Painel do Nutricionista</h2>
+        <p style={{color:T.muted,marginTop:8}}>Em desenvolvimento</p>
+        <button onClick={logout} style={{marginTop:20,padding:"10px 20px",background:T.gold,border:"none",borderRadius:10,cursor:"pointer",fontWeight:700}}>Sair</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column"}}>
+      <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"12px 18px",position:"sticky",top:0,zIndex:50}}>
+        <div style={{maxWidth:640,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div><p style={{margin:0,fontSize:14,color:T.gold,fontWeight:600,letterSpacing:1}}>André Aragão · Nutrição</p><p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{patient.name.split(" ")[0]} · {patient.kcal} kcal/dia</p></div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={toggleTheme} style={{background:"none",border:"none",color:T.muted,cursor:"pointer",fontSize:16}}>{theme==="dark"?"☀️":"🌙"}</button>
+            <button onClick={logout} style={{background:"none",border:`1px solid ${T.border}`,borderRadius:8,padding:"5px 10px",color:T.muted,cursor:"pointer",fontSize:12,fontFamily:"monospace"}}>Sair</button>
+          </div>
+        </div>
+      </div>
+      <div style={{flex:1,maxWidth:640,margin:"0 auto",width:"100%",paddingTop:14}}>
+        {tab==="plano"&&<PlanTab patient={patient} T={T}/>}
+        {tab==="hoje"&&<TodayTab patient={patient} T={T}/>}
+        {tab==="evolucao"&&<EvolucaoTab patient={patient} T={T}/>}
+        {tab==="sups"&&<SupsTab patient={patient} T={T}/>}
+        {tab==="chat"&&<ChatTab patient={patient} T={T}/>}
+      </div>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:50,background:T.bgMid,borderTop:`1px solid ${T.border}`,padding:"8px 0 14px"}}>
+        <div style={{display:"flex",justifyContent:"center",gap:4,maxWidth:640,margin:"0 auto",padding:"0 8px"}}>
+          {PATIENT_TABS.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,background:tab===t.id?`${T.gold}18`:"none",border:tab===t.id?`1px solid ${T.gold}40`:"1px solid transparent",borderRadius:10,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"5px 8px",color:tab===t.id?T.gold:T.muted,transition:"all .15s"}}>
+            <span style={{fontSize:18}}>{t.icon}</span>
+            <span style={{fontSize:9,fontFamily:"monospace",fontWeight:tab===t.id?700:400,whiteSpace:"nowrap"}}>{t.label}</span>
+          </button>)}
+        </div>
+      </div>
+    </div>
+  );
+}
