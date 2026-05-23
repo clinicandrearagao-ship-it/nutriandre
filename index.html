@@ -10,8 +10,6 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Georgia, serif; }
-input, button, textarea { font-family: Georgia, serif; }
-@keyframes spin { to { transform: rotate(360deg); } }
 @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
 </style>
 </head>
@@ -19,96 +17,151 @@ input, button, textarea { font-family: Georgia, serif; }
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useRef, useEffect } = React;
-
 const THEMES = {
-  dark: { bg:"#0D1B2A",bgMid:"#1A2E42",bgLight:"#243B55",gold:"#C9A84C",goldDim:"#8A6E2F",text:"#F0EAD6",muted:"#7A8FA8",success:"#4CAF7D",danger:"#E07B7B",info:"#4A9ECC",border:"#243B55",cardBg:"#1A2E42" },
-  light: { bg:"#FAF8F5",bgMid:"#FFFFFF",bgLight:"#F3EEE7",gold:"#8A5E1E",goldDim:"#C9A84C",text:"#1A1A1A",muted:"#7A7A7A",success:"#2E7D52",danger:"#C0392B",info:"#1E6B99",border:"#E2D9CC",cardBg:"#FFFFFF" }
+  dark: { bg:"#0D1B2A",bgMid:"#1A2E42",bgLight:"#243B55",gold:"#C9A84C",text:"#F0EAD6",muted:"#7A8FA8",success:"#4CAF7D",danger:"#E07B7B",info:"#4A9ECC",border:"#243B55" },
+  light: { bg:"#FAF8F5",bgMid:"#FFFFFF",bgLight:"#F3EEE7",gold:"#8A5E1E",text:"#1A1A1A",muted:"#7A7A7A",success:"#2E7D52",danger:"#C0392B",info:"#1E6B99",border:"#E2D9CC" }
 };
-
 const store = {
-  get: (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
-  set: (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  get:(k)=>{ try{return JSON.parse(localStorage.getItem(k));}catch{return null;} },
+  set:(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
 };
+const todayStr=()=>new Date().toISOString().slice(0,10);
+function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},rubens:{senha:"rubens123",role:"patient"}};}
 
-const todayStr = () => new Date().toISOString().slice(0,10);
-
-const DEFAULT_PATIENTS = {
-  preslavia: {
-    id:"preslavia",name:"Preslavia Colares Aguiar",initials:"PC",
-    goal:"Perda de gordura + massa muscular",kcal:1600,
-    period:"Maio e Junho · 2026",waterGoal:2500,
-    note:"Mounjaro (tirzepatida) — uso semanal. Treino de manhã antes das 12h.",
-    supplements:[
-      {name:"Whey Protein",dose:"1 scoop (30g) em 200ml leite desnatado",times:["08:30","16:00"],brand:"Growth / Dux / Optimum"},
-      {name:"Creatina Monoidratada",dose:"5g em água ou junto com o whey",times:["08:30"],brand:"Growth Creapure / Dux Creapure"}
-    ],
-    plan:[
-      {meal:"Café da manhã",time:"08:30",options:[
-        {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Iogurte grego YoPRO 1 pote (100g)","Banana fatiada (80g) + aveia 1 col. sopa"]},
-        {label:"Opção 2",items:["Whey Protein 1 scoop em 200ml leite desnatado","Pão integral 2 fatias (50g)","Ovo mexido 1 un.","Queijo Coalho 1 fatia (20g)"]},
-        {label:"Opção 3",items:["Café com leite em pó desnatado","Iogurte grego 1 pote (100g)","Mamão papaya 1 fatia (150g)"]}
-      ]},
-      {meal:"Pré-treino",time:"08:30",note:"30–40 min antes",options:[
-        {label:"Opção 1",items:["Banana 1 un. média (100g)"]},
-        {label:"Opção 2",items:["Banana (60g)","Mel puro 1 col. sopa (15g)"]},
-        {label:"Opção 3",items:["Suco de uva integral 1 copo (200ml)"]}
-      ]},
-      {meal:"Almoço",time:"13:00",options:[
-        {label:"Opção 1",items:["Frango grelhado 130g","Arroz branco 2 col. (90g)","Feijão carioca 1 concha (80g)","Salada de folhas com tomate"]},
-        {label:"Opção 2",items:["Tilápia grelhada 150g","Arroz branco 2 col. (90g)","Brócolis no vapor 100g"]},
-        {label:"Opção 3",items:["Carne moída refogada 120g","Batata-doce cozida 120g","Salada à vontade"]}
-      ]},
-      {meal:"Lanche da tarde",time:"16:00",options:[
-        {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Maçã (130g)"]},
-        {label:"Opção 2",items:["Iogurte grego (160g)","Mamão papaya (150g)"]},
-        {label:"Opção 3",items:["Iogurte grego (100g)","Granola sem açúcar 1 col. sopa","Banana (80g)"]}
-      ]},
-      {meal:"Jantar",time:"20:00",options:[
-        {label:"Opção 1",items:["Omelete de frango — 2 ovos + 50g frango + 20g mussarela light","Salada com azeite à vontade"]},
-        {label:"Opção 2",items:["Frango grelhado ao limão 120g","Legumes salteados 150g"]},
-        {label:"Opção 3",items:["Sopa de frango com legumes (350g)"]}
-      ]}
-    ]
-  }
-};
-
-function getCreds() { return store.get("credenciais") || { nutri:{senha:"andre2024",role:"nutri"}, preslavia:{senha:"preslavia123",role:"patient"} }; }
-function setCreds(c) { store.set("credenciais",c); }
-
-function Btn({children,onClick,variant="primary",style={},T,disabled}) {
-  const bg=variant==="primary"?T.gold:variant==="danger"?T.danger:"transparent";
-  const col=variant==="primary"?"#0D1B2A":variant==="danger"?"#fff":T.gold;
-  const bor=variant==="ghost"?`1px solid ${T.gold}`:"none";
-  return <button onClick={onClick} disabled={disabled} style={{background:bg,color:col,border:bor,borderRadius:10,padding:"10px 18px",fontSize:13,fontWeight:700,cursor:disabled?"not-allowed":"pointer",fontFamily:"monospace",letterSpacing:0.5,opacity:disabled?0.5:1,...style}}>{children}</button>;
+const PATIENTS = {
+preslavia:{
+  id:"preslavia",name:"Preslavia Colares Aguiar",initials:"PC",
+  goal:"Perda de gordura + massa muscular",kcal:1600,waterGoal:2500,
+  note:"Mounjaro (tirzepatida) — uso semanal. Treino de manhã antes das 12h.",
+  supplements:[
+    {name:"Whey Protein",dose:"1 scoop (30g) em 200ml leite desnatado",times:["08:30","16:00"]},
+    {name:"Creatina",dose:"5g em água",times:["08:30"]}
+  ],
+  plan:[
+    {meal:"Café da manhã",time:"08:30",options:[
+      {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Iogurte grego YoPRO 1 pote (100g)","Banana (80g) + aveia 1 col. sopa"]},
+      {label:"Opção 2",items:["Whey Protein 1 scoop em 200ml leite desnatado","Pão integral 2 fatias","Ovo mexido 1 un.","Queijo Coalho 1 fatia (20g)"]},
+      {label:"Opção 3",items:["Café com leite desnatado","Iogurte grego 1 pote (100g)","Mamão papaya 1 fatia (150g)"]}
+    ]},
+    {meal:"Pré-treino",time:"08:30",note:"30–40 min antes",options:[
+      {label:"Opção 1",items:["Banana 1 un. média (100g)"]},
+      {label:"Opção 2",items:["Banana (60g)","Mel 1 col. sopa (15g)"]},
+      {label:"Opção 3",items:["Suco de uva integral 1 copo (200ml)"]}
+    ]},
+    {meal:"Almoço",time:"13:00",options:[
+      {label:"Opção 1",items:["Frango grelhado 130g","Arroz branco 2 col. (90g)","Feijão 1 concha (80g)","Salada à vontade"]},
+      {label:"Opção 2",items:["Tilápia grelhada 150g","Arroz 2 col. (90g)","Brócolis no vapor 100g"]},
+      {label:"Opção 3",items:["Carne moída 120g","Batata-doce cozida 120g","Salada à vontade"]}
+    ]},
+    {meal:"Lanche da tarde",time:"16:00",options:[
+      {label:"Opção 1",items:["Whey Protein 1 scoop em 200ml leite desnatado","Maçã (130g)"]},
+      {label:"Opção 2",items:["Iogurte grego (160g)","Mamão papaya (150g)"]},
+      {label:"Opção 3",items:["Iogurte grego (100g)","Granola 1 col. sopa","Banana (80g)"]}
+    ]},
+    {meal:"Jantar",time:"20:00",options:[
+      {label:"Opção 1",items:["Omelete — 2 ovos + 50g frango + 20g mussarela light","Salada à vontade"]},
+      {label:"Opção 2",items:["Frango grelhado ao limão 120g","Legumes salteados 150g"]},
+      {label:"Opção 3",items:["Sopa de frango com legumes (350g)"]}
+    ]}
+  ]
+},
+rubens:{
+  id:"rubens",name:"Rubens Oliveira De Couto",initials:"RO",
+  goal:"Recomposição corporal — ganho de massa + perda de gordura",kcal:2600,waterGoal:3000,
+  note:"Academia + corrida · treino noturno. Pré-treino às 18h, jantar pós-treino às 20:30.",
+  supplements:[
+    {name:"Whey Protein Baunilha",dose:"1 dosador (30g) em 300ml leite",times:["09:00","20:30"]}
+  ],
+  plan:[
+    {meal:"Café da manhã",time:"06:00",options:[
+      {label:"Opção 1",items:["Pão de forma 2 fatias (50g)","Ovo mexido 2 unidades","Queijo Coalho 1 fatia (20g)","Banana 1 un. (100g)","Café 1 xícara"]},
+      {label:"Opção 2",items:["Tapioca 60g","Ovo mexido 2 unidades","Queijo Coalho 1 fatia (20g)","Mamão 1 fatia média (170g)","Café 1 xícara"]},
+      {label:"Opção 3",items:["Cuscuz de milho 1 porção (139g)","Ovo mexido 2 unidades","Requeijão 1 col. sopa (30g)","Café 1 xícara"]},
+      {label:"Opção 4",items:["Pão de fermentação natural Padaria Nema 2 fatias (80g)","Ovo mexido 2 unidades","Abacate amassado 2 col. sopa (60g)","Café 1 xícara"]},
+      {label:"Opção 5",items:["Iogurte grego natural 1 pote (200g)","Granola 4 col. sopa (40g)","Banana 1 un. (100g)","Mel 1 col. sopa","Café 1 xícara"]},
+      {label:"Opção 6",items:["Pão de queijo assado 5 unidades (50g)","Ovo mexido 2 unidades","Suco de laranja natural 1 copo (200ml)","Café 1 xícara"]},
+      {label:"Opção 7",items:["Polpa de açaí congelada 100g","Leite integral 200ml","Banana 2 unidades médias (130g)","Whey Protein 1 dosador (30g)"]},
+      {label:"Opção 8",items:["Sanduíche natural de frango 1 unidade (160g)","Suco de laranja natural 1 copo duplo (240ml)"]}
+    ]},
+    {meal:"Lanche da manhã",time:"09:00",options:[
+      {label:"Opção 1",items:["Iogurte grego baunilha 1 pote (100g)","Granola 1 porção (30g)"]},
+      {label:"Opção 2",items:["Bebida láctea YoPRO Chocolate 1 copo (250ml)","Banana 1 unidade (65g)"]},
+      {label:"Opção 3",items:["Barra de proteína 1 unidade (40g)","Água de coco 1 copo (300ml)"]},
+      {label:"Opção 4",items:["Atum em lata 1 lata (120g)","Biscoito integral 6 unidades (30g)"]},
+      {label:"Opção 5",items:["Chips de mandioca e batata-doce 2 porções (50g)","Água de coco 1 copo (300ml)"]},
+      {label:"Opção 6",items:["Iogurte de morango 1 pote (160g)","Banana 1 unidade (65g)"]},
+      {label:"Opção 7",items:["Mini coxinhas Sucré 1 porção (50g)","Água de coco 1 copo (300ml)"]},
+      {label:"Opção 8",items:["Sanduíche natural de frango 1 unidade (100g)"]},
+      {label:"Opção 9",items:["Whey Protein com leite desnatado 1 dosador (30g) + 300ml leite"]},
+      {label:"Opção 10",items:["Maçã 1 unidade (130g)","Iogurte grego baunilha 1 pote (100g)"]}
+    ]},
+    {meal:"Almoço",time:"13:00",options:[
+      {label:"Opção 1",items:["Frango grelhado ao alho e limão 200g","Arroz branco 4 col. cheias (180g)","Feijão carioca 1 concha (100g)","Salada de legumes 120g","Farofa 2 col. sopa (50g)"]},
+      {label:"Opção 2",items:["Patinho moído ao molho de tomate 180g","Macarrão cozido 200g","Molho de tomate 2 conchas","Queijo parmesão 2 col. sopa (30g)"]},
+      {label:"Opção 3",items:["Peixe grelhado ao limão 200g","Arroz branco 3 col. (135g)","Feijão preto 1 concha (100g)","Legumes cozidos 100g"]},
+      {label:"Opção 4",items:["Strogonoff de frango 250g","Arroz branco 4 col. (180g)"]},
+      {label:"Opção 5",items:["Alcatra ou contrafilé grelhado 180g","Arroz 3 col. (135g)","Feijão-de-corda 1 concha (100g)","Farofa 2 col. sopa (50g)"]},
+      {label:"Opção 6",items:["Escondidinho de carne moída 400g","Salada de legumes cozidos 100g"]},
+      {label:"Opção 7",items:["Frango ao forno com batata inglesa e cebola 200g+120g","Arroz 3 col. (135g)","Feijão carioca 1 concha rasa (80g)"]},
+      {label:"Opção 8",items:["Macarrão cozido 200g","Camarão cozido 120g","Molho branco 1 col. servir (55g)","Queijo parmesão 1 col. sopa (15g)"]},
+      {label:"Opção 9",items:["Self service — salada+legumes 1/4 prato","Arroz 3 col. (135g)","Feijão 1 concha (100g)","Proteína grelhada 150–180g","Farofa ou purê 1 col. sopa"]}
+    ]},
+    {meal:"Lanche da tarde",time:"16:30",options:[
+      {label:"Opção 1",items:["Banana 2 unidades (200g)","Iogurte grego baunilha 1 pote (100g)"]},
+      {label:"Opção 2",items:["Pão de queijo assado 5 unidades (50g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 3",items:["Barra de proteína 1 unidade (40g)","Banana 1 unidade (65g)"]},
+      {label:"Opção 4",items:["Iogurte de morango 1 pote (160g)","Granola 2 col. sopa (20g)"]},
+      {label:"Opção 5",items:["Whey Protein com leite 1 dosador (30g) + 300ml leite integral"]},
+      {label:"Opção 6",items:["Pão francês 1 unidade (50g)","Requeijão 1 col. sopa (25g)","Suco de caixinha 1 unidade (200ml)"]},
+      {label:"Opção 7",items:["Água de coco 1 copo (300ml)","Banana 2 unidades (130g)"]},
+      {label:"Opção 8",items:["Bebida láctea YoPRO Chocolate 1 copo (250ml)","Maçã 1 unidade (130g)"]}
+    ]},
+    {meal:"Pré-treino",time:"18:00",note:"Carboidrato rápido — 30 a 45 min antes do treino",options:[
+      {label:"Opção 1",items:["Banana 2 unidades (200g)","Mel 1 col. sopa (20g)"]},
+      {label:"Opção 2",items:["Banana 2 unidades (200g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 3",items:["Tapioca simples com mel 1 unidade (70g) + 1 col. sopa mel"]},
+      {label:"Opção 4",items:["Manga fatiada 1 unidade grande (200g)"]},
+      {label:"Opção 5",items:["Uva passa 3 col. sopa (40g)","Banana 1 unidade (65g)"]},
+      {label:"Opção 6",items:["Água de coco 1 copo (300ml)","Banana 2 unidades (130g)"]},
+      {label:"Opção 7",items:["Pão francês com mel 1 unidade (50g) + 1 col. sopa mel"]},
+      {label:"Opção 8",items:["Abacaxi em cubos 4 fatias médias (200g)"]},
+      {label:"Opção 9",items:["Tâmara 4 unidades (40g)","Banana 1 unidade (65g)"]},
+      {label:"Opção 10",items:["Cajuína 1 garrafa (300ml)","Banana 1 unidade (65g)"]}
+    ]},
+    {meal:"Jantar · Pós-treino",time:"20:30",note:"Consumir até 1h após o treino",options:[
+      {label:"Opção 1",items:["Omelete de atum com tomate — 3 ovos + 1 lata atum (120g) + tomate","Arroz branco 2 col. (90g)"]},
+      {label:"Opção 2",items:["Frango desfiado com cuscuz e requeijão — 100g frango + 135g cuscuz + 1 col. requeijão"]},
+      {label:"Opção 3",items:["Wrap de carne moída com guacamole — 1 wrap + 100g carne + 2 col. guacamole","Tomate e pepino à vontade"]},
+      {label:"Opção 4",items:["Tilápia grelhada 180g","Purê de batata-doce 120g","Cenoura cozida 80g"]},
+      {label:"Opção 5",items:["Arroz com ovo e frango — 2 col. arroz (90g) + 2 ovos mexidos + 80g frango + shoyu"]},
+      {label:"Opção 6",items:["Tapioca de frango com cream cheese — 60g tapioca + 100g frango + cream cheese + tomate seco"]},
+      {label:"Opção 7",items:["Macarrão com atum, azeite e alho — 150g macarrão + 1 lata atum + azeite + alho + limão"]},
+      {label:"Opção 8",items:["Cheeseburguer caseiro — 1 hambúrguer (130g) + 1 pão + 1 fatia muçarela","Tomate e pepino à vontade"]},
+      {label:"Opção 9",items:["Sopa de legumes com frango — 300ml, 80g frango + legumes + macarrão cabelo de anjo (40g)"]},
+      {label:"Opção 10",items:["Pão integral 2 fatias (50g) + 2 ovos mexidos + Queijo Coalho 1 fatia (20g)","Suco de maracujá sem açúcar 1 copo (200ml)"]}
+    ]}
+  ]
 }
+};
 
-function Input({value,onChange,placeholder,type="text",style={},T,onKeyDown}) {
+function Btn({children,onClick,variant="primary",style={},T,disabled}){
+  const bg=variant==="primary"?T.gold:variant==="danger"?T.danger:"transparent";
+  const col=variant==="primary"?"#0D1B2A":"#fff";
+  const bor=variant==="ghost"?`1px solid ${T.gold}`:"none";
+  return <button onClick={onClick} disabled={disabled} style={{background:bg,color:col,border:bor,borderRadius:10,padding:"10px 18px",fontSize:13,fontWeight:700,cursor:disabled?"not-allowed":"pointer",opacity:disabled?0.5:1,...style}}>{children}</button>;
+}
+function Input({value,onChange,placeholder,type="text",style={},T,onKeyDown}){
   return <input value={value} onChange={onChange} placeholder={placeholder} type={type} onKeyDown={onKeyDown} style={{background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"11px 14px",color:T.text,fontSize:14,outline:"none",width:"100%",boxSizing:"border-box",...style}} onFocus={e=>e.target.style.borderColor=T.gold} onBlur={e=>e.target.style.borderColor=T.border}/>;
 }
+function Label({children,T}){return <p style={{margin:"0 0 6px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>{children}</p>;}
+function Card({children,style={},T}){return <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,position:"relative",overflow:"hidden",...style}}><div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:T.gold}}/>{children}</div>;}
 
-function Label({children,T}) {
-  return <p style={{margin:"0 0 6px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>{children}</p>;
-}
-
-function Card({children,style={},T}) {
-  return <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,position:"relative",overflow:"hidden",...style}}><div style={{position:"absolute",left:0,top:0,bottom:0,width:3,background:T.gold}}/>{children}</div>;
-}
-
-function PlanTab({patient,T}) {
-  return (
-    <div style={{padding:"0 14px 80px"}}>
-      {patient.note && <div style={{background:T.bgLight,borderLeft:`3px solid ${T.gold}`,borderRadius:10,padding:"10px 14px",marginBottom:14}}><p style={{margin:0,fontSize:12,color:T.muted,fontStyle:"italic"}}>💊 {patient.note}</p></div>}
-      {patient.plan.map((meal,i)=><MealCard key={i} meal={meal} T={T}/>)}
-    </div>
-  );
-}
-
-function MealCard({meal,T}) {
+function MealCard({meal,T}){
   const [open,setOpen]=useState(false);
   const [sel,setSel]=useState(0);
   const multi=meal.options.length>1;
   const cur=meal.options[sel];
-  return (
+  return(
     <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,marginBottom:11,overflow:"hidden"}}>
       <div style={{padding:"13px 16px 10px",cursor:multi?"pointer":"default"}} onClick={()=>multi&&setOpen(!open)}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -131,7 +184,16 @@ function MealCard({meal,T}) {
   );
 }
 
-function TodayTab({patient,T}) {
+function PlanTab({patient,T}){
+  return(
+    <div style={{padding:"0 14px 80px"}}>
+      {patient.note&&<div style={{background:T.bgLight,borderLeft:`3px solid ${T.gold}`,borderRadius:10,padding:"10px 14px",marginBottom:14}}><p style={{margin:0,fontSize:12,color:T.muted,fontStyle:"italic"}}>💊 {patient.note}</p></div>}
+      {patient.plan.map((meal,i)=><MealCard key={i} meal={meal} T={T}/>)}
+    </div>
+  );
+}
+
+function TodayTab({patient,T}){
   const ck=`hoje_${patient.id}_${todayStr()}`;
   const wk=`agua_${patient.id}_${todayStr()}`;
   const [checked,setChecked]=useState(()=>store.get(ck)||{});
@@ -141,7 +203,7 @@ function TodayTab({patient,T}) {
   const done=patient.plan.filter(m=>checked[m.meal]).length;
   const pct=Math.round((done/patient.plan.length)*100);
   const wpct=Math.min(Math.round((water/patient.waterGoal)*100),100);
-  return (
+  return(
     <div style={{padding:"0 14px 80px"}}>
       <div style={{display:"flex",gap:10,marginBottom:14}}>
         {[{label:"Refeições",value:`${done}/${patient.plan.length}`,pct,color:pct===100?T.success:T.gold},{label:"Água",value:`${(water/1000).toFixed(1)}L`,pct:wpct,color:wpct>=100?T.success:T.info}].map((s,i)=>(
@@ -156,7 +218,7 @@ function TodayTab({patient,T}) {
         <div key={meal.meal} onClick={()=>toggle(meal.meal)} style={{display:"flex",alignItems:"center",gap:12,background:checked[meal.meal]?`${T.success}18`:T.bgMid,border:`1px solid ${checked[meal.meal]?T.success:T.border}`,borderRadius:12,padding:"12px 14px",cursor:"pointer",marginBottom:10,transition:"all .2s"}}>
           <div style={{width:22,height:22,borderRadius:"50%",flexShrink:0,border:`2px solid ${checked[meal.meal]?T.success:T.border}`,background:checked[meal.meal]?T.success:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff"}}>{checked[meal.meal]?"✓":""}</div>
           <div style={{flex:1}}>
-            <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:1,textTransform:"uppercase"}}>{meal.time}</p>
+            <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",textTransform:"uppercase"}}>{meal.time}</p>
             <p style={{margin:"1px 0 0",fontSize:14,color:checked[meal.meal]?T.muted:T.text,textDecoration:checked[meal.meal]?"line-through":"none"}}>{meal.meal}</p>
           </div>
         </div>
@@ -176,16 +238,15 @@ function TodayTab({patient,T}) {
   );
 }
 
-function EvolucaoTab({patient,T}) {
+function EvolucaoTab({patient,T}){
   const key=`peso_${patient.id}`;
   const [entries,setEntries]=useState(()=>store.get(key)||[]);
   const [wInput,setWInput]=useState("");
   function add(){const v=parseFloat(wInput.replace(",","."));if(isNaN(v)||v<30||v>300)return;const n=[...entries,{date:todayStr(),weight:v}].sort((a,b)=>a.date.localeCompare(b.date));setEntries(n);store.set(key,n);setWInput("");}
   function remove(i){const n=entries.filter((_,idx)=>idx!==i);setEntries(n);store.set(key,n);}
-  const last=entries[entries.length-1];
-  const first=entries[0];
+  const last=entries[entries.length-1];const first=entries[0];
   const diff=entries.length>1?(last.weight-first.weight).toFixed(1):null;
-  return (
+  return(
     <div style={{padding:"0 14px 80px"}}>
       {entries.length>0&&<div style={{display:"flex",gap:10,marginBottom:14}}>{[{label:"Atual",value:`${last.weight} kg`},{label:"Inicial",value:`${first.weight} kg`},{label:"Variação",value:diff?`${diff>0?"+":""}${diff} kg`:"—",color:Number(diff)<0?T.success:T.danger}].map((s,i)=><div key={i} style={{flex:1,background:T.bgMid,borderRadius:10,padding:"10px 12px",border:`1px solid ${T.border}`}}><p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p><p style={{margin:"3px 0 0",color:s.color||T.text,fontSize:14,fontWeight:700}}>{s.value}</p></div>)}</div>}
       <Card T={T} style={{marginBottom:14,padding:"14px 16px"}}>
@@ -206,24 +267,24 @@ function EvolucaoTab({patient,T}) {
   );
 }
 
-function SupsTab({patient,T}) {
+function SupsTab({patient,T}){
   const key=`sups_${patient.id}_${todayStr()}`;
   const [taken,setTaken]=useState(()=>store.get(key)||{});
   function toggle(id){const n={...taken,[id]:!taken[id]};setTaken(n);store.set(key,n);}
-  return (
+  return(
     <div style={{padding:"0 14px 80px"}}>
       {patient.supplements.map((s,i)=>s.times.map((t,j)=>{
         const id=`${i}_${j}`;const done=taken[id];
         return <div key={id} onClick={()=>toggle(id)} style={{display:"flex",alignItems:"center",gap:12,background:done?`${T.success}18`:T.bgMid,border:`1px solid ${done?T.success:T.border}`,borderRadius:12,padding:"12px 14px",cursor:"pointer",marginBottom:10,transition:"all .2s"}}>
           <div style={{width:22,height:22,borderRadius:"50%",flexShrink:0,border:`2px solid ${done?T.success:T.border}`,background:done?T.success:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff"}}>{done?"✓":""}</div>
-          <div style={{flex:1}}><p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:1,textTransform:"uppercase"}}>{t}</p><p style={{margin:"2px 0 0",fontSize:14,color:done?T.muted:T.text,fontWeight:700,textDecoration:done?"line-through":"none"}}>{s.name}</p><p style={{margin:"1px 0 0",fontSize:12,color:T.muted}}>{s.dose}</p></div>
+          <div style={{flex:1}}><p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",textTransform:"uppercase"}}>{t}</p><p style={{margin:"2px 0 0",fontSize:14,color:done?T.muted:T.text,fontWeight:700,textDecoration:done?"line-through":"none"}}>{s.name}</p><p style={{margin:"1px 0 0",fontSize:12,color:T.muted}}>{s.dose}</p></div>
         </div>;
       }))}
     </div>
   );
 }
 
-async function callClaude(messages,system="") {
+async function callClaude(messages,system=""){
   const body={model:"claude-sonnet-4-20250514",max_tokens:1000,messages};
   if(system)body.system=system;
   const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
@@ -231,21 +292,21 @@ async function callClaude(messages,system="") {
   return d.content?.find(b=>b.type==="text")?.text||"";
 }
 
-function ChatTab({patient,T}) {
-  const [msgs,setMsgs]=useState([{role:"assistant",content:`Oi, ${patient.name.split(" ")[0]}! 👋 Sou a IA do Dr. André Aragão. Como posso te ajudar hoje?`}]);
+function ChatTab({patient,T}){
+  const [msgs,setMsgs]=useState([{role:"assistant",content:`Oi, ${patient.name.split(" ")[0]}! 👋 Sou a IA do Dr. André Aragão. Como posso te ajudar?`}]);
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
-  const planSummary=patient.plan.map(m=>`${m.meal}: ${m.options[0].items.slice(0,2).join(", ")}`).join(" | ");
   async function send(){
     const text=input.trim();if(!text||loading)return;
     setInput("");const next=[...msgs,{role:"user",content:text}];setMsgs(next);setLoading(true);
-    const system=`Você é a IA do nutricionista André Aragão. Paciente: ${patient.name}. Objetivo: ${patient.goal}. ${patient.kcal} kcal/dia. Plano: ${planSummary}. Responda em português, direto e empático. Máximo 3 parágrafos.`;
+    const plan=patient.plan.map(m=>`${m.meal}: ${m.options[0].items.slice(0,2).join(", ")}`).join(" | ");
+    const system=`Você é a IA do nutricionista André Aragão. Paciente: ${patient.name}. Objetivo: ${patient.goal}. ${patient.kcal} kcal/dia. Plano: ${plan}. Responda em português, direto e empático. Máximo 3 parágrafos.`;
     const reply=await callClaude(next.map(m=>({role:m.role,content:m.content})),system);
     setMsgs(p=>[...p,{role:"assistant",content:reply}]);setLoading(false);
   }
-  return (
+  return(
     <div style={{display:"flex",flexDirection:"column",height:"calc(100vh - 130px)"}}>
       <div style={{flex:1,overflowY:"auto",padding:"0 14px 10px"}}>
         {msgs.map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",marginBottom:10}}><div style={{maxWidth:"80%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none"}}>{m.content}</div></div>)}
@@ -254,47 +315,39 @@ function ChatTab({patient,T}) {
       </div>
       <div style={{padding:"10px 14px",borderTop:`1px solid ${T.border}`,background:T.bg,display:"flex",gap:8}}>
         <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Pergunte sobre seu plano..." style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:24,padding:"10px 16px",color:T.text,fontSize:14,outline:"none"}} onFocus={e=>e.target.style.borderColor=T.gold} onBlur={e=>e.target.style.borderColor=T.border}/>
-        <button onClick={send} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:"50%",background:input.trim()?T.gold:T.bgLight,border:"none",color:input.trim()?"#0D1B2A":T.muted,fontSize:18,cursor:input.trim()?"pointer":"default",transition:"all .2s",flexShrink:0}}>→</button>
+        <button onClick={send} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:"50%",background:input.trim()?T.gold:T.bgLight,border:"none",color:input.trim()?"#0D1B2A":T.muted,fontSize:18,cursor:input.trim()?"pointer":"default",flexShrink:0}}>→</button>
       </div>
     </div>
   );
 }
 
-const PATIENT_TABS=[
-  {id:"plano",label:"Plano",icon:"📋"},
-  {id:"hoje",label:"Hoje",icon:"✅"},
-  {id:"evolucao",label:"Evolução",icon:"📈"},
-  {id:"sups",label:"Supl.",icon:"💊"},
-  {id:"chat",label:"Chat IA",icon:"💬"}
-];
+const TABS=[{id:"plano",label:"Plano",icon:"📋"},{id:"hoje",label:"Hoje",icon:"✅"},{id:"evolucao",label:"Evolução",icon:"📈"},{id:"sups",label:"Supl.",icon:"💊"},{id:"chat",label:"Chat IA",icon:"💬"}];
 
-function App() {
+function App(){
   const [theme,setTheme]=useState(()=>store.get("theme")||"light");
-  const [loginNome,setLoginNome]=useState("");
-  const [loginSenha,setLoginSenha]=useState("");
+  const [user,setUser]=useState("");
+  const [senha,setSenha]=useState("");
   const [role,setRole]=useState(null);
   const [patient,setPatient]=useState(null);
   const [error,setError]=useState("");
   const [tab,setTab]=useState("plano");
   const T=THEMES[theme];
 
-  function toggleTheme(){const n=theme==="dark"?"light":"dark";setTheme(n);store.set("theme",n);}
-
-  function handleLogin(){
-    const key=loginNome.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s/g,"");
-    const creds=getCreds();const cred=creds[key];
-    if(cred&&loginSenha!==cred.senha){setError("Senha incorreta.");return;}
-    if(key==="nutri"||key==="andrearagao"){setRole("nutri");return;}
-    const found=DEFAULT_PATIENTS[key];
-    if(found){setPatient(found);setRole("patient");setError("");}
+  function login(){
+    const k=user.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s/g,"");
+    const creds=getCreds();const c=creds[k];
+    if(c&&senha!==c.senha){setError("Senha incorreta.");return;}
+    if(k==="nutri"){setRole("nutri");return;}
+    const p=PATIENTS[k];
+    if(p){setPatient(p);setRole("patient");setError("");}
     else setError("Usuário não encontrado.");
   }
 
-  function logout(){setRole(null);setPatient(null);setLoginNome("");setLoginSenha("");setTab("plano");}
+  function logout(){setRole(null);setPatient(null);setUser("");setSenha("");setTab("plano");}
 
-  if(!role) return (
+  if(!role) return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,position:"relative"}}>
-      <button onClick={toggleTheme} style={{position:"absolute",top:20,right:20,background:"none",border:`1px solid ${T.border}`,borderRadius:20,padding:"6px 12px",color:T.muted,cursor:"pointer",fontSize:13}}>{theme==="dark"?"☀️ Claro":"🌙 Escuro"}</button>
+      <button onClick={()=>{const n=theme==="dark"?"light":"dark";setTheme(n);store.set("theme",n);}} style={{position:"absolute",top:20,right:20,background:"none",border:`1px solid ${T.border}`,borderRadius:20,padding:"6px 12px",color:T.muted,cursor:"pointer",fontSize:13}}>{theme==="dark"?"☀️":"🌙"}</button>
       <div style={{width:"100%",maxWidth:360}}>
         <div style={{textAlign:"center",marginBottom:40}}>
           <h1 style={{color:T.gold,fontSize:28,fontWeight:400,letterSpacing:2}}>André Aragão</h1>
@@ -302,33 +355,33 @@ function App() {
         </div>
         <div style={{background:T.bgMid,borderRadius:20,padding:"32px 28px",border:`1px solid ${T.border}`}}>
           <h2 style={{margin:"0 0 20px",color:T.text,fontSize:18,fontWeight:500,textAlign:"center"}}>Meu Plano Alimentar</h2>
-          <div style={{marginBottom:10}}><Input value={loginNome} onChange={e=>setLoginNome(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Usuário (ex: preslavia)" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
-          <div style={{marginBottom:14}}><Input value={loginSenha} onChange={e=>setLoginSenha(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Senha" type="password" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
+          <div style={{marginBottom:10}}><Input value={user} onChange={e=>setUser(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} placeholder="Usuário" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
+          <div style={{marginBottom:14}}><Input value={senha} onChange={e=>setSenha(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} placeholder="Senha" type="password" T={T} style={{fontSize:15,padding:"13px 16px"}}/></div>
           {error&&<p style={{color:T.danger,fontSize:12,margin:"0 0 12px",fontFamily:"monospace"}}>⚠ {error}</p>}
-          <button onClick={handleLogin} style={{width:"100%",padding:"14px",borderRadius:12,background:theme==="dark"?`linear-gradient(135deg, ${T.gold}, #A67C2E)`:"#1A1A1A",border:"none",color:"#FFFFFF",fontSize:15,fontWeight:600,cursor:"pointer"}}>Entrar →</button>
+          <button onClick={login} style={{width:"100%",padding:"14px",borderRadius:12,background:theme==="dark"?`linear-gradient(135deg,${T.gold},#A67C2E)`:"#1A1A1A",border:"none",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer"}}>Entrar →</button>
         </div>
-        <p style={{textAlign:"center",marginTop:16,color:T.muted,fontSize:11,fontFamily:"monospace"}}>preslavia / preslavia123</p>
+        <p style={{textAlign:"center",marginTop:16,color:T.muted,fontSize:11,fontFamily:"monospace"}}>preslavia / preslavia123 · rubens / rubens123</p>
       </div>
     </div>
   );
 
-  if(role==="nutri") return (
+  if(role==="nutri") return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div style={{textAlign:"center",padding:40}}>
-        <h2 style={{color:T.gold}}>Painel do Nutricionista</h2>
-        <p style={{color:T.muted,marginTop:8}}>Em desenvolvimento</p>
-        <button onClick={logout} style={{marginTop:20,padding:"10px 20px",background:T.gold,border:"none",borderRadius:10,cursor:"pointer",fontWeight:700}}>Sair</button>
+        <h2 style={{color:T.gold,marginBottom:8}}>Painel Nutricionista</h2>
+        <p style={{color:T.muted,marginBottom:20}}>Pacientes: {Object.keys(PATIENTS).join(", ")}</p>
+        <button onClick={logout} style={{padding:"10px 20px",background:T.gold,border:"none",borderRadius:10,cursor:"pointer",fontWeight:700}}>Sair</button>
       </div>
     </div>
   );
 
-  return (
+  return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column"}}>
       <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"12px 18px",position:"sticky",top:0,zIndex:50}}>
         <div style={{maxWidth:640,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <div><p style={{margin:0,fontSize:14,color:T.gold,fontWeight:600,letterSpacing:1}}>André Aragão · Nutrição</p><p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{patient.name.split(" ")[0]} · {patient.kcal} kcal/dia</p></div>
+          <div><p style={{margin:0,fontSize:14,color:T.gold,fontWeight:600}}>André Aragão · Nutrição</p><p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{patient.name.split(" ")[0]} · {patient.kcal} kcal/dia</p></div>
           <div style={{display:"flex",gap:8}}>
-            <button onClick={toggleTheme} style={{background:"none",border:"none",color:T.muted,cursor:"pointer",fontSize:16}}>{theme==="dark"?"☀️":"🌙"}</button>
+            <button onClick={()=>{const n=theme==="dark"?"light":"dark";setTheme(n);store.set("theme",n);}} style={{background:"none",border:"none",color:T.muted,cursor:"pointer",fontSize:16}}>{theme==="dark"?"☀️":"🌙"}</button>
             <button onClick={logout} style={{background:"none",border:`1px solid ${T.border}`,borderRadius:8,padding:"5px 10px",color:T.muted,cursor:"pointer",fontSize:12,fontFamily:"monospace"}}>Sair</button>
           </div>
         </div>
@@ -342,7 +395,7 @@ function App() {
       </div>
       <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:50,background:T.bgMid,borderTop:`1px solid ${T.border}`,padding:"8px 0 14px"}}>
         <div style={{display:"flex",justifyContent:"center",gap:4,maxWidth:640,margin:"0 auto",padding:"0 8px"}}>
-          {PATIENT_TABS.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,background:tab===t.id?`${T.gold}18`:"none",border:tab===t.id?`1px solid ${T.gold}40`:"1px solid transparent",borderRadius:10,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"5px 8px",color:tab===t.id?T.gold:T.muted,transition:"all .15s"}}>
+          {TABS.map(t=><button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,background:tab===t.id?`${T.gold}18`:"none",border:tab===t.id?`1px solid ${T.gold}40`:"1px solid transparent",borderRadius:10,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"5px 8px",color:tab===t.id?T.gold:T.muted}}>
             <span style={{fontSize:18}}>{t.icon}</span>
             <span style={{fontSize:9,fontFamily:"monospace",fontWeight:tab===t.id?700:400,whiteSpace:"nowrap"}}>{t.label}</span>
           </button>)}
@@ -351,8 +404,8 @@ function App() {
     </div>
   );
 }
-  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
-
