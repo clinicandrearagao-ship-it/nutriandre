@@ -183,6 +183,103 @@ function MealCard({meal,T}){
     </div>
   );
 }
+const RUBENS_EVOLUCAO = [
+  {data:"11/07/2025",peso:115.7,gordura:22.2,massaGorda:25.6,massaMagra:90.1,cintura:110,imc:34.5},
+  {data:"21/08/2025",peso:114.5,gordura:18.7,massaGorda:21.4,massaMagra:93.1,cintura:105,imc:34.2},
+  {data:"15/10/2025",peso:116.7,gordura:16.6,massaGorda:19.3,massaMagra:97.4,cintura:101,imc:34.8},
+  {data:"22/01/2026",peso:106.5,gordura:12.9,massaGorda:13.7,massaMagra:92.8,cintura:97,imc:31.8},
+  {data:"31/03/2026",peso:112.5,gordura:15.0,massaGorda:16.8,massaMagra:95.7,cintura:95,imc:33.6}
+];
+
+function AvaliacaoTab({patient,T}){
+  const [metric,setMetric]=useState("peso");
+  if(patient.id!=="rubens") return(
+    <div style={{padding:"40px 14px",textAlign:"center"}}>
+      <p style={{fontSize:40,marginBottom:16}}>📊</p>
+      <p style={{color:T.muted,fontFamily:"monospace",fontSize:13}}>Avaliação física em breve.</p>
+    </div>
+  );
+  const dados=RUBENS_EVOLUCAO;
+  const metricas=[
+    {id:"peso",label:"Peso",unit:"kg",color:"#4A9ECC"},
+    {id:"gordura",label:"% Gordura",unit:"%",color:"#E07B7B"},
+    {id:"massaMagra",label:"Massa Magra",unit:"kg",color:"#4CAF7D"},
+    {id:"cintura",label:"Cintura",unit:"cm",color:"#C9A84C"}
+  ];
+  const cur=metricas.find(m=>m.id===metric);
+  const vals=dados.map(d=>d[metric]);
+  const minV=Math.min(...vals);const maxV=Math.max(...vals);
+  const range=maxV-minV||1;
+  const W=300,H=120,pad=20;
+  const pts=dados.map((d,i)=>{
+    const x=pad+(i/(dados.length-1))*(W-pad*2);
+    const y=pad+((maxV-d[metric])/range)*(H-pad*2);
+    return{x,y,d};
+  });
+  const polyline=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const first=dados[0];const last=dados[dados.length-1];
+  const diff=(last[metric]-first[metric]).toFixed(1);
+  const positivo=metric==="massaMagra"?Number(diff)>0:Number(diff)<0;
+  return(
+    <div style={{padding:"0 14px 80px"}}>
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"16px 18px",marginBottom:14}}>
+        <p style={{margin:"0 0 4px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliação Física</p>
+        <h2 style={{margin:"0 0 2px",color:T.text,fontSize:18}}>{patient.name}</h2>
+        <p style={{margin:0,fontSize:12,color:T.muted,fontFamily:"monospace"}}>183 cm · Academia + corrida · 5 avaliações</p>
+      </div>
+      <div style={{display:"flex",gap:8,marginBottom:14,overflowX:"auto"}}>
+        {metricas.map(m=>(
+          <button key={m.id} onClick={()=>setMetric(m.id)} style={{padding:"6px 14px",borderRadius:20,fontSize:11,fontFamily:"monospace",cursor:"pointer",flexShrink:0,border:`1px solid ${metric===m.id?m.color:T.border}`,background:metric===m.id?m.color+"20":"transparent",color:metric===m.id?m.color:T.muted,fontWeight:metric===m.id?700:400}}>{m.label}</button>
+        ))}
+      </div>
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"16px 18px",marginBottom:14}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:14}}>
+          <div>
+            <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{cur.label} atual</p>
+            <p style={{margin:"2px 0",fontSize:28,color:cur.color,fontWeight:700,fontFamily:"monospace"}}>{last[metric]}<span style={{fontSize:14,color:T.muted}}> {cur.unit}</span></p>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Variação total</p>
+            <p style={{margin:"2px 0",fontSize:18,fontWeight:700,fontFamily:"monospace",color:positivo?T.success:T.danger}}>{Number(diff)>0?"+":""}{diff} {cur.unit}</p>
+          </div>
+        </div>
+        <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
+          <polyline points={polyline} fill="none" stroke={cur.color} strokeWidth="2.5" strokeLinejoin="round"/>
+          {pts.map((p,i)=>(
+            <g key={i}>
+              <circle cx={p.x} cy={p.y} r="5" fill={cur.color}/>
+              <text x={p.x} y={H-2} textAnchor="middle" fontSize="7" fill={T.muted} fontFamily="monospace">{p.d.data.slice(0,5)}</text>
+              <text x={p.x} y={p.y-8} textAnchor="middle" fontSize="8" fill={cur.color} fontFamily="monospace">{p.d[metric]}</text>
+            </g>
+          ))}
+        </svg>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+        {[
+          {label:"Peso inicial",value:`${first.peso} kg`},
+          {label:"Peso atual",value:`${last.peso} kg`},
+          {label:"Gordura inicial",value:`${first.gordura}%`},
+          {label:"Gordura atual",value:`${last.gordura}%`},
+          {label:"Massa magra ini.",value:`${first.massaMagra} kg`},
+          {label:"Massa magra atual",value:`${last.massaMagra} kg`},
+          {label:"Cintura inicial",value:`${first.cintura} cm`},
+          {label:"Cintura atual",value:`${last.cintura} cm`},
+        ].map((s,i)=>(
+          <div key={i} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:10,padding:"10px 12px"}}>
+            <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
+            <p style={{margin:"3px 0 0",color:T.text,fontSize:14,fontWeight:700}}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderLeft:`3px solid ${T.success}`,borderRadius:10,padding:"12px 16px"}}>
+        <p style={{margin:"0 0 6px",fontSize:12,color:T.success,fontWeight:700}}>📈 Evolução em 9 meses</p>
+        <p style={{margin:0,fontSize:12,color:T.muted,lineHeight:1.7}}>
+          Perdeu <strong style={{color:T.success}}>8.8 kg de gordura</strong> e ganhou <strong style={{color:T.success}}>5.6 kg de massa magra</strong>. Cintura reduziu <strong style={{color:T.success}}>15 cm</strong>. % de gordura caiu de 22.2% para 15%.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function PlanTab({patient,T}){
   return(
@@ -321,7 +418,8 @@ function ChatTab({patient,T}){
   );
 }
 
-const TABS=[{id:"plano",label:"Plano",icon:"📋"},{id:"hoje",label:"Hoje",icon:"✅"},{id:"evolucao",label:"Evolução",icon:"📈"},{id:"sups",label:"Supl.",icon:"💊"},{id:"chat",label:"Chat IA",icon:"💬"}];
+const TABS=[{id:"plano",label:"Plano",icon:"📋"},{id:"hoje",label:"Hoje",icon:"✅"},{id:"evolucao",label:"Evolução",icon:"📈"},{id:"avaliacao",label:"Avaliação",icon:"📊"},{id:"sups",label:"Supl.",icon:"💊"},{id:"chat",label:"Chat IA",icon:"💬"}];
+
 
 function App(){
   const [theme,setTheme]=useState(()=>store.get("theme")||"light");
@@ -389,7 +487,8 @@ function App(){
       <div style={{flex:1,maxWidth:640,margin:"0 auto",width:"100%",paddingTop:14}}>
         {tab==="plano"&&<PlanTab patient={patient} T={T}/>}
         {tab==="hoje"&&<TodayTab patient={patient} T={T}/>}
-        {tab==="evolucao"&&<EvolucaoTab patient={patient} T={T}/>}
+        {tab==="avaliacao"&&<AvaliacaoTab patient={patient} T={T}/>}
+
         {tab==="sups"&&<SupsTab patient={patient} T={T}/>}
         {tab==="chat"&&<ChatTab patient={patient} T={T}/>}
       </div>
