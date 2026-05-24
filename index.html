@@ -458,6 +458,89 @@ function ChatTab({patient,T}){
 }
 
 const TABS=[{id:"plano",label:"Plano",icon:"📋"},{id:"hoje",label:"Hoje",icon:"✅"},{id:"evolucao",label:"Evolucao",icon:"📈"},{id:"avaliacao",label:"Avaliacao",icon:"📊"},{id:"sups",label:"Supl.",icon:"💊"},{id:"chat",label:"Chat IA",icon:"💬"}];
+function NutriPanel({T,onLogout}){
+  const [dados,setDados]=useState({});
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    async function fetchAll(){
+      const result={};
+      for(const id of Object.keys(PATIENTS)){
+        const rows=await db.load(id,"peso");
+        result[id]=rows||[];
+      }
+      setDados(result);
+      setLoading(false);
+    }
+    fetchAll();
+  },[]);
+
+  return(
+    <div style={{minHeight:"100vh",background:T.bg}}>
+      <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"14px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,zIndex:50}}>
+        <div>
+          <p style={{margin:0,fontSize:14,color:T.gold,fontWeight:700,letterSpacing:1}}>André Aragão · Nutrição</p>
+          <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Painel do Nutricionista</p>
+        </div>
+        <button onClick={onLogout} style={{background:"none",border:`1px solid ${T.border}`,borderRadius:8,padding:"5px 10px",color:T.muted,cursor:"pointer",fontSize:12,fontFamily:"monospace"}}>Sair</button>
+      </div>
+      <div style={{padding:"16px 14px 40px",maxWidth:640,margin:"0 auto"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20}}>
+          {[
+            {label:"Pacientes",value:Object.keys(PATIENTS).length},
+            {label:"Registros hoje",value:loading?"...":Object.values(dados).filter(r=>r.some&&r.some(x=>x.data===todayStr())).length},
+            {label:"Total pesos",value:loading?"...":Object.values(dados).reduce((a,r)=>a+r.length,0)}
+          ].map((s,i)=>(
+            <div key={i} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,padding:"12px 14px",textAlign:"center"}}>
+              <p style={{margin:0,fontSize:22,color:T.gold,fontWeight:700,fontFamily:"monospace"}}>{s.value}</p>
+              <p style={{margin:"4px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+        <p style={{margin:"0 0 12px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Pacientes</p>
+        {Object.values(PATIENTS).map(p=>{
+          const registros=dados[p.id]||[];
+          const ultimo=registros[0];
+          const penultimo=registros[1];
+          const diff=ultimo&&penultimo?(ultimo.valor.weight-penultimo.valor.weight).toFixed(1):null;
+          return(
+            <div key={p.id} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{width:40,height:40,borderRadius:"50%",background:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#0D1B2A",flexShrink:0}}>{p.initials}</div>
+                  <div>
+                    <p style={{margin:0,fontSize:14,color:T.text,fontWeight:700}}>{p.name}</p>
+                    <p style={{margin:"2px 0 0",fontSize:11,color:T.muted}}>{p.goal}</p>
+                  </div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>{p.kcal} kcal</p>
+                </div>
+              </div>
+              <div style={{display:"flex",gap:8}}>
+                <div style={{flex:1,background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
+                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Ultimo peso</p>
+                  <p style={{margin:"2px 0 0",fontSize:15,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{loading?"...":(ultimo?`${ultimo.valor.weight} kg`:"—")}</p>
+                  {diff&&<p style={{margin:"1px 0 0",fontSize:10,fontFamily:"monospace",color:Number(diff)<0?T.success:T.danger}}>{Number(diff)>0?"+":""}{diff} kg</p>}
+                </div>
+                <div style={{flex:1,background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
+                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Registros</p>
+                  <p style={{margin:"2px 0 0",fontSize:15,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{loading?"...":registros.length}</p>
+                  <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{ultimo?ultimo.data:"sem dados"}</p>
+                </div>
+                <div style={{flex:1,background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
+                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Plano</p>
+                  <p style={{margin:"2px 0 0",fontSize:11,color:T.text,fontWeight:700}}>{p.plan.length} refeicoes</p>
+                  <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{p.plan[0].options.length} opcoes</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function App(){
   const [theme,setTheme]=useState(()=>store.get("theme")||"light");
@@ -498,14 +581,9 @@ function App(){
     </div>
   );
   if(role==="nutri")return(
-    <div style={{minHeight:"100vh",background:T.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-      <div style={{textAlign:"center",padding:40}}>
-        <h2 style={{color:T.gold,marginBottom:8}}>Painel Nutricionista</h2>
-        <p style={{color:T.muted,marginBottom:20}}>Pacientes: {Object.keys(PATIENTS).join(", ")}</p>
-        <button onClick={logout} style={{padding:"10px 20px",background:T.gold,border:"none",borderRadius:10,cursor:"pointer",fontWeight:700}}>Sair</button>
-      </div>
-    </div>
-  );
+  <NutriPanel T={T} onLogout={logout}/>
+);
+
   return(
     <div style={{minHeight:"100vh",background:T.bg,display:"flex",flexDirection:"column"}}>
       <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"12px 18px",position:"sticky",top:0,zIndex:50}}>
