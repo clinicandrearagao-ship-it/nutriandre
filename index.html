@@ -170,11 +170,15 @@ rubens:{
 };
 
 const RUBENS_AVAL=[
-  {data:"11/07/2025",peso:115.7,gordura:22.2,massaMagra:90.1,cintura:110},
-  {data:"21/08/2025",peso:114.5,gordura:18.7,massaMagra:93.1,cintura:105},
-  {data:"15/10/2025",peso:116.7,gordura:16.6,massaMagra:97.4,cintura:101},
-  {data:"22/01/2026",peso:106.5,gordura:12.9,massaMagra:92.8,cintura:97},
-  {data:"31/03/2026",peso:112.5,gordura:15.0,massaMagra:95.7,cintura:95}
+  {data:"11/07/2025",peso:115.7,imc:34.5,gordura:22.2,massaGordura:25.6,massaMagra:90.1,massaResidual:27.9,somatorio:150,densidade:1.047,rcq:0.94,cmb:36.5,cintura:110,quadril:117,abdomen:112,pescoco:44,torax:120,ombro:136,bracoRelaxado:40,bracoContraido:44,antebraco:32,coxaProximal:70,coxaMedial:67,coxaDistal:60,panturrilha:44,dobraTricipital:11,dobraAbdominal:25,dobraSubescapular:23,dobraAxilar:23,dobraCoxa:15,dobraToraxica:13,dobraSuprailíaca:40},
+  {data:"21/08/2025",peso:114.5,imc:34.2,gordura:18.7,massaGordura:21.4,massaMagra:93.1,massaResidual:27.6,somatorio:120,densidade:1.056,rcq:0.93,cmb:38.7,cintura:105,quadril:113,abdomen:107,pescoco:43,torax:120,ombro:134,bracoRelaxado:41.2,bracoContraido:45.2,antebraco:32,coxaProximal:68,coxaMedial:58,coxaDistal:53,panturrilha:45,dobraTricipital:8,dobraAbdominal:21,dobraSubescapular:20,dobraAxilar:19,dobraCoxa:14,dobraToraxica:8,dobraSuprailíaca:30},
+  {data:"15/10/2025",peso:116.7,imc:34.8,gordura:16.6,massaGordura:19.3,massaMagra:97.4,massaResidual:28.1,somatorio:103,densidade:1.061,rcq:0.88,cmb:40.1,cintura:101,quadril:115,abdomen:104,pescoco:44,torax:119,ombro:135,bracoRelaxado:42,bracoContraido:46,antebraco:33,coxaProximal:64,coxaMedial:58,coxaDistal:52,panturrilha:44,dobraTricipital:6,dobraAbdominal:18,dobraSubescapular:18,dobraAxilar:17,dobraCoxa:13,dobraToraxica:6,dobraSuprailíaca:25},
+  {data:"22/01/2026",peso:106.5,imc:31.8,gordura:12.9,massaGordura:13.7,massaMagra:92.8,massaResidual:25.7,somatorio:76,densidade:1.070,rcq:0.91,cmb:36.7,cintura:97,quadril:107,abdomen:98,pescoco:41,torax:117,ombro:128,bracoRelaxado:38,bracoContraido:48,antebraco:31,coxaProximal:67,coxaMedial:60,coxaDistal:50,panturrilha:45,dobraTricipital:4,dobraAbdominal:13,dobraSubescapular:14,dobraAxilar:14,dobraCoxa:10,dobraToraxica:4,dobraSuprailíaca:17},
+  {data:"31/03/2026",peso:112.5,imc:33.6,gordura:15.0,massaGordura:16.8,massaMagra:95.7,massaResidual:27.1,somatorio:91,densidade:1.065,rcq:0.83,cmb:38.7,cintura:95,quadril:115,abdomen:96,pescoco:40,torax:117,ombro:130,bracoRelaxado:40,bracoContraido:46,antebraco:32,coxaProximal:66,coxaMedial:62,coxaDistal:52,panturrilha:44,dobraTricipital:4,dobraAbdominal:16,dobraSubescapular:16,dobraAxilar:16,dobraCoxa:14,dobraToraxica:5,dobraSuprailíaca:20}
+];
+
+const PRESLAVIA_AVAL=[
+  {data:"05/05/2026",peso:68,imc:27.2,gordura:22.4,massaGordura:15.2,massaMagra:52.8,massaResidual:14.2,somatorio:102,densidade:1.047,rcq:0.80,cmb:24.5,cintura:83,quadril:104,abdomen:83,pescoco:31,torax:93,ombro:96,bracoRelaxado:29.8,bracoContraido:29.9,antebraco:20,coxaProximal:null,coxaMedial:53,coxaDistal:null,panturrilha:34,dobraTricipital:17,dobraAbdominal:16,dobraSubescapular:14,dobraAxilar:10,dobraCoxa:20,dobraToraxica:7,dobraSuprailíaca:18}
 ];
 
 const HUNGER_LABELS=["Sem fome","Pouca fome","Fome normal","Muita fome","Faminto"];
@@ -486,86 +490,209 @@ function FotosSection({patient,T,isNutri=false}){
   );
 }
 
-function AvaliacaoTab({patient,T}){
-  const [metric,setMetric]=useState("peso");
-  if(patient.id!=="rubens")return(
-    <div style={{padding:"0 14px 80px"}}>
-      <FotosSection patient={patient} T={T} isNutri={false}/>
-    </div>
-  );
-  const dados=RUBENS_AVAL;
-  const metricas=[
-    {id:"peso",label:"Peso",unit:"kg",color:"#4A9ECC"},
-    {id:"gordura",label:"Gordura",unit:"%",color:"#E07B7B"},
-    {id:"massaMagra",label:"Massa Magra",unit:"kg",color:"#4CAF7D"},
-    {id:"cintura",label:"Cintura",unit:"cm",color:"#C9A84C"}
-  ];
-  const cur=metricas.find(m=>m.id===metric);
-  const vals=dados.map(d=>d[metric]);
+const AVAL_METRICAS=[
+  {id:"peso",label:"Peso",unit:"kg",color:"#4A9ECC",positivo:false},
+  {id:"gordura",label:"% Gordura",unit:"%",color:"#E07B7B",positivo:false},
+  {id:"massaMagra",label:"M. Magra",unit:"kg",color:"#4CAF7D",positivo:true},
+  {id:"massaGordura",label:"M. Gordura",unit:"kg",color:"#E07B7B",positivo:false},
+  {id:"cintura",label:"Cintura",unit:"cm",color:"#C9A84C",positivo:false},
+  {id:"quadril",label:"Quadril",unit:"cm",color:"#9B8FCC",positivo:false},
+  {id:"abdomen",label:"Abdômen",unit:"cm",color:"#CC8F6A",positivo:false},
+  {id:"rcq",label:"RCQ",unit:"",color:"#CC6A8F",positivo:false},
+  {id:"imc",label:"IMC",unit:"",color:"#7AB0CC",positivo:false},
+  {id:"somatorio",label:"Σ Dobras",unit:"mm",color:"#A0A0A0",positivo:false},
+  {id:"bracoContraido",label:"Braço Contr.",unit:"cm",color:"#4CAF7D",positivo:true},
+  {id:"panturrilha",label:"Panturrilha",unit:"cm",color:"#4CAF7D",positivo:true},
+];
+
+function AvaliacaoChart({dados,metric,T}){
+  const cur=AVAL_METRICAS.find(m=>m.id===metric)||AVAL_METRICAS[0];
+  const validDados=dados.filter(d=>d[metric]!=null);
+  if(validDados.length===0)return null;
+  const vals=validDados.map(d=>d[metric]);
   const minV=Math.min(...vals);const maxV=Math.max(...vals);
   const range=maxV-minV||1;
-  const W=300,H=120,pad=20;
-  const pts=dados.map((d,i)=>({
-    x:pad+(i/(dados.length-1))*(W-pad*2),
+  const W=300,H=110,pad=22;
+  const pts=validDados.map((d,i)=>({
+    x:pad+(i/(Math.max(validDados.length-1,1)))*(W-pad*2),
     y:pad+((maxV-d[metric])/range)*(H-pad*2),
     d
   }));
   const polyline=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  const first=dados[0];const last=dados[dados.length-1];
-  const diff=(last[metric]-first[metric]).toFixed(1);
-  const positivo=metric==="massaMagra"?Number(diff)>0:Number(diff)<0;
+  const first=validDados[0];const last=validDados[validDados.length-1];
+  const diff=(last[metric]-first[metric]);
+  const isPositive=cur.positivo?diff>0:diff<0;
+  const diffStr=(diff>0?"+":"")+diff.toFixed(diff%1===0?0:1);
   return(
-    <div style={{padding:"0 14px 80px"}}>
-      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"16px 18px",marginBottom:14}}>
-        <p style={{margin:"0 0 4px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliacao Fisica</p>
-        <h2 style={{margin:"0 0 2px",color:T.text,fontSize:18}}>{patient.name}</h2>
-        <p style={{margin:0,fontSize:12,color:T.muted,fontFamily:"monospace"}}>183 cm · Academia + corrida · 5 avaliacoes</p>
-      </div>
-      <div style={{display:"flex",gap:8,marginBottom:14,overflowX:"auto"}}>
-        {metricas.map(m=>(
-          <button key={m.id} onClick={()=>setMetric(m.id)} style={{padding:"6px 14px",borderRadius:20,fontSize:11,fontFamily:"monospace",cursor:"pointer",flexShrink:0,border:`1px solid ${metric===m.id?m.color:T.border}`,background:metric===m.id?m.color+"20":"transparent",color:metric===m.id?m.color:T.muted,fontWeight:metric===m.id?700:400}}>{m.label}</button>
-        ))}
-      </div>
-      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"16px 18px",marginBottom:14}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:14}}>
-          <div>
-            <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{cur.label} atual</p>
-            <p style={{margin:"2px 0",fontSize:28,color:cur.color,fontWeight:700,fontFamily:"monospace"}}>{last[metric]}<span style={{fontSize:14,color:T.muted}}> {cur.unit}</span></p>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Variacao total</p>
-            <p style={{margin:"2px 0",fontSize:18,fontWeight:700,fontFamily:"monospace",color:positivo?T.success:T.danger}}>{Number(diff)>0?"+":""}{diff} {cur.unit}</p>
-          </div>
+    <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+        <div>
+          <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>{cur.label} atual</p>
+          <p style={{margin:"2px 0",fontSize:26,color:cur.color,fontWeight:700,fontFamily:"monospace"}}>{last[metric]}<span style={{fontSize:13,color:T.muted}}>{cur.unit?" "+cur.unit:""}</span></p>
         </div>
+        <div style={{textAlign:"right"}}>
+          <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>Variação total</p>
+          <p style={{margin:"2px 0",fontSize:16,fontWeight:700,fontFamily:"monospace",color:validDados.length>1?(isPositive?T.success:T.danger):T.muted}}>{validDados.length>1?diffStr+"  "+cur.unit:"—"}</p>
+        </div>
+      </div>
+      {validDados.length>1&&(
         <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
           <polyline points={polyline} fill="none" stroke={cur.color} strokeWidth="2.5" strokeLinejoin="round"/>
           {pts.map((p,i)=>(
             <g key={i}>
-              <circle cx={p.x} cy={p.y} r="5" fill={cur.color}/>
-              <text x={p.x} y={H-2} textAnchor="middle" fontSize="7" fill={T.muted} fontFamily="monospace">{p.d.data.slice(0,5)}</text>
-              <text x={p.x} y={p.y-8} textAnchor="middle" fontSize="8" fill={cur.color} fontFamily="monospace">{p.d[metric]}</text>
+              <circle cx={p.x} cy={p.y} r="4.5" fill={cur.color}/>
+              <text x={p.x} y={H} textAnchor="middle" fontSize="7" fill={T.muted} fontFamily="monospace">{p.d.data.slice(0,5)}</text>
+              <text x={p.x} y={p.y-7} textAnchor="middle" fontSize="7.5" fill={cur.color} fontFamily="monospace">{p.d[metric]}</text>
             </g>
           ))}
         </svg>
+      )}
+    </div>
+  );
+}
+
+function AvaliacaoTab({patient,T}){
+  const isRubens=patient.id==="rubens";
+  const isPres=patient.id==="preslavia";
+  const dados=isRubens?RUBENS_AVAL:isPres?PRESLAVIA_AVAL:null;
+  const [metric,setMetric]=useState("peso");
+  const [secao,setSecao]=useState("composicao");
+
+  const secoes=[
+    {id:"composicao",label:"Composição"},
+    {id:"circunferencias",label:"Circunf."},
+    {id:"dobras",label:"Dobras"},
+    {id:"fotos",label:"Fotos 📸"},
+  ];
+
+  const metricasComposicao=["peso","gordura","massaMagra","massaGordura","imc","rcq","somatorio"];
+  const metricasCirc=["cintura","quadril","abdomen","bracoContraido","panturrilha"];
+  const metricasDobras=dados?Object.keys(dados[0]).filter(k=>k.startsWith("dobra")):[];
+
+  const metricasPorSecao={composicao:metricasComposicao,circunferencias:metricasCirc,dobras:metricasDobras};
+  const metricasAtivas=metricasPorSecao[secao]||[];
+
+  if(!dados)return(
+    <div style={{padding:"0 14px 80px"}}>
+      <FotosSection patient={patient} T={T} isNutri={false}/>
+    </div>
+  );
+
+  const first=dados[0];const last=dados[dados.length-1];
+  const altura=isRubens?"183 cm":"158 cm";
+
+  return(
+    <div style={{padding:"0 14px 80px"}}>
+      {/* Header */}
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:14}}>
+        <p style={{margin:"0 0 3px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliação Física</p>
+        <h2 style={{margin:"0 0 2px",color:T.text,fontSize:17}}>{patient.name}</h2>
+        <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{altura} · {dados.length} {dados.length===1?"avaliação":"avaliações"}</p>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+
+      {/* Resumo composição */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>
         {[
-          {label:"Peso inicial",value:`${first.peso} kg`},{label:"Peso atual",value:`${last.peso} kg`},
-          {label:"Gordura inicial",value:`${first.gordura}%`},{label:"Gordura atual",value:`${last.gordura}%`},
-          {label:"Massa magra ini.",value:`${first.massaMagra} kg`},{label:"Massa magra atual",value:`${last.massaMagra} kg`},
-          {label:"Cintura inicial",value:`${first.cintura} cm`},{label:"Cintura atual",value:`${last.cintura} cm`}
-        ].map((s,i)=>(
-          <div key={i} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:10,padding:"10px 12px"}}>
-            <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
-            <p style={{margin:"3px 0 0",color:T.text,fontSize:14,fontWeight:700}}>{s.value}</p>
-          </div>
+          {label:"Peso",v1:`${first.peso} kg`,v2:`${last.peso} kg`,diff:last.peso-first.peso,positivo:false},
+          {label:"% Gordura",v1:`${first.gordura}%`,v2:`${last.gordura}%`,diff:last.gordura-first.gordura,positivo:false},
+          {label:"M. Magra",v1:`${first.massaMagra} kg`,v2:`${last.massaMagra} kg`,diff:last.massaMagra-first.massaMagra,positivo:true},
+        ].map((s,i)=>{
+          const isGood=s.positivo?s.diff>0:s.diff<0;
+          const showDiff=dados.length>1;
+          return(
+            <div key={i} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:10,padding:"10px 10px"}}>
+              <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
+              <p style={{margin:"3px 0 1px",color:T.text,fontSize:14,fontWeight:700,fontFamily:"monospace"}}>{s.v2}</p>
+              {showDiff&&<p style={{margin:0,fontSize:10,fontFamily:"monospace",color:isGood?T.success:T.danger}}>{s.diff>0?"+":""}{s.diff.toFixed(1)}</p>}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Seção tabs */}
+      <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto"}}>
+        {secoes.map(s=>(
+          <button key={s.id} onClick={()=>{setSecao(s.id);if(s.id!=="fotos")setMetric(metricasPorSecao[s.id]?.[0]||"peso");}} style={{flexShrink:0,padding:"6px 14px",borderRadius:20,fontSize:11,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${secao===s.id?T.gold:T.border}`,background:secao===s.id?T.gold:"transparent",color:secao===s.id?"#0D1B2A":T.muted,fontWeight:secao===s.id?700:400}}>{s.label}</button>
         ))}
       </div>
-      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderLeft:`3px solid ${T.success}`,borderRadius:10,padding:"12px 16px",marginBottom:18}}>
-        <p style={{margin:"0 0 6px",fontSize:12,color:T.success,fontWeight:700}}>Evolucao em 9 meses</p>
-        <p style={{margin:0,fontSize:12,color:T.muted,lineHeight:1.7}}>Perdeu <strong style={{color:T.success}}>8.8 kg de gordura</strong> e ganhou <strong style={{color:T.success}}>5.6 kg de massa magra</strong>. Cintura reduziu <strong style={{color:T.success}}>15 cm</strong>.</p>
-      </div>
-      <FotosSection patient={patient} T={T} isNutri={false}/>
+
+      {secao==="fotos"?(
+        <FotosSection patient={patient} T={T} isNutri={false}/>
+      ):(
+        <>
+          {/* Metric selector */}
+          <div style={{display:"flex",gap:6,marginBottom:12,overflowX:"auto",paddingBottom:2}}>
+            {metricasAtivas.map(mid=>{
+              const m=AVAL_METRICAS.find(x=>x.id===mid)||{id:mid,label:mid.replace("dobra","").replace(/([A-Z])/g," $1").trim(),color:"#888",unit:"mm",positivo:false};
+              const hasData=dados.some(d=>d[mid]!=null);
+              if(!hasData)return null;
+              return(
+                <button key={mid} onClick={()=>setMetric(mid)} style={{flexShrink:0,padding:"5px 12px",borderRadius:20,fontSize:10,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${metric===mid?m.color:T.border}`,background:metric===mid?m.color+"22":"transparent",color:metric===mid?m.color:T.muted,fontWeight:metric===mid?700:400}}>{m.label||mid}</button>
+              );
+            })}
+          </div>
+
+          <AvaliacaoChart dados={dados} metric={metric} T={T}/>
+
+          {/* Tabela comparativa */}
+          {dados.length>1&&(
+            <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,overflow:"hidden",marginBottom:14}}>
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:11,fontFamily:"monospace"}}>
+                  <thead>
+                    <tr style={{background:T.bgLight}}>
+                      <td style={{padding:"8px 10px",color:T.muted,fontWeight:700}}>Parâmetro</td>
+                      {dados.map((d,i)=><td key={i} style={{padding:"8px 10px",color:T.gold,textAlign:"center",whiteSpace:"nowrap"}}>{d.data.slice(0,5)}</td>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {metricasAtivas.filter(mid=>dados.some(d=>d[mid]!=null)).map(mid=>{
+                      const m=AVAL_METRICAS.find(x=>x.id===mid)||{label:mid,unit:"mm",positivo:false};
+                      const vals=dados.map(d=>d[mid]);
+                      const first=vals.find(v=>v!=null);
+                      return(
+                        <tr key={mid} style={{borderTop:`1px solid ${T.border}`}}>
+                          <td style={{padding:"7px 10px",color:T.muted}}>{m.label||mid}</td>
+                          {vals.map((v,i)=>{
+                            if(v==null)return<td key={i} style={{padding:"7px 10px",textAlign:"center",color:T.muted}}>—</td>;
+                            const prev=vals.slice(0,i).filter(x=>x!=null).pop();
+                            const diff=prev!=null?v-prev:null;
+                            const isGood=diff==null?null:(m.positivo?diff>0:diff<0);
+                            return(
+                              <td key={i} style={{padding:"7px 10px",textAlign:"center",color:T.text,fontWeight:i===vals.length-1?700:400}}>
+                                {v}
+                                {diff!=null&&diff!==0&&<span style={{fontSize:9,color:isGood?T.success:T.danger,marginLeft:2}}>{diff>0?"+":""}{diff.toFixed(diff%1===0?0:1)}</span>}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Única avaliação — card completo */}
+          {dados.length===1&&(
+            <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,padding:"14px 16px",marginBottom:14}}>
+              <p style={{margin:"0 0 10px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliação de {dados[0].data}</p>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                {metricasAtivas.filter(mid=>dados[0][mid]!=null).map(mid=>{
+                  const m=AVAL_METRICAS.find(x=>x.id===mid)||{label:mid,unit:"mm"};
+                  return(
+                    <div key={mid} style={{background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
+                      <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{m.label||mid}</p>
+                      <p style={{margin:"2px 0 0",fontSize:14,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{dados[0][mid]}{m.unit?" "+m.unit:""}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
@@ -1052,6 +1179,8 @@ function NutriPanel({T,onLogout}){
           const ultimo=registros[0];
           const penultimo=registros[1];
           const diff=ultimo&&penultimo?(ultimo.valor.weight-penultimo.valor.weight).toFixed(1):null;
+          const avalDados=p.id==="rubens"?RUBENS_AVAL:p.id==="preslavia"?PRESLAVIA_AVAL:null;
+          const ultimaAval=avalDados?avalDados[avalDados.length-1]:null;
           return(
             <div key={p.id} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
@@ -1073,14 +1202,14 @@ function NutriPanel({T,onLogout}){
                   {diff&&<p style={{margin:"1px 0 0",fontSize:10,fontFamily:"monospace",color:Number(diff)<0?T.success:T.danger}}>{Number(diff)>0?"+":""}{diff} kg</p>}
                 </div>
                 <div style={{flex:1,background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
-                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Registros</p>
-                  <p style={{margin:"2px 0 0",fontSize:15,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{loading?"...":registros.length}</p>
-                  <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{ultimo?ultimo.data:"sem dados"}</p>
+                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>% Gordura</p>
+                  <p style={{margin:"2px 0 0",fontSize:15,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{ultimaAval?`${ultimaAval.gordura}%`:"—"}</p>
+                  {avalDados&&avalDados.length>1&&<p style={{margin:"1px 0 0",fontSize:10,fontFamily:"monospace",color:(ultimaAval.gordura-avalDados[0].gordura)<0?T.success:T.danger}}>{(ultimaAval.gordura-avalDados[0].gordura)>0?"+":""}{(ultimaAval.gordura-avalDados[0].gordura).toFixed(1)}%</p>}
                 </div>
                 <div style={{flex:1,background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
-                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Plano</p>
-                  <p style={{margin:"2px 0 0",fontSize:11,color:T.text,fontWeight:700}}>{p.plan.length} refeicoes</p>
-                  <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{p.plan[0].options.length} opcoes</p>
+                  <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>Última aval.</p>
+                  <p style={{margin:"2px 0 0",fontSize:11,color:T.text,fontWeight:700}}>{ultimaAval?ultimaAval.data:"—"}</p>
+                  <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{avalDados?`${avalDados.length} aval.`:"sem dados"}</p>
                 </div>
               </div>
               {/* Botões */}
