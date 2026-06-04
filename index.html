@@ -490,63 +490,133 @@ function FotosSection({patient,T,isNutri=false}){
   );
 }
 
+const TEAL="#2BBFBF";
 const AVAL_METRICAS=[
-  {id:"peso",label:"Peso",unit:"kg",color:"#4A9ECC",positivo:false},
-  {id:"gordura",label:"% Gordura",unit:"%",color:"#E07B7B",positivo:false},
-  {id:"massaMagra",label:"M. Magra",unit:"kg",color:"#4CAF7D",positivo:true},
-  {id:"massaGordura",label:"M. Gordura",unit:"kg",color:"#E07B7B",positivo:false},
-  {id:"cintura",label:"Cintura",unit:"cm",color:"#C9A84C",positivo:false},
-  {id:"quadril",label:"Quadril",unit:"cm",color:"#9B8FCC",positivo:false},
-  {id:"abdomen",label:"Abdômen",unit:"cm",color:"#CC8F6A",positivo:false},
-  {id:"rcq",label:"RCQ",unit:"",color:"#CC6A8F",positivo:false},
-  {id:"imc",label:"IMC",unit:"",color:"#7AB0CC",positivo:false},
-  {id:"somatorio",label:"Σ Dobras",unit:"mm",color:"#A0A0A0",positivo:false},
-  {id:"bracoContraido",label:"Braço Contr.",unit:"cm",color:"#4CAF7D",positivo:true},
-  {id:"panturrilha",label:"Panturrilha",unit:"cm",color:"#4CAF7D",positivo:true},
+  {id:"peso",label:"Peso",unit:"kg",positivo:false},
+  {id:"gordura",label:"Percentual de Gordura",unit:"%",positivo:false},
+  {id:"massaGordura",label:"Massa de Gordura",unit:"kg",positivo:false},
+  {id:"massaMagra",label:"Massa Livre de Gordura",unit:"kg",positivo:true},
+  {id:"imc",label:"IMC",unit:"",positivo:false},
+  {id:"rcq",label:"RCQ",unit:"",positivo:false},
+  {id:"somatorio",label:"Somatório de Dobras",unit:"mm",positivo:false},
+  {id:"cintura",label:"Cintura",unit:"cm",positivo:false},
+  {id:"quadril",label:"Quadril",unit:"cm",positivo:false},
+  {id:"abdomen",label:"Abdômen",unit:"cm",positivo:false},
+  {id:"bracoRelaxado",label:"Braço Relaxado",unit:"cm",positivo:true},
+  {id:"bracoContraido",label:"Braço Contraído",unit:"cm",positivo:true},
+  {id:"panturrilha",label:"Panturrilha",unit:"cm",positivo:true},
+  {id:"pescoco",label:"Pescoço",unit:"cm",positivo:false},
+  {id:"coxaProximal",label:"Coxa Proximal",unit:"cm",positivo:false},
+  {id:"dobraTricipital",label:"Dobra Tricipital",unit:"mm",positivo:false},
+  {id:"dobraAbdominal",label:"Dobra Abdominal",unit:"mm",positivo:false},
+  {id:"dobraSubescapular",label:"Dobra Subescapular",unit:"mm",positivo:false},
+  {id:"dobraCoxa",label:"Dobra Coxa",unit:"mm",positivo:false},
+  {id:"dobraSuprailíaca",label:"Dobra Suprailíaca",unit:"mm",positivo:false},
 ];
 
-function AvaliacaoChart({dados,metric,T}){
-  const cur=AVAL_METRICAS.find(m=>m.id===metric)||AVAL_METRICAS[0];
-  const validDados=dados.filter(d=>d[metric]!=null);
-  if(validDados.length===0)return null;
-  const vals=validDados.map(d=>d[metric]);
-  const minV=Math.min(...vals);const maxV=Math.max(...vals);
-  const range=maxV-minV||1;
-  const W=300,H=110,pad=22;
-  const pts=validDados.map((d,i)=>({
-    x:pad+(i/(Math.max(validDados.length-1,1)))*(W-pad*2),
-    y:pad+((maxV-d[metric])/range)*(H-pad*2),
-    d
-  }));
-  const polyline=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  const first=validDados[0];const last=validDados[validDados.length-1];
-  const diff=(last[metric]-first[metric]);
-  const isPositive=cur.positivo?diff>0:diff<0;
-  const diffStr=(diff>0?"+":"")+diff.toFixed(diff%1===0?0:1);
+// Mini sparkline for historic table rows
+function MiniSparkline({vals,positivo,T}){
+  const clean=vals.filter(v=>v!=null);
+  if(clean.length<2)return<span style={{color:T.muted,fontSize:10}}>—</span>;
+  const W=60,H=24,pad=4;
+  const minV=Math.min(...clean),maxV=Math.max(...clean),range=maxV-minV||1;
+  // map only the non-null positions
+  let xi=0;
+  const pts=vals.map((v)=>{
+    if(v==null)return null;
+    const x=pad+(xi/(clean.length-1))*(W-pad*2);
+    const y=pad+((maxV-v)/range)*(H-pad*2);
+    xi++;
+    return{x,y,v};
+  }).filter(Boolean);
+  const poly=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const fillPts=[...pts,{x:pts[pts.length-1].x,y:H-pad},{x:pts[0].x,y:H-pad}];
+  const fillPoly=fillPts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const last=pts[pts.length-1];
+  const first2=pts[0];
+  const diff=last.v-first2.v;
+  const good=positivo?diff>0:diff<0;
+  const col=diff===0?T.muted:good?T.success:T.danger;
   return(
-    <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-        <div>
-          <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>{cur.label} atual</p>
-          <p style={{margin:"2px 0",fontSize:26,color:cur.color,fontWeight:700,fontFamily:"monospace"}}>{last[metric]}<span style={{fontSize:13,color:T.muted}}>{cur.unit?" "+cur.unit:""}</span></p>
+    <svg viewBox={`0 0 ${W} ${H}`} style={{width:60,height:24,verticalAlign:"middle"}}>
+      <polygon points={fillPoly} fill={TEAL} fillOpacity="0.15"/>
+      <polyline points={poly} fill="none" stroke={TEAL} strokeWidth="1.5" strokeLinejoin="round"/>
+      {pts.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="2.5" fill={TEAL}/>)}
+    </svg>
+  );
+}
+
+// Horizontal bar chart row (Análise Global style)
+function BarRow({label,value,min,max,unit,positivo,T}){
+  const steps=10;
+  const stepSize=(max-min)/steps;
+  const marks=Array.from({length:steps+1},(_,i)=>+(min+i*stepSize).toFixed(1));
+  const pct=Math.max(0,Math.min(100,((value-min)/(max-min))*100));
+  // normal zone: 30-70%
+  const normalStart=30,normalEnd=70;
+  const zone=pct<normalStart?"Abaixo":pct>normalEnd?"Acima":"Normal";
+  const zoneColor=zone==="Normal"?T.success:zone==="Abaixo"?T.info:T.danger;
+  return(
+    <div style={{marginBottom:2}}>
+      <div style={{display:"flex",alignItems:"stretch",minHeight:52}}>
+        <div style={{width:120,flexShrink:0,background:TEAL,display:"flex",alignItems:"center",padding:"6px 10px",borderRadius:"6px 0 0 6px"}}>
+          <span style={{color:"#fff",fontSize:11,fontWeight:700,lineHeight:1.3}}>{label}{unit?" ("+unit+")":""}</span>
         </div>
-        <div style={{textAlign:"right"}}>
-          <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>Variação total</p>
-          <p style={{margin:"2px 0",fontSize:16,fontWeight:700,fontFamily:"monospace",color:validDados.length>1?(isPositive?T.success:T.danger):T.muted}}>{validDados.length>1?diffStr+"  "+cur.unit:"—"}</p>
+        <div style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderLeft:"none",borderRadius:"0 6px 6px 0",padding:"6px 8px",position:"relative",overflow:"hidden"}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+            {marks.filter((_,i)=>i%2===0).map((m,i)=><span key={i} style={{fontSize:8,color:T.muted,fontFamily:"monospace"}}>{m}</span>)}
+          </div>
+          <div style={{height:8,background:T.bgLight,borderRadius:4,position:"relative",overflow:"hidden",marginBottom:3}}>
+            <div style={{position:"absolute",left:`${normalStart}%`,width:`${normalEnd-normalStart}%`,height:"100%",background:T.success,opacity:0.15}}/>
+            <div style={{position:"absolute",left:0,width:`${pct}%`,height:"100%",background:"#222",borderRadius:4}}/>
+          </div>
+          <div style={{position:"relative"}}>
+            <span style={{position:"absolute",left:`calc(${pct}% - 10px)`,fontSize:13,fontWeight:700,color:"#222",fontFamily:"monospace",whiteSpace:"nowrap"}}>{value}</span>
+          </div>
         </div>
       </div>
-      {validDados.length>1&&(
-        <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"auto"}}>
-          <polyline points={polyline} fill="none" stroke={cur.color} strokeWidth="2.5" strokeLinejoin="round"/>
-          {pts.map((p,i)=>(
-            <g key={i}>
-              <circle cx={p.x} cy={p.y} r="4.5" fill={cur.color}/>
-              <text x={p.x} y={H} textAnchor="middle" fontSize="7" fill={T.muted} fontFamily="monospace">{p.d.data.slice(0,5)}</text>
-              <text x={p.x} y={p.y-7} textAnchor="middle" fontSize="7.5" fill={cur.color} fontFamily="monospace">{p.d[metric]}</text>
-            </g>
-          ))}
-        </svg>
-      )}
+    </div>
+  );
+}
+
+// Historic table with mini sparklines
+function HistoricoTable({dados,metricas,T}){
+  return(
+    <div style={{overflowX:"auto"}}>
+      <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+        <thead>
+          <tr>
+            <th style={{background:"#aaa",color:"#fff",padding:"6px 8px",textAlign:"left",fontWeight:700,minWidth:130,fontSize:11}}></th>
+            {dados.map((d,i)=>(
+              <th key={i} style={{background:i===dados.length-1?"#555":"#aaa",color:"#fff",padding:"6px 8px",textAlign:"center",fontWeight:700,minWidth:70,fontSize:10}}>{d.data}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {metricas.map(mid=>{
+            const m=AVAL_METRICAS.find(x=>x.id===mid)||{label:mid,unit:"",positivo:false};
+            const vals=dados.map(d=>d[mid]??null);
+            if(vals.every(v=>v==null))return null;
+            return(
+              <tr key={mid}>
+                <td style={{background:TEAL,color:"#fff",padding:"5px 8px",fontWeight:700,fontSize:11}}>{m.label}</td>
+                {vals.map((v,i)=>{
+                  const prev=vals.slice(0,i).filter(x=>x!=null).pop();
+                  const diff=prev!=null&&v!=null?+(v-prev).toFixed(1):null;
+                  const good=diff==null||diff===0?null:(m.positivo?diff>0:diff<0);
+                  return(
+                    <td key={i} style={{padding:"5px 8px",textAlign:"center",borderLeft:`1px dashed ${T.border}`,verticalAlign:"middle"}}>
+                      {v!=null&&<div style={{fontSize:11,fontWeight:i===vals.length-1?700:400,color:T.text,fontFamily:"monospace"}}>{v}</div>}
+                      {diff!=null&&diff!==0&&<div style={{fontSize:9,color:good?T.success:T.danger,fontFamily:"monospace"}}>{diff>0?"+":""}{diff}</div>}
+                      {v==null&&<span style={{color:T.muted}}>—</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -555,22 +625,7 @@ function AvaliacaoTab({patient,T}){
   const isRubens=patient.id==="rubens";
   const isPres=patient.id==="preslavia";
   const dados=isRubens?RUBENS_AVAL:isPres?PRESLAVIA_AVAL:null;
-  const [metric,setMetric]=useState("peso");
-  const [secao,setSecao]=useState("composicao");
-
-  const secoes=[
-    {id:"composicao",label:"Composição"},
-    {id:"circunferencias",label:"Circunf."},
-    {id:"dobras",label:"Dobras"},
-    {id:"fotos",label:"Fotos 📸"},
-  ];
-
-  const metricasComposicao=["peso","gordura","massaMagra","massaGordura","imc","rcq","somatorio"];
-  const metricasCirc=["cintura","quadril","abdomen","bracoContraido","panturrilha"];
-  const metricasDobras=dados?Object.keys(dados[0]).filter(k=>k.startsWith("dobra")):[];
-
-  const metricasPorSecao={composicao:metricasComposicao,circunferencias:metricasCirc,dobras:metricasDobras};
-  const metricasAtivas=metricasPorSecao[secao]||[];
+  const [secao,setSecao]=useState("global");
 
   if(!dados)return(
     <div style={{padding:"0 14px 80px"}}>
@@ -578,124 +633,99 @@ function AvaliacaoTab({patient,T}){
     </div>
   );
 
-  const first=dados[0];const last=dados[dados.length-1];
-  const altura=isRubens?"183 cm":"158 cm";
+  const last=dados[dados.length-1];
+  const altura=isRubens?183:158;
+
+  const secoes=[
+    {id:"global",label:"Global"},
+    {id:"historico",label:"Histórico"},
+    {id:"circunf",label:"Circunf."},
+    {id:"dobras",label:"Dobras"},
+    {id:"fotos",label:"Fotos 📸"},
+  ];
 
   return(
     <div style={{padding:"0 14px 80px"}}>
       {/* Header */}
-      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:14}}>
-        <p style={{margin:"0 0 3px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliação Física</p>
-        <h2 style={{margin:"0 0 2px",color:T.text,fontSize:17}}>{patient.name}</h2>
-        <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>{altura} · {dados.length} {dados.length===1?"avaliação":"avaliações"}</p>
-      </div>
-
-      {/* Resumo composição */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>
-        {[
-          {label:"Peso",v1:`${first.peso} kg`,v2:`${last.peso} kg`,diff:last.peso-first.peso,positivo:false},
-          {label:"% Gordura",v1:`${first.gordura}%`,v2:`${last.gordura}%`,diff:last.gordura-first.gordura,positivo:false},
-          {label:"M. Magra",v1:`${first.massaMagra} kg`,v2:`${last.massaMagra} kg`,diff:last.massaMagra-first.massaMagra,positivo:true},
-        ].map((s,i)=>{
-          const isGood=s.positivo?s.diff>0:s.diff<0;
-          const showDiff=dados.length>1;
-          return(
-            <div key={i} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:10,padding:"10px 10px"}}>
-              <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
-              <p style={{margin:"3px 0 1px",color:T.text,fontSize:14,fontWeight:700,fontFamily:"monospace"}}>{s.v2}</p>
-              {showDiff&&<p style={{margin:0,fontSize:10,fontFamily:"monospace",color:isGood?T.success:T.danger}}>{s.diff>0?"+":""}{s.diff.toFixed(1)}</p>}
-            </div>
-          );
-        })}
+      <div style={{background:TEAL,borderRadius:12,padding:"12px 14px",marginBottom:12}}>
+        <p style={{margin:0,fontSize:16,color:"#fff",fontWeight:700}}>{patient.name}</p>
+        <p style={{margin:"3px 0 0",fontSize:11,color:"rgba(255,255,255,0.85)",fontFamily:"monospace"}}>
+          {altura} cm · {dados.length} {dados.length===1?"avaliação":"avaliações"} · Última: {last.data}
+        </p>
       </div>
 
       {/* Seção tabs */}
       <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto"}}>
         {secoes.map(s=>(
-          <button key={s.id} onClick={()=>{setSecao(s.id);if(s.id!=="fotos")setMetric(metricasPorSecao[s.id]?.[0]||"peso");}} style={{flexShrink:0,padding:"6px 14px",borderRadius:20,fontSize:11,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${secao===s.id?T.gold:T.border}`,background:secao===s.id?T.gold:"transparent",color:secao===s.id?"#0D1B2A":T.muted,fontWeight:secao===s.id?700:400}}>{s.label}</button>
+          <button key={s.id} onClick={()=>setSecao(s.id)} style={{flexShrink:0,padding:"6px 14px",borderRadius:20,fontSize:11,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${secao===s.id?TEAL:T.border}`,background:secao===s.id?TEAL:"transparent",color:secao===s.id?"#fff":T.muted,fontWeight:secao===s.id?700:400}}>{s.label}</button>
         ))}
       </div>
 
-      {secao==="fotos"?(
-        <FotosSection patient={patient} T={T} isNutri={false}/>
-      ):(
+      {secao==="global"&&(
         <>
-          {/* Metric selector */}
-          <div style={{display:"flex",gap:6,marginBottom:12,overflowX:"auto",paddingBottom:2}}>
-            {metricasAtivas.map(mid=>{
-              const m=AVAL_METRICAS.find(x=>x.id===mid)||{id:mid,label:mid.replace("dobra","").replace(/([A-Z])/g," $1").trim(),color:"#888",unit:"mm",positivo:false};
-              const hasData=dados.some(d=>d[mid]!=null);
-              if(!hasData)return null;
-              return(
-                <button key={mid} onClick={()=>setMetric(mid)} style={{flexShrink:0,padding:"5px 12px",borderRadius:20,fontSize:10,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${metric===mid?m.color:T.border}`,background:metric===mid?m.color+"22":"transparent",color:metric===mid?m.color:T.muted,fontWeight:metric===mid?700:400}}>{m.label||mid}</button>
-              );
-            })}
+          {/* Resumo 3 cards */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>
+            {[
+              {label:"Peso",value:`${last.peso} kg`},
+              {label:"% Gordura",value:`${last.gordura}%`},
+              {label:"M. Magra",value:`${last.massaMagra} kg`},
+            ].map((s,i)=>(
+              <div key={i} style={{background:T.bgMid,border:`2px solid ${TEAL}`,borderRadius:10,padding:"10px 10px",textAlign:"center"}}>
+                <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{s.label}</p>
+                <p style={{margin:"4px 0 0",color:TEAL,fontSize:16,fontWeight:700,fontFamily:"monospace"}}>{s.value}</p>
+              </div>
+            ))}
           </div>
-
-          <AvaliacaoChart dados={dados} metric={metric} T={T}/>
-
-          {/* Tabela comparativa */}
-          {dados.length>1&&(
-            <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,overflow:"hidden",marginBottom:14}}>
-              <div style={{overflowX:"auto"}}>
-                <table style={{width:"100%",borderCollapse:"collapse",fontSize:11,fontFamily:"monospace"}}>
-                  <thead>
-                    <tr style={{background:T.bgLight}}>
-                      <td style={{padding:"8px 10px",color:T.muted,fontWeight:700}}>Parâmetro</td>
-                      {dados.map((d,i)=><td key={i} style={{padding:"8px 10px",color:T.gold,textAlign:"center",whiteSpace:"nowrap"}}>{d.data.slice(0,5)}</td>)}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {metricasAtivas.filter(mid=>dados.some(d=>d[mid]!=null)).map(mid=>{
-                      const m=AVAL_METRICAS.find(x=>x.id===mid)||{label:mid,unit:"mm",positivo:false};
-                      const vals=dados.map(d=>d[mid]);
-                      const first=vals.find(v=>v!=null);
-                      return(
-                        <tr key={mid} style={{borderTop:`1px solid ${T.border}`}}>
-                          <td style={{padding:"7px 10px",color:T.muted}}>{m.label||mid}</td>
-                          {vals.map((v,i)=>{
-                            if(v==null)return<td key={i} style={{padding:"7px 10px",textAlign:"center",color:T.muted}}>—</td>;
-                            const prev=vals.slice(0,i).filter(x=>x!=null).pop();
-                            const diff=prev!=null?v-prev:null;
-                            const isGood=diff==null?null:(m.positivo?diff>0:diff<0);
-                            return(
-                              <td key={i} style={{padding:"7px 10px",textAlign:"center",color:T.text,fontWeight:i===vals.length-1?700:400}}>
-                                {v}
-                                {diff!=null&&diff!==0&&<span style={{fontSize:9,color:isGood?T.success:T.danger,marginLeft:2}}>{diff>0?"+":""}{diff.toFixed(diff%1===0?0:1)}</span>}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+          {/* Análise Global — barras */}
+          <p style={{margin:"0 0 8px",fontSize:13,color:TEAL,fontWeight:700}}>Análise Global Resumida</p>
+          <div style={{marginBottom:14}}>
+            {/* Header abaixo/normal/acima */}
+            <div style={{display:"flex",marginBottom:4,marginLeft:120}}>
+              {["Abaixo","Normal","Acima"].map((z,i)=>(
+                <div key={i} style={{flex:i===2?2:1,background:i===0?"#aaa":i===1?"#555":TEAL,color:"#fff",fontSize:10,fontWeight:700,textAlign:"center",padding:"4px 0",borderRight:"2px solid #fff",borderRadius:i===0?"4px 0 0 4px":i===2?"0 4px 4px 0":"0"}}>{z}</div>
+              ))}
             </div>
-          )}
-
-          {/* Única avaliação — card completo */}
-          {dados.length===1&&(
-            <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,padding:"14px 16px",marginBottom:14}}>
-              <p style={{margin:"0 0 10px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Avaliação de {dados[0].data}</p>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                {metricasAtivas.filter(mid=>dados[0][mid]!=null).map(mid=>{
-                  const m=AVAL_METRICAS.find(x=>x.id===mid)||{label:mid,unit:"mm"};
-                  return(
-                    <div key={mid} style={{background:T.bgLight,borderRadius:8,padding:"8px 10px"}}>
-                      <p style={{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}}>{m.label||mid}</p>
-                      <p style={{margin:"2px 0 0",fontSize:14,color:T.text,fontWeight:700,fontFamily:"monospace"}}>{dados[0][mid]}{m.unit?" "+m.unit:""}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+            {[
+              {id:"peso",label:"Peso",unit:"kg",min:50,max:140},
+              {id:"gordura",label:"Percentual de Gordura",unit:"%",min:5,max:40},
+              {id:"massaGordura",label:"Massa de Gordura",unit:"kg",min:5,max:45},
+              {id:"massaMagra",label:"Massa Livre de Gordura",unit:"kg",min:40,max:110},
+              {id:"imc",label:"IMC",unit:"",min:15,max:45},
+            ].map(row=>(
+              last[row.id]!=null&&<BarRow key={row.id} label={row.label} value={last[row.id]} min={row.min} max={row.max} unit={row.unit} positivo={row.id==="massaMagra"} T={T}/>
+            ))}
+          </div>
         </>
+      )}
+
+      {secao==="historico"&&(
+        <>
+          <p style={{margin:"0 0 10px",fontSize:13,color:TEAL,fontWeight:700}}>Histórico da Composição Corporal</p>
+          <HistoricoTable dados={dados} T={T} metricas={["peso","gordura","massaGordura","massaMagra","imc","rcq","somatorio","cintura","quadril","abdomen"]}/>
+        </>
+      )}
+
+      {secao==="circunf"&&(
+        <>
+          <p style={{margin:"0 0 10px",fontSize:13,color:TEAL,fontWeight:700}}>Circunferências</p>
+          <HistoricoTable dados={dados} T={T} metricas={["cintura","quadril","abdomen","pescoco","bracoRelaxado","bracoContraido","coxaProximal","panturrilha"]}/>
+        </>
+      )}
+
+      {secao==="dobras"&&(
+        <>
+          <p style={{margin:"0 0 10px",fontSize:13,color:TEAL,fontWeight:700}}>Dobras Cutâneas</p>
+          <HistoricoTable dados={dados} T={T} metricas={["somatorio","dobraTricipital","dobraAbdominal","dobraSubescapular","dobraCoxa","dobraSuprailíaca"]}/>
+        </>
+      )}
+
+      {secao==="fotos"&&(
+        <FotosSection patient={patient} T={T} isNutri={false}/>
       )}
     </div>
   );
 }
+
 
 function SupsTab({patient,T}){
   const key=`sups_${patient.id}_${todayStr()}`;
