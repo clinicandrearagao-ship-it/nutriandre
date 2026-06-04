@@ -323,12 +323,174 @@ function EvolucaoTab({patient,T}){
   );
 }
 
+function FotosSection({patient,T,isNutri=false}){
+  const key=`fotos_${patient.id}`;
+  const [fotos,setFotos]=useState(()=>store.get(key)||[]);
+  const [compareA,setCompareA]=useState(null);
+  const [compareB,setCompareB]=useState(null);
+  const [comparing,setComparing]=useState(false);
+  const [addingPhoto,setAddingPhoto]=useState(false);
+  const [newPhoto,setNewPhoto]=useState(null);
+  const [newLabel,setNewLabel]=useState("");
+  const [newDate,setNewDate]=useState(todayStr());
+  const [newObs,setNewObs]=useState("");
+  const fileRef=useRef();
+
+  useEffect(()=>{
+    db.load(patient.id,"fotos").then(rows=>{
+      if(rows&&rows.length>0){
+        const data=rows.map(r=>r.valor).sort((a,b)=>a.date.localeCompare(b.date));
+        setFotos(data);store.set(key,data);
+      }
+    });
+  },[]);
+
+  function handleFile(ev){
+    const file=ev.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=r=>setNewPhoto(r.target.result);
+    reader.readAsDataURL(file);
+  }
+
+  function savePhoto(){
+    if(!newPhoto)return;
+    const entry={id:Date.now().toString(),date:newDate,label:newLabel||newDate,obs:newObs,photo:newPhoto,addedBy:isNutri?"nutri":"patient"};
+    const n=[...fotos,entry].sort((a,b)=>a.date.localeCompare(b.date));
+    setFotos(n);store.set(key,n);
+    db.save(patient.id,"fotos",newDate,entry);
+    setNewPhoto(null);setNewLabel("");setNewDate(todayStr());setNewObs("");setAddingPhoto(false);
+  }
+
+  function removePhoto(id){
+    const n=fotos.filter(f=>f.id!==id);setFotos(n);store.set(key,n);
+    if(compareA===id)setCompareA(null);
+    if(compareB===id)setCompareB(null);
+  }
+
+  const fotoA=fotos.find(f=>f.id===compareA);
+  const fotoB=fotos.find(f=>f.id===compareB);
+
+  if(comparing&&fotoA&&fotoB)return(
+    <div>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+        <button onClick={()=>setComparing(false)} style={{background:"none",border:"none",color:T.gold,cursor:"pointer",fontSize:20,lineHeight:1}}>←</button>
+        <p style={{margin:0,fontSize:13,color:T.text,fontWeight:700}}>Comparação de fotos</p>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+        {[fotoA,fotoB].map((f,i)=>(
+          <div key={i}>
+            <img src={f.photo} alt={f.label} style={{width:"100%",aspectRatio:"3/4",objectFit:"cover",borderRadius:10,border:`2px solid ${i===0?T.info:T.success}`}}/>
+            <p style={{margin:"6px 0 0",fontSize:10,fontFamily:"monospace",color:i===0?T.info:T.success,textAlign:"center"}}>{f.label}</p>
+            {f.obs&&<p style={{margin:"2px 0 0",fontSize:10,color:T.muted,textAlign:"center",fontStyle:"italic"}}>{f.obs}</p>}
+          </div>
+        ))}
+      </div>
+      <div style={{background:T.bgLight,borderRadius:10,padding:"10px 14px",textAlign:"center"}}>
+        <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>
+          {fotoA.label} → {fotoB.label}
+        </p>
+      </div>
+    </div>
+  );
+
+  if(addingPhoto)return(
+    <div>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
+        <button onClick={()=>{setAddingPhoto(false);setNewPhoto(null);}} style={{background:"none",border:"none",color:T.gold,cursor:"pointer",fontSize:20,lineHeight:1}}>←</button>
+        <p style={{margin:0,fontSize:14,color:T.text,fontWeight:700}}>{isNutri?"Adicionar foto da consulta":"Adicionar foto"}</p>
+      </div>
+      <div style={{marginBottom:12}}>
+        <Label T={T}>Data</Label>
+        <input type="date" value={newDate} onChange={e=>setNewDate(e.target.value)} style={{background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"11px 14px",color:T.text,fontSize:14,outline:"none",width:"100%"}}/>
+      </div>
+      <div style={{marginBottom:12}}>
+        <Label T={T}>Legenda (opcional)</Label>
+        <input value={newLabel} onChange={e=>setNewLabel(e.target.value)} placeholder={`Ex: Semana 4 · ${isNutri?"Consulta":"Frente"}`} style={{background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"11px 14px",color:T.text,fontSize:14,outline:"none",width:"100%"}}/>
+      </div>
+      <div style={{marginBottom:12}}>
+        {newPhoto?(
+          <div style={{position:"relative"}}>
+            <img src={newPhoto} alt="preview" style={{width:"100%",maxHeight:260,objectFit:"cover",borderRadius:10,border:`1px solid ${T.border}`}}/>
+            <button onClick={()=>setNewPhoto(null)} style={{position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.6)",border:"none",borderRadius:"50%",width:28,height:28,color:"#fff",cursor:"pointer",fontSize:16}}>×</button>
+          </div>
+        ):(
+          <button onClick={()=>fileRef.current.click()} style={{width:"100%",padding:"40px 14px",background:T.bgLight,border:`2px dashed ${T.border}`,borderRadius:10,color:T.muted,cursor:"pointer",fontSize:13,fontFamily:"Georgia,serif",display:"flex",flexDirection:"column",alignItems:"center",gap:8}}>
+            <span style={{fontSize:32}}>📷</span>
+            <span>{isNutri?"Carregar foto da consulta":"Tirar foto / escolher da galeria"}</span>
+          </button>
+        )}
+        <input ref={fileRef} type="file" accept="image/*" capture={isNutri?undefined:"environment"} onChange={handleFile} style={{display:"none"}}/>
+      </div>
+      <div style={{marginBottom:16}}>
+        <Label T={T}>Observação (opcional)</Label>
+        <input value={newObs} onChange={e=>setNewObs(e.target.value)} placeholder="Ex: Início do protocolo, pós-consulta..." style={{background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"11px 14px",color:T.text,fontSize:14,outline:"none",width:"100%"}}/>
+      </div>
+      <Btn onClick={savePhoto} T={T} style={{width:"100%",padding:"13px",fontSize:14}} disabled={!newPhoto}>Salvar foto</Btn>
+    </div>
+  );
+
+  return(
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+        <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Evolução fotográfica</p>
+        <div style={{display:"flex",gap:8}}>
+          {fotos.length>=2&&(
+            <button onClick={()=>{setCompareA(fotos[0].id);setCompareB(fotos[fotos.length-1].id);setComparing(true);}} style={{padding:"5px 10px",background:"transparent",border:`1px solid ${T.info}`,borderRadius:8,color:T.info,cursor:"pointer",fontSize:11,fontFamily:"monospace"}}>Comparar</button>
+          )}
+          <button onClick={()=>setAddingPhoto(true)} style={{padding:"5px 10px",background:T.gold,border:"none",borderRadius:8,color:"#0D1B2A",cursor:"pointer",fontSize:11,fontFamily:"monospace",fontWeight:700}}>+ Foto</button>
+        </div>
+      </div>
+
+      {fotos.length===0?(
+        <div style={{textAlign:"center",padding:"30px 0",background:T.bgLight,borderRadius:12,border:`1px dashed ${T.border}`}}>
+          <p style={{fontSize:32,marginBottom:8}}>📸</p>
+          <p style={{color:T.muted,fontSize:12,fontFamily:"monospace"}}>Nenhuma foto ainda.</p>
+          <p style={{color:T.muted,fontSize:11,fontFamily:"monospace",marginTop:4}}>Adicione a primeira foto para começar a evolução.</p>
+        </div>
+      ):(
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+          {fotos.map(f=>(
+            <div key={f.id} style={{position:"relative",borderRadius:10,overflow:"hidden",border:`1px solid ${T.border}`,cursor:"pointer"}}
+              onClick={()=>{
+                if(!compareA){setCompareA(f.id);}
+                else if(!compareB&&f.id!==compareA){setCompareB(f.id);setComparing(true);}
+                else{setCompareA(f.id);setCompareB(null);}
+              }}>
+              <img src={f.photo} alt={f.label} style={{width:"100%",aspectRatio:"3/4",objectFit:"cover",display:"block"}}/>
+              {(compareA===f.id||compareB===f.id)&&(
+                <div style={{position:"absolute",top:4,right:4,background:compareA===f.id?T.info:T.success,borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#fff",fontWeight:700}}>{compareA===f.id?"A":"B"}</div>
+              )}
+              {f.addedBy==="nutri"&&(
+                <div style={{position:"absolute",top:4,left:4,background:"rgba(0,0,0,0.55)",borderRadius:4,padding:"2px 5px",fontSize:8,color:"#fff",fontFamily:"monospace"}}>DR</div>
+              )}
+              <div style={{background:"rgba(0,0,0,0.5)",padding:"5px 6px"}}>
+                <p style={{margin:0,fontSize:9,color:"#fff",fontFamily:"monospace",textAlign:"center"}}>{f.label||f.date}</p>
+              </div>
+              {(isNutri||f.addedBy==="patient")&&(
+                <button onClick={e=>{e.stopPropagation();removePhoto(f.id);}} style={{position:"absolute",bottom:22,right:4,background:"rgba(0,0,0,0.55)",border:"none",borderRadius:4,color:"#fff",cursor:"pointer",fontSize:10,padding:"2px 5px"}}>×</button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {fotos.length>0&&fotos.length<2&&(
+        <p style={{marginTop:8,fontSize:10,color:T.muted,fontFamily:"monospace",textAlign:"center"}}>Adicione mais uma foto para comparar lado a lado.</p>
+      )}
+      {fotos.length>=2&&!compareA&&(
+        <p style={{marginTop:8,fontSize:10,color:T.muted,fontFamily:"monospace",textAlign:"center"}}>Toque em duas fotos para comparar · ou use o botão "Comparar"</p>
+      )}
+      {compareA&&!compareB&&(
+        <p style={{marginTop:8,fontSize:10,color:T.info,fontFamily:"monospace",textAlign:"center"}}>Foto A selecionada · toque em outra para comparar</p>
+      )}
+    </div>
+  );
+}
+
 function AvaliacaoTab({patient,T}){
   const [metric,setMetric]=useState("peso");
   if(patient.id!=="rubens")return(
-    <div style={{padding:"40px 14px",textAlign:"center"}}>
-      <p style={{fontSize:40,marginBottom:16}}>📊</p>
-      <p style={{color:T.muted,fontFamily:"monospace",fontSize:13}}>Avaliacao fisica em breve.</p>
+    <div style={{padding:"0 14px 80px"}}>
+      <FotosSection patient={patient} T={T} isNutri={false}/>
     </div>
   );
   const dados=RUBENS_AVAL;
@@ -399,10 +561,11 @@ function AvaliacaoTab({patient,T}){
           </div>
         ))}
       </div>
-      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderLeft:`3px solid ${T.success}`,borderRadius:10,padding:"12px 16px"}}>
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderLeft:`3px solid ${T.success}`,borderRadius:10,padding:"12px 16px",marginBottom:18}}>
         <p style={{margin:"0 0 6px",fontSize:12,color:T.success,fontWeight:700}}>Evolucao em 9 meses</p>
         <p style={{margin:0,fontSize:12,color:T.muted,lineHeight:1.7}}>Perdeu <strong style={{color:T.success}}>8.8 kg de gordura</strong> e ganhou <strong style={{color:T.success}}>5.6 kg de massa magra</strong>. Cintura reduziu <strong style={{color:T.success}}>15 cm</strong>.</p>
       </div>
+      <FotosSection patient={patient} T={T} isNutri={false}/>
     </div>
   );
 }
@@ -731,6 +894,23 @@ function ChatTab({patient,T}){
 
 // ─── NUTRI PANEL ─────────────────────────────────────────────────────────────
 
+function PatientFotosView({patient,T,onBack}){
+  return(
+    <div style={{minHeight:"100vh",background:T.bg}}>
+      <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"14px 20px",display:"flex",alignItems:"center",gap:12,position:"sticky",top:0,zIndex:50}}>
+        <button onClick={onBack} style={{background:"none",border:"none",color:T.gold,cursor:"pointer",fontSize:22}}>←</button>
+        <div>
+          <p style={{margin:0,fontSize:14,color:T.text,fontWeight:700}}>{patient.name}</p>
+          <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Evolução fotográfica</p>
+        </div>
+      </div>
+      <div style={{padding:"16px 14px 40px",maxWidth:640,margin:"0 auto"}}>
+        <FotosSection patient={patient} T={T} isNutri={true}/>
+      </div>
+    </div>
+  );
+}
+
 function PatientDiarioView({patient,T,onBack}){
   const key=`diario_${patient.id}`;
   const [entries,setEntries]=useState(()=>store.get(key)||[]);
@@ -826,6 +1006,7 @@ function NutriPanel({T,onLogout}){
   const [dados,setDados]=useState({});
   const [loading,setLoading]=useState(true);
   const [viewDiario,setViewDiario]=useState(null);
+  const [viewFotos,setViewFotos]=useState(null);
 
   useEffect(()=>{
     async function fetchAll(){
@@ -840,6 +1021,7 @@ function NutriPanel({T,onLogout}){
     fetchAll();
   },[]);
 
+  if(viewFotos)return <PatientFotosView patient={viewFotos} T={T} onBack={()=>setViewFotos(null)}/>;
   if(viewDiario)return <PatientDiarioView patient={viewDiario} T={T} onBack={()=>setViewDiario(null)}/>;
 
   return(
@@ -901,10 +1083,15 @@ function NutriPanel({T,onLogout}){
                   <p style={{margin:"1px 0 0",fontSize:10,color:T.muted,fontFamily:"monospace"}}>{p.plan[0].options.length} opcoes</p>
                 </div>
               </div>
-              {/* Diário button */}
-              <button onClick={()=>setViewDiario(p)} style={{width:"100%",padding:"9px",background:"transparent",border:`1px solid ${T.gold}`,borderRadius:8,color:T.gold,cursor:"pointer",fontSize:12,fontFamily:"monospace",fontWeight:700}}>
-                📓 Ver diário alimentar
-              </button>
+              {/* Botões */}
+              <div style={{display:"flex",gap:8}}>
+                <button onClick={()=>setViewDiario(p)} style={{flex:1,padding:"9px",background:"transparent",border:`1px solid ${T.gold}`,borderRadius:8,color:T.gold,cursor:"pointer",fontSize:12,fontFamily:"monospace",fontWeight:700}}>
+                  📓 Diário
+                </button>
+                <button onClick={()=>setViewFotos(p)} style={{flex:1,padding:"9px",background:"transparent",border:`1px solid ${T.info}`,borderRadius:8,color:T.info,cursor:"pointer",fontSize:12,fontFamily:"monospace",fontWeight:700}}>
+                  📸 Fotos
+                </button>
+              </div>
             </div>
           );
         })}
