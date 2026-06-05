@@ -1010,6 +1010,222 @@ function DiarioTab({patient,T}){
   );
 }
 
+
+// ─── QUESTIONÁRIO SEMANAL ─────────────────────────────────────────────────────
+
+const PERGUNTAS=[
+  {id:"alimentacao",label:"Como você avalia sua alimentação essa semana?",type:"scale",min:1,max:5,labels:["Péssima","Ruim","Regular","Boa","Ótima"]},
+  {id:"plano",label:"Conseguiu seguir o plano alimentar?",type:"choice",options:["Sim, totalmente","Parcialmente","Não consegui"]},
+  {id:"treinos",label:"Quantos dias treinou essa semana?",type:"choice",options:["0 dias","1–2 dias","3–4 dias","5+ dias"]},
+  {id:"energia",label:"Como estava sua energia ao longo da semana?",type:"scale",min:1,max:5,labels:["Muito baixa","Baixa","Normal","Boa","Excelente"]},
+  {id:"sono",label:"Como foi seu sono?",type:"scale",min:1,max:5,labels:["Muito ruim","Ruim","Regular","Bom","Ótimo"]},
+  {id:"compulsao",label:"Teve algum episódio de compulsão ou fuga do plano?",type:"choice",options:["Não","1–2 vezes","Várias vezes"]},
+  {id:"hidratacao",label:"Sua hidratação foi adequada?",type:"choice",options:["Sim","Às vezes","Não"]},
+  {id:"sentimento",label:"Como você está se sentindo em relação aos seus resultados?",type:"text",placeholder:"Conte como foi sua semana..."},
+];
+
+function weekStr(){
+  const d=new Date();
+  const day=d.getDay();
+  const diff=d.getDate()-day+(day===0?-6:1);
+  const mon=new Date(d.setDate(diff));
+  return mon.toISOString().slice(0,10);
+}
+
+function QuestionarioTab({patient,T}){
+  const key=`quiz_${patient.id}`;
+  const [respostas,setRespostas]=useState(()=>store.get(key)||[]);
+  const [showForm,setShowForm]=useState(false);
+  const [form,setForm]=useState({});
+  const [step,setStep]=useState(0);
+  const [saving,setSaving]=useState(false);
+  const semana=weekStr();
+  const jaRespondeu=respostas.some(r=>r.semana===semana);
+
+  function iniciar(){setForm({});setStep(0);setShowForm(true);}
+
+  function responder(id,val){setForm(f=>({...f,[id]:val}));}
+
+  async function finalizar(){
+    const entry={id:Date.now().toString(),semana,data:todayStr(),respostas:form};
+    const n=[entry,...respostas];
+    setRespostas(n);store.set(key,n);
+    setSaving(true);
+    await db.save(patient.id,"questionario",semana,entry);
+    setSaving(false);
+    setShowForm(false);
+  }
+
+  const pAtual=PERGUNTAS[step];
+  const totalSteps=PERGUNTAS.length;
+  const respondida=form[pAtual?.id]!=null&&form[pAtual?.id]!=="";
+
+  if(showForm)return(
+    <div style={{padding:"0 14px 80px",animation:"fadeIn .2s ease"}}>
+      {/* Header */}
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
+        <button onClick={()=>setShowForm(false)} style={{background:"none",border:"none",color:T.gold,cursor:"pointer",fontSize:22,lineHeight:1}}>←</button>
+        <div style={{flex:1}}>
+          <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Pergunta {step+1} de {totalSteps}</p>
+          <div style={{height:4,background:T.bgLight,borderRadius:2,marginTop:4,overflow:"hidden"}}>
+            <div style={{width:`${((step+1)/totalSteps)*100}%`,height:"100%",background:TEAL,borderRadius:2,transition:"width .3s"}}/>
+          </div>
+        </div>
+      </div>
+
+      {/* Pergunta */}
+      <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"20px 16px",marginBottom:20,minHeight:180}}>
+        <p style={{margin:"0 0 20px",fontSize:16,color:T.text,fontWeight:700,lineHeight:1.4}}>{pAtual.label}</p>
+
+        {pAtual.type==="scale"&&(
+          <div>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+              {Array.from({length:pAtual.max-pAtual.min+1},(_,i)=>i+pAtual.min).map(v=>(
+                <button key={v} onClick={()=>responder(pAtual.id,v)} style={{width:48,height:48,borderRadius:"50%",border:`2px solid ${form[pAtual.id]===v?TEAL:T.border}`,background:form[pAtual.id]===v?TEAL:"transparent",color:form[pAtual.id]===v?"#fff":T.text,fontSize:16,fontWeight:700,cursor:"pointer",transition:"all .15s"}}>{v}</button>
+              ))}
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between"}}>
+              <span style={{fontSize:10,color:T.muted,fontFamily:"monospace"}}>{pAtual.labels[0]}</span>
+              <span style={{fontSize:10,color:T.muted,fontFamily:"monospace"}}>{pAtual.labels[pAtual.labels.length-1]}</span>
+            </div>
+            {form[pAtual.id]&&<p style={{margin:"12px 0 0",textAlign:"center",fontSize:13,color:TEAL,fontWeight:700}}>{pAtual.labels[form[pAtual.id]-pAtual.min]}</p>}
+          </div>
+        )}
+
+        {pAtual.type==="choice"&&(
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {pAtual.options.map(opt=>(
+              <button key={opt} onClick={()=>responder(pAtual.id,opt)} style={{padding:"12px 16px",borderRadius:10,border:`2px solid ${form[pAtual.id]===opt?TEAL:T.border}`,background:form[pAtual.id]===opt?`${TEAL}18`:"transparent",color:form[pAtual.id]===opt?TEAL:T.text,fontSize:14,fontWeight:form[pAtual.id]===opt?700:400,cursor:"pointer",textAlign:"left",transition:"all .15s"}}>{opt}</button>
+            ))}
+          </div>
+        )}
+
+        {pAtual.type==="text"&&(
+          <textarea value={form[pAtual.id]||""} onChange={e=>responder(pAtual.id,e.target.value)} placeholder={pAtual.placeholder} style={{width:"100%",minHeight:100,background:T.bgLight,border:`1px solid ${T.border}`,borderRadius:10,padding:"12px 14px",color:T.text,fontSize:14,resize:"vertical",fontFamily:"Georgia,serif",lineHeight:1.5,outline:"none"}}/>
+        )}
+      </div>
+
+      {/* Nav buttons */}
+      <div style={{display:"flex",gap:10}}>
+        {step>0&&<button onClick={()=>setStep(s=>s-1)} style={{flex:1,padding:"13px",background:"transparent",border:`1px solid ${T.border}`,borderRadius:10,color:T.muted,cursor:"pointer",fontSize:14,fontFamily:"monospace"}}>← Anterior</button>}
+        {step<totalSteps-1?(
+          <button onClick={()=>respondida&&setStep(s=>s+1)} disabled={!respondida} style={{flex:2,padding:"13px",background:respondida?TEAL:T.bgLight,border:"none",borderRadius:10,color:respondida?"#fff":T.muted,cursor:respondida?"pointer":"not-allowed",fontSize:14,fontWeight:700,transition:"all .15s"}}>Próxima →</button>
+        ):(
+          <button onClick={finalizar} disabled={!respondida||saving} style={{flex:2,padding:"13px",background:respondida?TEAL:T.bgLight,border:"none",borderRadius:10,color:respondida?"#fff":T.muted,cursor:respondida?"pointer":"not-allowed",fontSize:14,fontWeight:700}}>
+            {saving?"Salvando...":"✓ Finalizar"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
+  return(
+    <div style={{padding:"0 14px 80px"}}>
+      {/* CTA semana atual */}
+      <div style={{background:jaRespondeu?`${T.success}18`:T.bgMid,border:`2px solid ${jaRespondeu?T.success:TEAL}`,borderRadius:14,padding:"18px 16px",marginBottom:16,textAlign:"center"}}>
+        {jaRespondeu?(
+          <>
+            <p style={{fontSize:28,marginBottom:8}}>✅</p>
+            <p style={{margin:0,fontSize:15,color:T.success,fontWeight:700}}>Questionário desta semana respondido!</p>
+            <p style={{margin:"4px 0 0",fontSize:11,color:T.muted,fontFamily:"monospace"}}>Semana de {semana.slice(5).split("-").reverse().join("/")} — obrigado!</p>
+          </>
+        ):(
+          <>
+            <p style={{fontSize:28,marginBottom:8}}>📋</p>
+            <p style={{margin:0,fontSize:15,color:T.text,fontWeight:700}}>Questionário da semana</p>
+            <p style={{margin:"4px 0 12px",fontSize:12,color:T.muted}}>8 perguntas · leva ~2 minutos</p>
+            <button onClick={iniciar} style={{padding:"12px 28px",background:TEAL,border:"none",borderRadius:10,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer"}}>Responder agora</button>
+          </>
+        )}
+      </div>
+
+      {/* Histórico */}
+      {respostas.length>0&&(
+        <>
+          <p style={{margin:"0 0 10px",fontSize:10,color:T.gold,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}>Histórico</p>
+          {respostas.map(r=>{
+            const nota=r.respostas.alimentacao;
+            const plano=r.respostas.plano;
+            const humor=r.respostas.sentimento;
+            return(
+              <div key={r.id} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:12,padding:"12px 14px",marginBottom:10}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                  <p style={{margin:0,fontSize:10,color:T.gold,fontFamily:"monospace"}}>Semana de {r.semana.slice(5).split("-").reverse().join("/")}</p>
+                  <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>{r.data}</p>
+                </div>
+                <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:humor?8:0}}>
+                  {nota&&<span style={{padding:"3px 10px",borderRadius:20,background:TEAL+"22",color:TEAL,fontSize:11,fontFamily:"monospace",fontWeight:700}}>Alimentação: {nota}/5</span>}
+                  {plano&&<span style={{padding:"3px 10px",borderRadius:20,background:T.bgLight,color:T.muted,fontSize:11,fontFamily:"monospace"}}>{plano}</span>}
+                  {r.respostas.treinos&&<span style={{padding:"3px 10px",borderRadius:20,background:T.bgLight,color:T.muted,fontSize:11,fontFamily:"monospace"}}>{r.respostas.treinos}</span>}
+                  {r.respostas.hidratacao&&<span style={{padding:"3px 10px",borderRadius:20,background:T.bgLight,color:T.muted,fontSize:11,fontFamily:"monospace"}}>Hidrat.: {r.respostas.hidratacao}</span>}
+                </div>
+                {humor&&<p style={{margin:0,fontSize:12,color:T.muted,fontStyle:"italic",lineHeight:1.5,borderTop:`1px solid ${T.border}`,paddingTop:8}}>{humor}</p>}
+              </div>
+            );
+          })}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── PAINEL NUTRI — VER QUESTIONÁRIOS ────────────────────────────────────────
+
+function PatientQuizView({patient,T,onBack}){
+  const key=`quiz_${patient.id}`;
+  const [respostas,setRespostas]=useState(()=>store.get(key)||[]);
+
+  useEffect(()=>{
+    db.load(patient.id,"questionario").then(rows=>{
+      if(rows&&rows.length>0){
+        const data=rows.map(r=>r.valor).sort((a,b)=>b.semana.localeCompare(a.semana));
+        setRespostas(data);store.set(key,data);
+      }
+    });
+  },[]);
+
+  return(
+    <div style={{minHeight:"100vh",background:T.bg}}>
+      <div style={{background:T.bgMid,borderBottom:`1px solid ${T.border}`,padding:"14px 20px",display:"flex",alignItems:"center",gap:12,position:"sticky",top:0,zIndex:50}}>
+        <button onClick={onBack} style={{background:"none",border:"none",color:T.gold,cursor:"pointer",fontSize:22}}>←</button>
+        <div>
+          <p style={{margin:0,fontSize:14,color:T.text,fontWeight:700}}>{patient.name}</p>
+          <p style={{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}}>Questionários semanais · {respostas.length} respostas</p>
+        </div>
+      </div>
+      <div style={{padding:"16px 14px 40px",maxWidth:640,margin:"0 auto"}}>
+        {respostas.length===0?(
+          <div style={{textAlign:"center",padding:"40px 0"}}>
+            <p style={{fontSize:36,marginBottom:10}}>📋</p>
+            <p style={{color:T.muted,fontSize:13,fontFamily:"monospace"}}>Nenhum questionário respondido ainda.</p>
+          </div>
+        ):(
+          respostas.map(r=>(
+            <div key={r.id} style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                <p style={{margin:0,fontSize:13,color:TEAL,fontWeight:700}}>Semana de {r.semana.slice(5).split("-").reverse().join("/")}</p>
+                <p style={{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}}>{r.data}</p>
+              </div>
+              {PERGUNTAS.map(p=>{
+                const val=r.respostas[p.id];
+                if(!val)return null;
+                return(
+                  <div key={p.id} style={{marginBottom:8,paddingBottom:8,borderBottom:`1px solid ${T.border}`}}>
+                    <p style={{margin:"0 0 3px",fontSize:10,color:T.muted,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:1}}>{p.label}</p>
+                    <p style={{margin:0,fontSize:13,color:T.text,fontWeight:p.type==="scale"?700:400}}>
+                      {p.type==="scale"?`${val}/5 — ${p.labels[val-p.min]}`:val}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── CHAT ────────────────────────────────────────────────────────────────────
 
 async function callClaude(messages,system=""){
@@ -1164,6 +1380,7 @@ function NutriPanel({T,onLogout}){
   const [loading,setLoading]=useState(true);
   const [viewDiario,setViewDiario]=useState(null);
   const [viewFotos,setViewFotos]=useState(null);
+  const [viewQuiz,setViewQuiz]=useState(null);
 
   useEffect(()=>{
     async function fetchAll(){
@@ -1178,6 +1395,7 @@ function NutriPanel({T,onLogout}){
     fetchAll();
   },[]);
 
+  if(viewQuiz)return <PatientQuizView patient={viewQuiz} T={T} onBack={()=>setViewQuiz(null)}/>;
   if(viewFotos)return <PatientFotosView patient={viewFotos} T={T} onBack={()=>setViewFotos(null)}/>;
   if(viewDiario)return <PatientDiarioView patient={viewDiario} T={T} onBack={()=>setViewDiario(null)}/>;
 
@@ -1249,6 +1467,11 @@ function NutriPanel({T,onLogout}){
                 </button>
                 <button onClick={()=>setViewFotos(p)} style={{flex:1,padding:"9px",background:"transparent",border:`1px solid ${T.info}`,borderRadius:8,color:T.info,cursor:"pointer",fontSize:12,fontFamily:"monospace",fontWeight:700}}>
                   📸 Fotos
+                </button>
+              </div>
+              <div style={{display:"flex",gap:8,marginBottom:8}}>
+                <button onClick={()=>setViewQuiz(p)} style={{flex:1,padding:"9px",background:"transparent",border:`1px solid ${TEAL}`,borderRadius:8,color:TEAL,cursor:"pointer",fontSize:12,fontFamily:"monospace",fontWeight:700}}>
+                  📋 Questionários
                 </button>
               </div>
               <button onClick={()=>gerarPDF(p)} style={{width:"100%",padding:"10px",background:TEAL,border:"none",borderRadius:8,color:"#fff",cursor:"pointer",fontSize:13,fontFamily:"monospace",fontWeight:700}}>
@@ -1468,6 +1691,7 @@ const TABS=[
   {id:"evolucao",label:"Evolução",icon:"📈"},
   {id:"avaliacao",label:"Aval.",icon:"📊"},
   {id:"sups",label:"Supl.",icon:"💊"},
+  {id:"quiz",label:"Quiz",icon:"📋"},
   {id:"chat",label:"Chat IA",icon:"💬"}
 ];
 
@@ -1529,6 +1753,7 @@ function App(){
         {tab==="evolucao"&&<EvolucaoTab patient={patient} T={T}/>}
         {tab==="avaliacao"&&<AvaliacaoTab patient={patient} T={T}/>}
         {tab==="sups"&&<SupsTab patient={patient} T={T}/>}
+        {tab==="quiz"&&<QuestionarioTab patient={patient} T={T}/>}
         {tab==="chat"&&<ChatTab patient={patient} T={T}/>}
       </div>
       <div style={{position:"fixed",bottom:0,left:0,right:0,zIndex:50,background:T.bgMid,borderTop:`1px solid ${T.border}`,padding:"8px 0 14px"}}>
