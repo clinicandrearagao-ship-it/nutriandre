@@ -1236,8 +1236,26 @@ async function callClaude(messages,system=""){
   return d.content?.find(b=>b.type==="text")?.text||"";
 }
 
+const NUTRI_AVATAR="data:image/jpeg;base64,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";
+
+function ChatAvatar({role,patient,T}){
+  const initials=patient.name.split(" ").map(w=>w[0]).slice(0,2).join("");
+  if(role==="assistant"){
+    return(
+      <div style={{flexShrink:0,width:36,height:36,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`,boxShadow:`0 2px 8px ${TEAL}44`}}>
+        <img src={NUTRI_AVATAR} alt="Dr. André" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
+      </div>
+    );
+  }
+  return(
+    <div style={{flexShrink:0,width:32,height:32,borderRadius:"50%",background:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#0D1B2A"}}>
+      {initials}
+    </div>
+  );
+}
+
 function ChatTab({patient,T}){
-  const [msgs,setMsgs]=useState([{role:"assistant",content:`Oi, ${patient.name.split(" ")[0]}! Sou a IA do Dr. Andre Aragao. Como posso te ajudar?`}]);
+  const [msgs,setMsgs]=useState([{role:"assistant",content:`Oi, ${patient.name.split(" ")[0]}! Sou a IA do Dr. André Aragão. Pode me perguntar sobre seu plano, dúvidas de alimentação ou como está se sentindo. 😊`}]);
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
@@ -1252,14 +1270,37 @@ function ChatTab({patient,T}){
   }
   return(
     <div style={{display:"flex",flexDirection:"column",height:"calc(100vh - 130px)"}}>
-      <div style={{flex:1,overflowY:"auto",padding:"0 14px 10px"}}>
-        {msgs.map((m,i)=><div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",marginBottom:10}}><div style={{maxWidth:"80%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none"}}>{m.content}</div></div>)}
-        {loading&&<div style={{display:"flex",marginBottom:10}}><div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:"16px 16px 16px 4px",padding:"12px 16px",display:"flex",gap:4}}>{[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:T.muted,animation:`bounce 1.2s ${i*0.2}s infinite`}}/>)}</div></div>}
+      {/* Header com avatar */}
+      <div style={{padding:"10px 14px 8px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:10,background:T.bgMid}}>
+        <div style={{width:40,height:40,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`,flexShrink:0}}>
+          <img src={NUTRI_AVATAR} alt="Dr. André" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
+        </div>
+        <div>
+          <p style={{margin:0,fontSize:13,fontWeight:700,color:T.text}}>Dr. André Aragão</p>
+          <p style={{margin:0,fontSize:10,color:TEAL,fontFamily:"monospace"}}>● IA disponível agora</p>
+        </div>
+      </div>
+      <div style={{flex:1,overflowY:"auto",padding:"12px 14px 10px"}}>
+        {msgs.map((m,i)=>(
+          <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",alignItems:"flex-end",gap:8,marginBottom:12}}>
+            {m.role==="assistant"&&<ChatAvatar role="assistant" patient={patient} T={T}/>}
+            <div style={{maxWidth:"75%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none",boxShadow:"0 1px 4px rgba(0,0,0,0.06)"}}>{m.content}</div>
+            {m.role==="user"&&<ChatAvatar role="user" patient={patient} T={T}/>}
+          </div>
+        ))}
+        {loading&&(
+          <div style={{display:"flex",alignItems:"flex-end",gap:8,marginBottom:12}}>
+            <ChatAvatar role="assistant" patient={patient} T={T}/>
+            <div style={{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:"16px 16px 16px 4px",padding:"12px 16px",display:"flex",gap:5}}>
+              {[0,1,2].map(i=><div key={i} style={{width:7,height:7,borderRadius:"50%",background:TEAL,animation:`bounce 1.2s ${i*0.2}s infinite`}}/>)}
+            </div>
+          </div>
+        )}
         <div ref={bottomRef}/>
       </div>
-      <div style={{padding:"10px 14px",borderTop:`1px solid ${T.border}`,background:T.bg,display:"flex",gap:8}}>
-        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Pergunte sobre seu plano..." style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:24,padding:"10px 16px",color:T.text,fontSize:14,outline:"none"}} onFocus={e=>e.target.style.borderColor=T.gold} onBlur={e=>e.target.style.borderColor=T.border}/>
-        <button onClick={send} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:"50%",background:input.trim()?T.gold:T.bgLight,border:"none",color:input.trim()?"#0D1B2A":T.muted,fontSize:18,cursor:input.trim()?"pointer":"default",flexShrink:0}}>→</button>
+      <div style={{padding:"10px 14px",borderTop:`1px solid ${T.border}`,background:T.bg,display:"flex",gap:8,alignItems:"center"}}>
+        <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Mensagem para Dr. André..." style={{flex:1,background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:24,padding:"10px 16px",color:T.text,fontSize:14,outline:"none"}} onFocus={e=>e.target.style.borderColor=TEAL} onBlur={e=>e.target.style.borderColor=T.border}/>
+        <button onClick={send} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:"50%",background:input.trim()?TEAL:T.bgLight,border:"none",color:input.trim()?"#fff":T.muted,fontSize:18,cursor:input.trim()?"pointer":"default",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>→</button>
       </div>
     </div>
   );
