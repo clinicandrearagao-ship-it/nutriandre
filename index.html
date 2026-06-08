@@ -998,11 +998,22 @@ function App(){
 }
 
 (function(){
+  var attempts=0;
   function startApp(){
+    attempts++;
+    var rootEl=document.getElementById("root");
     if(typeof React==="undefined"||typeof ReactDOM==="undefined"){
-      setTimeout(startApp,50);return;
+      if(attempts>100){
+        rootEl.innerHTML='<div style="padding:40px;text-align:center;font-family:Georgia,serif;color:#8A5E1E"><p style="font-size:18px;margin-bottom:8px">André Aragão</p><p style="font-size:12px;color:#C0392B">Erro: React não carregou. Verifique sua conexão.</p></div>';
+        return;
+      }
+      setTimeout(startApp,100);return;
     }
-    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+    try{
+      ReactDOM.createRoot(rootEl).render(React.createElement(App));
+    }catch(e){
+      rootEl.innerHTML='<div style="padding:40px;font-family:monospace;font-size:12px;color:#C0392B;word-break:break-all">Erro JS: '+e.message+'<br><br>'+e.stack+'</div>';
+    }
   }
   if(document.readyState==="loading"){
     document.addEventListener("DOMContentLoaded",startApp);
