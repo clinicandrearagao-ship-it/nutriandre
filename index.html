@@ -206,6 +206,7 @@ rebeca:{
     ]}
   ]
 }
+}
 };
 
 const RUBENS_AVAL=[
@@ -817,13 +818,16 @@ function ChatTab({patient,T}){
       )
     ),
     h("div",{style:{flex:1,overflowY:"auto",padding:"12px 14px 10px"}},
-      ...msgs.map((m,i)=>h("div",{key:i,style:{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",alignItems:"flex-end",gap:8,marginBottom:12}},
-        m.role==="assistant"&&h("div",{style:{flexShrink:0,width:32,height:32,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`}},
-          h("img",{src:NUTRI_AVATAR,style:{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}})
-        ),
-        h("div",{style:{maxWidth:"75%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none"}},m.content),
-        m.role==="user"&&h("div",{style:{flexShrink:0,width:30,height:30,borderRadius:"50%",background:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#0D1B2A"}},initials)
-      )),
+      ...msgs.map((m,i)=>{
+        const children=[
+          m.role==="assistant"?h("div",{style:{flexShrink:0,width:32,height:32,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`}},
+            h("img",{src:NUTRI_AVATAR,style:{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}})
+          ):null,
+          h("div",{style:{maxWidth:"75%",background:m.role==="user"?T.gold:T.bgMid,color:m.role==="user"?"#0D1B2A":T.text,borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",padding:"10px 14px",fontSize:14,lineHeight:1.6,border:m.role==="assistant"?`1px solid ${T.border}`:"none"}},m.content),
+          m.role==="user"?h("div",{style:{flexShrink:0,width:30,height:30,borderRadius:"50%",background:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#0D1B2A"}},initials):null
+        ].filter(Boolean);
+        return h("div",{key:i,style:{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",alignItems:"flex-end",gap:8,marginBottom:12}},...children);
+      }),
       loading&&h("div",{style:{display:"flex",alignItems:"flex-end",gap:8,marginBottom:12}},
         h("div",{style:{flexShrink:0,width:32,height:32,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`}},
           h("img",{src:NUTRI_AVATAR,style:{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}})
