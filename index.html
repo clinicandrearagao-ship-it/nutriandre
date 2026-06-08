@@ -9,9 +9,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="NutriAndré">
 <meta name="theme-color" content="#8A5E1E">
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+// Force Babel to be ready before app loads
+window.addEventListener('error', function(e) {
+  if (e.message && e.message.includes('Unexpected token')) {
+    document.getElementById('root').innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif"><p>Carregando...</p></div>';
+  }
+});
+</script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: Georgia, serif; }
@@ -21,7 +29,7 @@ body { font-family: Georgia, serif; }
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel">
+<script type="text/babel" data-presets="react">
 const { useState, useRef, useEffect } = React;
 const THEMES = {
   dark: { bg:"#0D1B2A",bgMid:"#1A2E42",bgLight:"#243B55",gold:"#C9A84C",text:"#F0EAD6",muted:"#7A8FA8",success:"#4CAF7D",danger:"#E07B7B",info:"#4A9ECC",border:"#243B55" },
