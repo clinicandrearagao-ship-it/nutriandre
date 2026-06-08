@@ -53,7 +53,7 @@ const db={
   }
 };
 const todayStr=()=>new Date().toISOString().slice(0,10);
-function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},rubens:{senha:"rubens123",role:"patient"}};}
+function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},rubens:{senha:"rubens123",role:"patient"},rebeca:{senha:"rebeca123",role:"patient"}};}
 
 const PATIENTS={
 preslavia:{
@@ -164,6 +164,66 @@ rubens:{
       {label:"Opção 8",items:["Cheeseburguer caseiro — 1 hamburguer (130g) + 1 pao + 1 fatia mucurela","Tomate e pepino a vontade"]},
       {label:"Opção 9",items:["Sopa de legumes com frango — 300ml, 80g frango + legumes + macarrao cabelo de anjo (40g)"]},
       {label:"Opção 10",items:["Pao integral 2 fatias (50g) + 2 ovos mexidos + Queijo Coalho 1 fatia (20g)","Suco de maracuja sem acucar 1 copo (200ml)"]}
+    ]}
+  ]
+,
+rebeca:{
+  id:"rebeca",name:"Rebeca Mont'alverne Barreto De Paula Pessoa",initials:"RM",
+  goal:"Perda de gordura + ganho de massa muscular",kcal:1500,waterGoal:2000,
+  note:"Mounjaro (tirzepatida) em uso. Comer devagar, proteína primeiro. Não forçar volume — parar ao sentir saciedade.",
+  supplements:[
+    {name:"Whey Protein Baunilha",dose:"20g (½ scoop) em 150–200ml leite ou água",times:["10:00","16:00"]}
+  ],
+  plan:[
+    {meal:"Café da manhã",time:"07:00",options:[
+      {label:"Opção 1",items:["Tapioca 50g de goma","Ovos mexidos 2 unidades (100g)","Queijo coalho grelhado 1 fatia (20g)"]},
+      {label:"Opção 2",items:["Iogurte grego natural 1 pote (170g)","Granola sem açúcar 2 col. sopa (20g)","Banana fatiada ou mamão ½ unidade (60g)"]},
+      {label:"Opção 3",items:["Pão francês 1 unidade (50g)","Ovo mexido 1 unidade (50g)","Requeijão light 1 col. sopa (20g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 4",items:["Crepioca: 1 ovo + 3 col. goma de tapioca (130g)","Frango desfiado 3 col. sopa (60g)","Queijo muçarela light 1 fatia (20g)"]},
+      {label:"Opção 5",items:["Cuscuz de milho 1 porção pequena (90g)","Frango desfiado 3 col. sopa (60g)","Requeijão light 1 col. sopa (20g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 6",items:["Omelete: 2 ovos + queijo muçarela (20g)","Pão de forma integral 1 fatia (25g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 7",items:["Polpa de açaí congelada 100g","Leite integral 150ml","Banana ½ unidade (40g)","Whey Protein baunilha 20g"]},
+      {label:"Opção 8",items:["Pão de queijo assado 3 unidades (60g)","Iogurte grego natural 1 pote pequeno (100g)","Mamão papaya 1 fatia pequena (100g)"]}
+    ]},
+    {meal:"Lanche da manhã",time:"10:00",options:[
+      {label:"Opção 1",items:["Iogurte grego natural 1 pote (170g)","Morangos frescos 5 unidades (60g)","Mel 1 col. chá (5g)"]},
+      {label:"Opção 2",items:["Barra de proteína >15g proteína 1 unidade (45–60g)"]},
+      {label:"Opção 3",items:["Pão de forma integral 2 fatias (50g)","Atum ao natural ½ lata (60g)","Cream cheese light 1 col. sopa (20g)"]},
+      {label:"Opção 4",items:["Bebida láctea YoPRO 1 copo (250ml)","Morangos ou uvas ½ xícara (60g)"]},
+      {label:"Opção 5",items:["Tapioca pequena 40g de goma","Queijo coalho grelhado 1 fatia (20g)","Goiabada 1 col. sopa (20g)"]},
+      {label:"Opção 6",items:["Rap10 integral 1 unidade (40g)","Frango desfiado 3 col. sopa (60g)","Requeijão light 1 col. chá (10g)","Tomate picado à vontade"]},
+      {label:"Opção 7",items:["Leite integral 200ml","Banana ½ unidade (50g)","Whey Protein baunilha 20g"]},
+      {label:"Opção 8",items:["Salada de frutas (mamão, banana, maçã, morango) 1 tigela (200g)","Whey Protein baunilha 20g diluído em 150ml água"]}
+    ]},
+    {meal:"Almoço",time:"13:00",note:"Iniciar sempre pela proteína antes do carboidrato",options:[
+      {label:"Opção 1",items:["Peito de frango grelhado 150g","Arroz branco 2 col. (90g)","Feijão carioca 1 concha rasa (80g)","Salada de alface e tomate à vontade"]},
+      {label:"Opção 2",items:["Filé de tilápia grelhado com ervas 180g","Purê de batata inglesa 2 col. servir (120g)","Brócolis no vapor 80g"]},
+      {label:"Opção 3",items:["Escondidinho de carne moída (macaxeira ou batata-doce) 1 porção (300g)","Tomate fatiado com orégano à vontade"]},
+      {label:"Opção 4",items:["Peito de frango ao forno 150g","Batata inglesa em rodelas 1 batata pequena (80g)","Alface com tomate à vontade"]},
+      {label:"Opção 5",items:["Macarrão cozido 1 escumadeira (120g)","Carne moída ao molho bolonhesa 4 col. sopa (100g)","Molho de tomate 2 col. sopa (40g)","Queijo parmesão ralado 1 col. sopa (10g)"]},
+      {label:"Opção 6",items:["Frango grelhado ao molho de laranja 150g","Arroz branco 2 col. (90g)","Alface com tomate à vontade"]},
+      {label:"Opção 7",items:["Frango grelhado desfiado 120g","Grão-de-bico cozido 4 col. sopa (80g)","Brócolis no vapor 80g","Arroz branco 1 col. (45g)"]},
+      {label:"Opção 8",items:["Macarrão cozido 1 escumadeira (120g)","Camarão sem casca cozido 10 unidades (60g)","Molho branco light 3 col. sopa (50g)","Tomate cereja à vontade"]}
+    ]},
+    {meal:"Lanche da tarde",time:"16:00",note:"Não pular mesmo com pouca fome — uma opção pequena já é suficiente",options:[
+      {label:"Opção 1",items:["Pão de queijo assado 3 unidades (60g)","Suco de laranja natural 1 copo (200ml)"]},
+      {label:"Opção 2",items:["Iogurte grego natural 1 pote (170g)","Morangos frescos ou uvas ½ xícara (60g)","Granola sem açúcar 1 col. sopa (10g)","Mel 1 col. chá (5g)"]},
+      {label:"Opção 3",items:["Vitamina de açaí (polpa + leite) 1 copo (200ml)","Whey Protein baunilha 20g diluído"]},
+      {label:"Opção 4",items:["Tapioca pequena 40g de goma","Goiabada 1 col. sopa (20g)","Queijo coalho grelhado 1 fatia (20g)"]},
+      {label:"Opção 5",items:["Iogurte de morango 1 unidade (180ml)","Granola sem açúcar 1 col. sopa (10g)"]},
+      {label:"Opção 6",items:["Pão de forma integral 2 fatias (50g)","Peito de peru defumado 2 fatias (30g)","Cream cheese light 1 col. sopa (20g)","Tomate fatiado à vontade"]},
+      {label:"Opção 7",items:["Chips de mandioca e batata-doce Roots To Go 1 porção (25g)","Bebida láctea YoPRO 1 copo (250ml)"]},
+      {label:"Opção 8",items:["Maçã em fatias 1 unidade (130g) aquecida com canela","Iogurte grego natural 1 pote pequeno (100g)"]}
+    ]},
+    {meal:"Jantar",time:"20:00",note:"Opções leves — priorizar fácil digestão",options:[
+      {label:"Opção 1",items:["Tapioca 60g de goma","Ovos mexidos 2 unidades","Queijo coalho grelhado 1 fatia (20g)","Chá de camomila ou erva-cidreira 1 xícara"]},
+      {label:"Opção 2",items:["Sopa de frango com legumes (frango + cenoura + chuchu + abóbora) 1 tigela (280g)","Torrada integral 2 unidades"]},
+      {label:"Opção 3",items:["Omelete: 2 ovos + queijo muçarela (20g)","Arroz branco 1 col. (45g)","Salada de alface com tomate à vontade"]},
+      {label:"Opção 4",items:["Macarrão cozido 1 escumadeira (120g)","Carne moída refogada 4 col. sopa (100g)","Molho de tomate 2 col. sopa (40g)"]},
+      {label:"Opção 5",items:["Rap10 integral 2 unidades (80g)","Frango desfiado 4 col. sopa (80g)","Requeijão light 1 col. sopa (20g)","Alface e tomate à vontade"]},
+      {label:"Opção 6",items:["Hambúrguer caseiro de patinho 1 unidade (120g)","Pão integral de hambúrguer 1 unidade (50g)","Queijo muçarela light 1 fatia (20g)","Alface, tomate, cebola roxa à vontade"]},
+      {label:"Opção 7",items:["Cuscuz de milho 1 porção (120g)","Ovos mexidos 2 unidades","Requeijão light 1 col. sopa (20g)"]},
+      {label:"Opção 8",items:["Arroz branco ou integral 2 col. (80g)","Atum ao natural ½ lata (60g) ou camarão cozido 60g","Cenoura ralada e abacate à vontade","Shoyu light e gergelim a gosto"]}
     ]}
   ]
 }
@@ -1693,6 +1753,16 @@ function gerarPDF(patient){
 
   <!-- EVOLUÇÃO PESO -->
   ${evolHTML}
+
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(r => console.log("SW registrado:", r.scope))
+      .catch(e => console.log("SW erro:", e));
+  });
+}
+</script>
 </body>
 </html>`;
 
@@ -1770,7 +1840,7 @@ function App(){
           {error&&<p style={{color:T.danger,fontSize:12,margin:"0 0 12px",fontFamily:"monospace"}}>{error}</p>}
           <button onClick={login} style={{width:"100%",padding:"14px",borderRadius:12,background:theme==="dark"?`linear-gradient(135deg,${T.gold},#A67C2E)`:"#1A1A1A",border:"none",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer"}}>Entrar</button>
         </div>
-        <p style={{textAlign:"center",marginTop:16,color:T.muted,fontSize:11,fontFamily:"monospace"}}>preslavia / preslavia123 · rubens / rubens123</p>
+        <p style={{textAlign:"center",marginTop:16,color:T.muted,fontSize:11,fontFamily:"monospace"}}>preslavia / preslavia123 · rubens / rubens123 · rebeca / rebeca123</p>
       </div>
     </div>
   );
@@ -1809,6 +1879,16 @@ function App(){
   );
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(r => console.log("SW registrado:", r.scope))
+      .catch(e => console.log("SW erro:", e));
+  });
+}
 </script>
 </body>
 </html>
