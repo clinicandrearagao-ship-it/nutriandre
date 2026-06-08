@@ -241,6 +241,14 @@ const THEMES={
   light:{bg:"#FAF8F5",bgMid:"#FFFFFF",bgLight:"#F3EEE7",gold:"#8A5E1E",text:"#1A1A1A",muted:"#7A7A7A",success:"#2E7D52",danger:"#C0392B",info:"#1E6B99",border:"#E2D9CC"}
 };
 
+// Limpa creds antigas que não têm rebeca
+(function(){
+  try{
+    var saved=JSON.parse(localStorage.getItem("creds"));
+    if(saved&&!saved.rebeca){localStorage.removeItem("creds");}
+  }catch(e){}
+})();
+
 const store={
   get:(k)=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}},
   set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
