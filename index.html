@@ -956,7 +956,7 @@ async function callClaude(messages,system){
   const body={model:"claude-sonnet-4-20250514",max_tokens:1000,messages};
   if(system)body.system=system;
   try{
-    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
     const d=await r.json();
     return d.content?.find(b=>b.type==="text")?.text||"Desculpe, não consegui responder agora.";
   }catch(e){return "Erro de conexão. Tente novamente.";}
@@ -1072,8 +1072,10 @@ function ScannerTab({patient,T}){
     if(!img||loading)return;
     setLoading(true);setErro(null);setResultado(null);
     try{
-      const base64=img.split(',')[1];
-      const mediaType=img.split(';')[0].split(':')[1];
+      // Comprimir imagem
+      const compressed=await new Promise(res=>{const c=document.createElement('canvas'),i=new Image();i.onload=()=>{const M=1024;let w=i.width,h=i.height;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M;}else{w=Math.round(w*M/h);h=M;}}c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);res(c.toDataURL('image/jpeg',0.8));};i.src=img;});
+      const base64=compressed.split(',')[1];
+      const mediaType='image/jpeg';
       const system=`Você é um nutricionista especialista em análise de rótulos. Analise a tabela nutricional ou lista de ingredientes da imagem. Responda APENAS em JSON válido sem markdown, no formato:
 {"produto":"nome do produto","porcao":"tamanho da porção","macros":{"calorias":0,"proteinas":0,"carboidratos":0,"gorduras":0,"sodio":0,"fibras":0},"ingredientes_destaque":["lista dos principais ingredientes ou aditivos relevantes"],"veredito":"APROVADO|MODERADO|EVITAR","cor":"#4CAF7D|#C9A84C|#E07B7B","justificativa":"explicação curta em 2-3 frases","dicas":["dica 1","dica 2"]}`;
       const body={
@@ -1085,14 +1087,15 @@ function ScannerTab({patient,T}){
           {type:"text",text:`Analise este rótulo para o paciente ${patient.name.split(' ')[0]}, objetivo: ${patient.goal}, ${patient.kcal} kcal/dia. Seja direto e prático.`}
         ]}]
       };
-      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+      const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
       const d=await r.json();
+      if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
       const text=d.content?.find(b=>b.type==="text")?.text||"";
       const clean=text.replace(/```json|```/g,"").trim();
       const parsed=JSON.parse(clean);
       setResultado(parsed);
     }catch(e){
-      setErro("Não consegui analisar a imagem. Tente uma foto mais nítida do rótulo.");
+      setErro(`Erro: ${e.message||"Tente novamente com uma foto mais nítida."}`);
     }
     setLoading(false);
   }
