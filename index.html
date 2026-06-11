@@ -953,7 +953,7 @@ function SupsTab({patient,T}){
 
 // ─── ChatTab ──────────────────────────────────────────────────────────────────
 async function callClaude(messages,system){
-  const body={model:"claude-sonnet-4-20250514",max_tokens:1000,messages};
+  const body={model:"claude-sonnet-4-5",max_tokens:1000,messages};
   if(system)body.system=system;
   try{
     const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
@@ -1079,7 +1079,7 @@ function ScannerTab({patient,T}){
       const system=`Você é um nutricionista especialista em análise de rótulos. Analise a tabela nutricional ou lista de ingredientes da imagem. Responda APENAS em JSON válido sem markdown, no formato:
 {"produto":"nome do produto","porcao":"tamanho da porção","macros":{"calorias":0,"proteinas":0,"carboidratos":0,"gorduras":0,"sodio":0,"fibras":0},"ingredientes_destaque":["lista dos principais ingredientes ou aditivos relevantes"],"veredito":"APROVADO|MODERADO|EVITAR","cor":"#4CAF7D|#C9A84C|#E07B7B","justificativa":"explicação curta em 2-3 frases","dicas":["dica 1","dica 2"]}`;
       const body={
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-5",
         max_tokens:1000,
         system,
         messages:[{role:"user",content:[
