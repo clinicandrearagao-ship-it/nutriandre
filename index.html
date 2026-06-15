@@ -220,6 +220,22 @@ const PRESLAVIA_AVAL=[
   {data:"05/05/2026",peso:68,imc:27.2,gordura:22.4,massaGordura:15.2,massaMagra:52.8,massaResidual:14.2,somatorio:102,densidade:1.047,rcq:0.80,cmb:24.5,cintura:83,quadril:104,abdomen:83,pescoco:31,torax:93,ombro:96,bracoRelaxado:29.8,bracoContraido:29.9,antebraco:20,coxaProximal:null,coxaMedial:53,coxaDistal:null,panturrilha:34,dobraTricipital:17,dobraAbdominal:16,dobraSubescapular:14,dobraAxilar:10,dobraCoxa:20,dobraToraxica:7,dobraSuprailíaca:18}
 ];
 
+const REBECA_AVAL=[
+  {data:"10/08/2023",peso:52.9,imc:21.2,gc:21.5,massaGordura:11.4,mlg:41.5,cintura:70,quadril:93,abdomen:73,pescoco:29.5,braco:23,coxaMed:48,panturrilha:31.5,rcq:0.75,tri:18,sub:12,abd:20,cxa:25,sup:15,axl:11,tor:8,soma:109},
+  {data:"01/03/2024",peso:56.6,imc:22.7,gc:16.5,massaGordura:9.3,mlg:47.2,cintura:64,quadril:105,abdomen:66,pescoco:31,braco:26,coxaMed:52,panturrilha:34,rcq:0.61,tri:12,sub:9,abd:12,cxa:19,sup:11,axl:8,tor:5,soma:76},
+  {data:"01/07/2024",peso:59.0,imc:23.6,gc:17.9,massaGordura:10.6,mlg:48.4,cintura:65,quadril:110,abdomen:67,pescoco:29,braco:29.5,coxaMed:56,panturrilha:34,rcq:0.59,tri:14,sub:10,abd:16,cxa:17,sup:12,axl:11,tor:5,soma:85},
+  {data:"17/09/2024",peso:61.0,imc:24.4,gc:18.2,massaGordura:11.1,mlg:49.9,cintura:63,quadril:112,abdomen:65,pescoco:32,braco:29.5,coxaMed:63,panturrilha:35,rcq:0.56,tri:12,sub:11,abd:14,cxa:23,sup:14,axl:8,tor:5,soma:87},
+  {data:"08/12/2024",peso:62.0,imc:24.8,gc:20.3,massaGordura:12.6,mlg:49.4,cintura:64.2,quadril:114,abdomen:64,pescoco:32,braco:32.8,coxaMed:60,panturrilha:36,rcq:0.56,tri:16,sub:12,abd:19,cxa:20,sup:20,axl:8,tor:6,soma:101},
+  {data:"06/02/2025",peso:64.0,imc:25.6,gc:18.7,massaGordura:12.0,mlg:52.0,cintura:63,quadril:115,abdomen:64,pescoco:31,braco:28.5,coxaMed:60,panturrilha:36,rcq:0.55,tri:15,sub:7,abd:13,cxa:25,sup:15,axl:10,tor:5,soma:90},
+  {data:"23/05/2025",peso:62.3,imc:25.0,gc:16.9,massaGordura:10.5,mlg:51.8,cintura:64,quadril:114,abdomen:67,pescoco:29,braco:32.5,coxaMed:60,panturrilha:36,rcq:0.56,tri:14,sub:10,abd:13,cxa:18,sup:12,axl:7,tor:4,soma:78},
+  {data:"15/08/2025",peso:61.7,imc:24.7,gc:17.2,massaGordura:10.6,mlg:51.1,cintura:67,quadril:115,abdomen:68,pescoco:30,braco:30,coxaMed:59,panturrilha:36,rcq:0.58,tri:14,sub:12,abd:12,cxa:17,sup:14,axl:7,tor:4,soma:80},
+  {data:"03/01/2026",peso:64.4,imc:25.8,gc:19.8,massaGordura:12.8,mlg:51.6,cintura:68,quadril:113,abdomen:68,pescoco:31,braco:27,coxaMed:55,panturrilha:35,rcq:0.60,tri:10,sub:10,abd:22,cxa:25,sup:15,axl:8,tor:7,soma:97},
+  {data:"08/02/2026",peso:63.7,imc:25.5,gc:18.8,massaGordura:12.0,mlg:51.8,cintura:66,quadril:116,abdomen:68,pescoco:30,braco:28,coxaMed:55,panturrilha:34,rcq:0.57,tri:9,sub:9,abd:18,cxa:24,sup:14,axl:9,tor:7,soma:90},
+  {data:"03/04/2026",peso:63.3,imc:25.4,gc:22.0,massaGordura:13.9,mlg:49.3,cintura:72,quadril:105,abdomen:75,pescoco:30,braco:30,coxaMed:53,panturrilha:34,rcq:0.69,tri:15,sub:10,abd:18,cxa:25,sup:22,axl:15,tor:7,soma:112},
+  {data:"06/05/2026",peso:61.8,imc:24.8,gc:20.2,massaGordura:12.5,mlg:49.3,cintura:64,quadril:107,abdomen:65,pescoco:31,braco:30,coxaMed:54,panturrilha:35,rcq:0.60,tri:11,sub:10,abd:19,cxa:28,sup:16,axl:10,tor:5,soma:99},
+  {data:"27/05/2026",peso:61.1,imc:24.5,gc:16.8,massaGordura:10.3,mlg:50.8,cintura:64,quadril:110,abdomen:65,pescoco:30,braco:29,coxaMed:58,panturrilha:34,rcq:0.58,tri:11,sub:8,abd:11,cxa:21,sup:12,axl:10,tor:4,soma:77}
+];
+
 const PERGUNTAS=[
   {id:"alimentacao",label:"Como você avalia sua alimentação essa semana?",type:"scale",min:1,max:5,labels:["Péssima","Ruim","Regular","Boa","Ótima"]},
   {id:"plano",label:"Conseguiu seguir o plano alimentar?",type:"choice",options:["Sim, totalmente","Parcialmente","Não consegui"]},
@@ -311,18 +327,73 @@ function Card({children,style={},T}){
 }
 
 // ─── MealCard ────────────────────────────────────────────────────────────────
-function MealCard({meal,T,isCurrent,isPast}){
+function MealCard({meal,T,isCurrent,isPast,patientId}){
   const [open,setOpen]=useState(isCurrent);
   const [sel,setSel]=useState(0);
+  const [foto,setFoto]=useState(null);
+  const [gerandoFoto,setGerandoFoto]=useState(false);
   const multi=meal.options.length>1;
   const cur=meal.options[sel];
+
+  function fotoKey(optIdx){
+    return "foto_"+(patientId||"x")+"_"+meal.meal.replace(/\W+/g,"_")+"_op"+(optIdx===undefined?sel:optIdx);
+  }
+
+  useEffect(function(){
+    if(!patientId)return;
+    setFoto(store.get(fotoKey(sel))||null);
+  },[sel,patientId]);
+
+  async function gerarFoto(e){
+    e.stopPropagation();
+    if(gerandoFoto)return;
+    setGerandoFoto(true);
+    const items=cur.items.slice(0,6).join(", ");
+    const prompt="Professional overhead food photography, Brazilian healthy meal: "+items
+      +". Clean white ceramic plate, natural lighting, restaurant presentation, "
+      +"appetizing and colorful, high detail. No text, no labels, no watermarks.";
+    try{
+      const r=await fetch("https://nutriandre-proxy.vercel.app/api/image",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({prompt,size:"1024x1024",quality:"standard"})
+      });
+      const d=await r.json();
+      if(d.url){
+        const compressed=await new Promise(function(res,rej){
+          const img=new Image();
+          img.onload=function(){
+            const c=document.createElement("canvas");
+            const W=600,H=380;c.width=W;c.height=H;
+            const ctx=c.getContext("2d");
+            const ar=img.width/img.height,tar=W/H;
+            let sx=0,sy=0,sw=img.width,sh=img.height;
+            if(ar>tar){sw=img.height*tar;sx=(img.width-sw)/2;}
+            else{sh=img.width/tar;sy=(img.height-sh)/2;}
+            ctx.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+            res(c.toDataURL("image/jpeg",0.72));
+          };
+          img.onerror=rej;
+          if(!d.url.startsWith("data:"))img.crossOrigin="anonymous";
+          img.src=d.url;
+        });
+        store.set(fotoKey(sel),compressed);
+        setFoto(compressed);
+      }
+    }catch(err){}
+    setGerandoFoto(false);
+  }
+
+  function removerFoto(e){
+    e.stopPropagation();
+    store.set(fotoKey(sel),null);
+    setFoto(null);
+  }
 
   const borderColor=isCurrent?T.gold:isPast?`${T.success}60`:`${T.border}`;
   const bgColor=isCurrent?`${T.gold}0A`:isPast?`${T.success}06`:T.bgMid;
   const accentBar=isCurrent?T.gold:isPast?T.success:T.border;
 
   return h("div",{style:{background:bgColor,border:`1px solid ${borderColor}`,borderRadius:16,marginBottom:10,overflow:"hidden",transition:"all .2s",position:"relative"}},
-    // Barra lateral colorida
     h("div",{style:{position:"absolute",left:0,top:0,bottom:0,width:3,background:accentBar,borderRadius:"3px 0 0 3px"}}),
     h("div",{style:{padding:"14px 16px 12px 18px",cursor:"pointer"},onClick:()=>multi&&setOpen(!open)},
       h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
@@ -331,23 +402,70 @@ function MealCard({meal,T,isCurrent,isPast}){
             h("span",{style:{fontSize:10,color:isCurrent?T.gold:T.muted,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase",fontWeight:isCurrent?700:400}},meal.time),
             isCurrent&&h("span",{style:{fontSize:9,background:T.gold,color:"#0D1B2A",padding:"2px 7px",borderRadius:20,fontFamily:"monospace",fontWeight:700,letterSpacing:1}},"AGORA")
           ),
-          h("h3",{style:{margin:0,color:isPast?T.muted:T.text,fontSize:15,fontWeight:700,textDecoration:isPast?"line-through":"none",textDecorationColor:`${T.muted}60`}},meal.meal),
+          h("h3",{style:{margin:0,color:isPast?T.muted:T.text,fontSize:15,fontWeight:700,textDecoration:isPast?"line-through":"none",textDecorationColor:T.border}},meal.meal),
           meal.note&&h("p",{style:{margin:"3px 0 0",fontSize:11,color:T.muted,fontStyle:"italic",lineHeight:1.4}},meal.note)
         ),
         multi&&h("div",{style:{color:T.muted,fontSize:11,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4}},
-          h("svg",{width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,style:{transform:open?"rotate(180deg)":"none",transition:"0.2s",color:isCurrent?T.gold:T.muted}},
+          h("svg",{width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2,style:{transform:open?"rotate(180deg)":"none",transition:"transform .2s"}},
             h("polyline",{points:"6 9 12 15 18 9"})
           ),
           !open&&h("span",{style:{fontSize:9,fontFamily:"monospace",color:T.muted}},`${meal.options.length} opções`)
         )
       )
     ),
-    (open||!multi)&&h("div",{style:{padding:"0 16px 14px 18px",borderTop:`1px solid ${T.border}`}},
-      multi&&h("div",{style:{display:"flex",flexWrap:"wrap",gap:5,margin:"12px 0 10px"}},
-        ...meal.options.map((o,i)=>h("button",{key:i,onClick:e=>{e.stopPropagation();setSel(i);},style:{padding:"4px 12px",borderRadius:20,fontSize:10,fontFamily:"monospace",cursor:"pointer",border:`1px solid ${sel===i?T.gold:T.border}`,background:sel===i?T.gold:"transparent",color:sel===i?"#0D1B2A":T.muted,fontWeight:sel===i?700:400,transition:"all .15s"}},o.label))
+    (open||!multi)&&h("div",{style:{borderTop:`1px solid ${T.border}`}},
+
+      // ── Foto da refeição ──
+      foto&&h("div",{style:{position:"relative",margin:"0",overflow:"hidden"}},
+        h("img",{src:foto,style:{width:"100%",height:180,objectFit:"cover",display:"block"}}),
+        h("div",{style:{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 50%,"+bgColor+"CC 100%)"}}),
+        h("button",{onClick:removerFoto,style:{position:"absolute",top:8,right:8,
+          background:"rgba(0,0,0,0.5)",border:"none",borderRadius:16,
+          width:28,height:28,color:"#fff",cursor:"pointer",fontSize:14,
+          display:"flex",alignItems:"center",justifyContent:"center"}},"✕")
       ),
-      h("ul",{style:{margin:multi?"0":"12px 0 0",paddingLeft:16}},
-        ...cur.items.map((item,i)=>h("li",{key:i,style:{color:T.muted,fontSize:13,marginBottom:4,lineHeight:1.5}},item))
+
+      // ── Corpo expandido ──
+      h("div",{style:{padding:"12px 16px 14px 18px"}},
+        multi&&h("div",{style:{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}},
+          ...meal.options.map(function(o,i){
+            const s=i===sel;
+            return h("button",{key:i,onClick:function(e){e.stopPropagation();setSel(i);},
+              style:{padding:"4px 12px",borderRadius:20,fontSize:12,cursor:"pointer",
+                border:`1px solid ${s?T.gold:T.border}`,
+                background:s?T.gold+"15":"transparent",color:s?T.gold:T.muted,
+                fontFamily:"Georgia,serif",fontWeight:s?700:400,transition:"all .15s"}},
+              o.label
+            );
+          })
+        ),
+        h("ul",{style:{margin:multi?"0":"0",paddingLeft:16,marginBottom:patientId?10:0}},
+          ...cur.items.map(function(item,i){
+            return h("li",{key:i,style:{color:T.muted,fontSize:13,marginBottom:4,lineHeight:1.5}},item);
+          })
+        ),
+
+        // ── Botão gerar foto ──
+        patientId&&!foto&&h("button",{
+          onClick:gerarFoto,
+          disabled:gerandoFoto,
+          style:{
+            marginTop:8,padding:"8px 14px",borderRadius:10,cursor:gerandoFoto?"not-allowed":"pointer",
+            background:"transparent",border:`1px dashed ${gerandoFoto?T.muted:TEAL}`,
+            color:gerandoFoto?T.muted:TEAL,fontSize:12,fontFamily:"Georgia,serif",
+            display:"flex",alignItems:"center",gap:8,transition:"all .2s",
+            opacity:gerandoFoto?0.6:1
+          }
+        },
+          gerandoFoto
+            ?h("div",{style:{width:12,height:12,border:"2px solid "+TEAL,borderTopColor:"transparent",
+                borderRadius:"50%",animation:"spin .8s linear infinite"}})
+            :h("svg",{width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:2},
+                h("path",{d:"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"}),
+                h("circle",{cx:12,cy:13,r:4})
+              ),
+          gerandoFoto?"Gerando foto com IA...":"Gerar foto desta opção"
+        )
       )
     )
   );
@@ -411,7 +529,7 @@ function PlanTab({patient,T,currentIdx}){
     // Lista completa
     h("div",{style:{padding:"20px 16px 0"}},
       h("p",{style:{margin:"0 0 12px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:3,textTransform:"uppercase"}},"Todas as refeições"),
-      ...patient.plan.map((meal,i)=>h(MealCard,{key:i,meal,T,isCurrent:i===currentIdx,isPast:i<currentIdx}))
+      ...patient.plan.map((meal,i)=>h(MealCard,{key:i,meal,T,isCurrent:i===currentIdx,isPast:i<currentIdx,patientId:patient.id}))
     )
   );
 }
@@ -855,11 +973,17 @@ const AVAL_METRICAS=[
   {id:"bracoContraido",label:"Braço Cont.",unit:"cm",positivo:true},
   {id:"panturrilha",label:"Panturrilha",unit:"cm",positivo:true},
   {id:"somatorio",label:"Σ Dobras",unit:"mm",positivo:false},
+  {id:"gc",label:"% Gordura",unit:"%",positivo:false},
+  {id:"mlg",label:"M. Magra",unit:"kg",positivo:true},
+  {id:"braco",label:"Braço Cont.",unit:"cm",positivo:true},
+  {id:"coxaMed",label:"Coxa Med.",unit:"cm",positivo:true},
+  {id:"soma",label:"Σ Dobras",unit:"mm",positivo:false},
 ];
 
 function AvaliacaoTab({patient,T}){
-  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:null;
+  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:null;
   const [metric,setMetric]=useState("peso");
+  if(patient.id==="rebeca")return h(InBodyTab,{patient,T});
   if(!dados)return h("div",{style:{padding:"40px 14px",textAlign:"center"}},
     h("p",{style:{fontSize:36,marginBottom:10}},"📊"),
     h("p",{style:{color:T.muted,fontFamily:"monospace",fontSize:13}},"Avaliação física em breve.")
@@ -875,7 +999,7 @@ function AvaliacaoTab({patient,T}){
       h("p",{style:{margin:"3px 0 0",fontSize:11,color:"rgba(255,255,255,0.85)",fontFamily:"monospace"}},`${dados.length} avaliação(ões) · Última: ${last.data}`)
     ),
     h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}},
-      ...[{l:"Peso",v:`${last.peso} kg`},{l:"% Gordura",v:`${last.gordura}%`},{l:"M. Magra",v:`${last.massaMagra} kg`}].map((s,i)=>
+      ...[{l:"Peso",v:`${last.peso} kg`},{l:"% Gordura",v:`${last.gordura||last.gc}%`},{l:"M. Magra",v:`${last.massaMagra||last.mlg} kg`}].map((s,i)=>
         h("div",{key:i,style:{background:T.bgMid,border:`2px solid ${TEAL}`,borderRadius:10,padding:"10px",textAlign:"center"}},
           h("p",{style:{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}},s.l),
           h("p",{style:{margin:"4px 0 0",color:TEAL,fontSize:15,fontWeight:700,fontFamily:"monospace"}},s.v)
@@ -924,6 +1048,249 @@ function AvaliacaoTab({patient,T}){
                 })
               )
             )
+          )
+        )
+      )
+    )
+  );
+}
+
+// ─── InBodyTab para Rebeca ────────────────────────────────────────────────────
+function InBodyTab({patient,T}){
+  const dados=REBECA_AVAL;
+  const [tabIdx,setTabIdx]=useState(dados.length-1);
+  const [showAll,setShowAll]=useState(false);
+  const d=dados[tabIdx];
+  const prev=tabIdx>0?dados[tabIdx-1]:null;
+
+  function delta(key,inv){
+    if(!prev)return null;
+    const diff=+(d[key]-prev[key]).toFixed(1);
+    if(diff===0)return null;
+    const good=inv?(diff<0):(diff>0);
+    return {diff,good};
+  }
+  function DeltaBadge({k,inv}){
+    const r=delta(k,inv);
+    if(!r)return null;
+    return h("span",{style:{
+      fontSize:9,fontWeight:700,fontFamily:"monospace",
+      color:r.good?T.success:T.danger,
+      marginLeft:4
+    }},r.diff>0?`+${r.diff}`:r.diff);
+  }
+
+  // bar: value between min and max, fill color
+  function SegBar({val,min,max,good,T}){
+    const pct=Math.max(0,Math.min(100,((val-min)/(max-min))*100));
+    const color=good?"#4CAF7D":val>max?"#E07B7B":"#4A9ECC";
+    return h("div",{style:{position:"relative",height:6,background:T.bgLight,borderRadius:3,overflow:"visible",flexGrow:1,margin:"0 6px"}},
+      h("div",{style:{position:"absolute",left:`${pct}%`,top:-2,width:10,height:10,borderRadius:"50%",background:color,border:"2px solid #fff",transform:"translateX(-50%)",boxShadow:"0 1px 4px rgba(0,0,0,.3)"}}),
+      h("div",{style:{position:"absolute",left:0,top:0,height:6,width:`${pct}%`,background:color+"55",borderRadius:3}})
+    );
+  }
+
+  const last=dados[dados.length-1];
+  const first=dados[0];
+  const totalDays=Math.round((new Date(last.data.split("/").reverse().join("-"))-new Date(first.data.split("/").reverse().join("-")))/(1000*86400));
+  const pesoGain=+(last.peso-first.peso).toFixed(1);
+  const mlgGain=+(last.mlg-first.mlg).toFixed(1);
+  const gcDrop=+(first.gc-last.gc).toFixed(1);
+
+  // date selector — show last 6 or all
+  const visible=showAll?dados:[...dados].slice(-6);
+
+  return h("div",{style:{padding:"0 14px 90px"}},
+
+    // ── Header InBody ──
+    h("div",{style:{background:"linear-gradient(135deg,#1A2E42,#0D1B2A)",borderRadius:14,padding:"14px 16px",marginBottom:12,border:`1px solid ${TEAL}55`}},
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}},
+        h("div",null,
+          h("p",{style:{margin:0,fontSize:10,color:TEAL,fontFamily:"monospace",fontWeight:700,letterSpacing:2,textTransform:"uppercase"}},"Relatório InBody"),
+          h("p",{style:{margin:"4px 0 2px",fontSize:17,color:"#fff",fontWeight:700}},patient.name),
+          h("p",{style:{margin:0,fontSize:10,color:"rgba(255,255,255,.6)",fontFamily:"monospace"}},"158 cm · 27 anos · Fem.")
+        ),
+        h("div",{style:{textAlign:"right"}},
+          h("p",{style:{margin:0,fontSize:9,color:"rgba(255,255,255,.5)",fontFamily:"monospace"}},"AVALIAÇÃO"),
+          h("p",{style:{margin:"2px 0",fontSize:14,color:TEAL,fontWeight:700,fontFamily:"monospace"}},d.data),
+          h("p",{style:{margin:0,fontSize:9,color:"rgba(255,255,255,.5)",fontFamily:"monospace"}}),
+        )
+      ),
+      // timeline journey summary
+      h("div",{style:{display:"flex",gap:8,marginTop:12}},
+        ...[
+          {l:"Acomp.",v:`${totalDays}d`,icon:"📅"},
+          {l:"Peso",v:`${pesoGain>0?"+":""}${pesoGain} kg`,icon:"⚖️",c:pesoGain<3?"#4CAF7D":"#C9A84C"},
+          {l:"M.Magra",v:`+${mlgGain} kg`,icon:"💪",c:"#4CAF7D"},
+          {l:"% Gord.",v:`-${gcDrop}%`,icon:"🔥",c:gcDrop>0?"#4CAF7D":"#E07B7B"}
+        ].map((s,i)=>h("div",{key:i,style:{flex:1,background:"rgba(255,255,255,.06)",borderRadius:8,padding:"6px 4px",textAlign:"center"}},
+          h("p",{style:{margin:0,fontSize:14}},s.icon),
+          h("p",{style:{margin:"2px 0",fontSize:10,fontWeight:700,color:s.c||"#fff",fontFamily:"monospace"}},s.v),
+          h("p",{style:{margin:0,fontSize:8,color:"rgba(255,255,255,.5)",fontFamily:"monospace"}},s.l)
+        ))
+      )
+    ),
+
+    // ── Date selector ──
+    h("div",{style:{marginBottom:12}},
+      h("div",{style:{display:"flex",gap:4,overflowX:"auto",paddingBottom:2,alignItems:"center"}},
+        ...visible.map((av,i)=>{
+          const realIdx=dados.indexOf(av);
+          const isCur=realIdx===tabIdx;
+          return h("button",{key:realIdx,onClick:()=>setTabIdx(realIdx),style:{
+            flexShrink:0,padding:"4px 10px",borderRadius:16,fontSize:9,fontFamily:"monospace",
+            cursor:"pointer",border:`1px solid ${isCur?TEAL:T.border}`,
+            background:isCur?TEAL:"transparent",color:isCur?"#fff":T.muted,
+            fontWeight:isCur?700:400,whiteSpace:"nowrap"
+          }},av.data.slice(0,5));
+        }),
+        !showAll&&dados.length>6&&h("button",{onClick:()=>setShowAll(true),style:{
+          flexShrink:0,padding:"4px 10px",borderRadius:16,fontSize:9,fontFamily:"monospace",
+          cursor:"pointer",border:`1px solid ${T.border}`,background:"transparent",color:T.muted
+        }},"+ "+( dados.length-6))
+      )
+    ),
+
+    // ── Composição corporal — big 3 ──
+    h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}},
+      ...[
+        {l:"Peso Total",v:d.peso,unit:"kg",k:"peso",inv:true,big:true},
+        {l:"M. Magra",v:d.mlg,unit:"kg",k:"mlg",inv:false,big:true,good:true},
+        {l:"M. Gorda",v:d.massaGordura,unit:"kg",k:"massaGordura",inv:true,big:true}
+      ].map((s,i)=>{
+        const r=delta(s.k,s.inv);
+        return h("div",{key:i,style:{
+          background:T.bgMid,borderRadius:12,padding:"12px 10px",textAlign:"center",
+          border:`1px solid ${s.good?TEAL+"66":T.border}`
+        }},
+          h("p",{style:{margin:0,fontSize:8,color:T.muted,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:1}},s.l),
+          h("p",{style:{margin:"5px 0 2px",fontSize:22,color:TEAL,fontWeight:700,fontFamily:"monospace"}},s.v),
+          h("p",{style:{margin:0,fontSize:9,color:T.muted}},s.unit),
+          r&&h("p",{style:{margin:"4px 0 0",fontSize:10,fontWeight:700,fontFamily:"monospace",color:r.good?T.success:T.danger}},
+            r.diff>0?`+${r.diff}`:`${r.diff}`," vs ant."
+          )
+        );
+      })
+    ),
+
+    // ── IMC + Gordura + RCQ ──
+    h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}},
+      ...[
+        {l:"IMC",v:d.imc,ref:"18.5–24.9",ok:d.imc>=18.5&&d.imc<=24.9},
+        {l:"% Gordura",v:`${d.gc}%`,ref:"15–23%",ok:d.gc>=15&&d.gc<=23},
+        {l:"RCQ",v:d.rcq,ref:"<0.80",ok:d.rcq<0.80}
+      ].map((s,i)=>h("div",{key:i,style:{
+        background:T.bgMid,borderRadius:10,padding:"10px 8px",textAlign:"center",
+        border:`2px solid ${s.ok?T.success+"88":T.danger+"88"}`
+      }},
+        h("p",{style:{margin:0,fontSize:8,color:T.muted,fontFamily:"monospace",textTransform:"uppercase"}},(s.l)),
+        h("p",{style:{margin:"4px 0 0",fontSize:18,color:s.ok?T.success:T.danger,fontWeight:700,fontFamily:"monospace"}},s.v),
+        h("p",{style:{margin:"2px 0 0",fontSize:8,color:T.muted,fontFamily:"monospace"}},`Ref: ${s.ref}`)
+      ))
+    ),
+
+    // ── Circunferências com barra estilo InBody ──
+    h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
+      h("p",{style:{margin:"0 0 12px",fontSize:11,fontWeight:700,color:T.text,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:1}},"📏 Circunferências"),
+      ...[
+        {l:"Pescoço",k:"pescoco",val:d.pescoco,min:26,max:40,unit:"cm",inv:false},
+        {l:"Cintura",k:"cintura",val:d.cintura,min:60,max:80,unit:"cm",inv:true,good:d.cintura<80},
+        {l:"Abdômen",k:"abdomen",val:d.abdomen,min:60,max:85,unit:"cm",inv:true,good:d.abdomen<80},
+        {l:"Quadril",k:"quadril",val:d.quadril,min:85,max:120,unit:"cm",inv:false},
+        {l:"Braço",k:"braco",val:d.braco,min:20,max:40,unit:"cm",inv:false,good:true},
+        {l:"Coxa Med.",k:"coxaMed",val:d.coxaMed,min:40,max:72,unit:"cm",inv:false},
+        {l:"Panturrilha",k:"panturrilha",val:d.panturrilha,min:28,max:42,unit:"cm",inv:false,good:true}
+      ].map((s,i)=>{
+        const r=delta(s.k,s.inv||false);
+        const pct=Math.max(0,Math.min(100,((s.val-s.min)/(s.max-s.min))*100));
+        const barColor=s.good!=null?( s.good?T.success:T.danger):TEAL;
+        return h("div",{key:i,style:{marginBottom:10}},
+          h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}},
+            h("span",{style:{fontSize:11,color:T.muted,fontFamily:"monospace"}},s.l),
+            h("div",{style:{display:"flex",alignItems:"center",gap:4}},
+              h("span",{style:{fontSize:13,fontWeight:700,color:T.text,fontFamily:"monospace"}},`${s.val} ${s.unit}`),
+              r&&h("span",{style:{fontSize:9,fontWeight:700,fontFamily:"monospace",color:r.good?T.success:T.danger}},r.diff>0?`+${r.diff}`:`${r.diff}`)
+            )
+          ),
+          h("div",{style:{position:"relative",height:8,background:T.bgLight,borderRadius:4,overflow:"hidden"}},
+            h("div",{style:{position:"absolute",left:0,top:0,height:"100%",width:`${pct}%`,background:`linear-gradient(90deg,${barColor}88,${barColor})`,borderRadius:4,transition:"width .4s"}})
+          )
+        );
+      })
+    ),
+
+    // ── Dobras cutâneas ──
+    h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
+      h("p",{style:{margin:"0 0 12px",fontSize:11,fontWeight:700,color:T.text,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:1}},"📌 Dobras Cutâneas  (Pollock 7)"),
+      h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}},
+        ...[
+          {l:"Triceptal",v:d.tri,k:"tri"},
+          {l:"Subescapular",v:d.sub,k:"sub"},
+          {l:"Abdominal",v:d.abd,k:"abd"},
+          {l:"Coxa",v:d.cxa,k:"cxa"},
+          {l:"Suprailiaca",v:d.sup,k:"sup"},
+          {l:"Axilar Med.",v:d.axl,k:"axl"},
+          {l:"Torácica",v:d.tor,k:"tor"}
+        ].map((s,i)=>{
+          const r=delta(s.k,true);
+          return h("div",{key:i,style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:T.bgLight,borderRadius:8}},
+            h("span",{style:{fontSize:11,color:T.muted,fontFamily:"monospace"}},s.l),
+            h("div",{style:{display:"flex",alignItems:"center",gap:4}},
+              h("span",{style:{fontSize:13,fontWeight:700,color:T.text,fontFamily:"monospace"}},`${s.v} mm`),
+              r&&h("span",{style:{fontSize:9,fontWeight:700,fontFamily:"monospace",color:r.good?T.success:T.danger}},r.diff>0?`+${r.diff}`:`${r.diff}`)
+            )
+          );
+        })
+      ),
+      // Somatório
+      h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 12px",background:`${TEAL}18`,borderRadius:10,border:`1px solid ${TEAL}44`}},
+        h("span",{style:{fontSize:12,fontWeight:700,color:T.text,fontFamily:"monospace"}},"Σ Somatório"),
+        h("div",{style:{display:"flex",alignItems:"center",gap:4}},
+          h("span",{style:{fontSize:16,fontWeight:700,color:TEAL,fontFamily:"monospace"}},`${d.soma} mm`),
+          (()=>{const r=delta("soma",true);return r&&h("span",{style:{fontSize:9,fontWeight:700,fontFamily:"monospace",color:r.good?T.success:T.danger}},r.diff>0?`+${r.diff}`:`${r.diff}`);})()
+        )
+      )
+    ),
+
+    // ── Evolução — mini cards últimas avaliações ──
+    h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
+      h("p",{style:{margin:"0 0 12px",fontSize:11,fontWeight:700,color:T.text,fontFamily:"monospace",textTransform:"uppercase",letterSpacing:1}},"📈 Evolução geral"),
+      h("div",{style:{overflowX:"auto"}},
+        h("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:10,fontFamily:"monospace",minWidth:500}},
+          h("thead",null,
+            h("tr",{style:{background:`${TEAL}22`}},
+              ...[["Data","","left"],["Peso","kg","center"],["G%","%","center"],["MLG","kg","center"],["Cintura","cm","center"],["Σ","mm","center"]].map(([l,u,a],i)=>
+                h("td",{key:i,style:{padding:"6px 8px",color:TEAL,fontWeight:700,textAlign:a,borderBottom:`2px solid ${TEAL}`,whiteSpace:"nowrap"}},l)
+              )
+            )
+          ),
+          h("tbody",null,
+            ...[...dados].reverse().slice(0,8).map((row,i)=>{
+              const pi=dados.indexOf(row);const prev2=pi>0?dados[pi-1]:null;
+              const isPast=pi<dados.length-1;
+              const isCurrent=pi===dados.length-1;
+              return h("tr",{key:i,style:{
+                borderBottom:`1px solid ${T.border}`,
+                background:isCurrent?`${TEAL}14`:"transparent"
+              }},
+                h("td",{style:{padding:"5px 8px",color:isCurrent?TEAL:T.muted,fontWeight:isCurrent?700:400}},row.data.slice(0,5)),
+                ...[
+                  {v:row.peso,k:"peso",inv:true},
+                  {v:row.gc,k:"gc",inv:true,suf:"%"},
+                  {v:row.mlg,k:"mlg",inv:false},
+                  {v:row.cintura,k:"cintura",inv:true},
+                  {v:row.soma,k:"soma",inv:true}
+                ].map((f,j)=>{
+                  const pd=prev2?.[f.k];
+                  const dd=pd!=null?+(row[f.k]-pd).toFixed(1):null;
+                  const good=dd==null||dd===0?null:(f.inv?dd<0:dd>0);
+                  return h("td",{key:j,style:{padding:"5px 8px",textAlign:"center",color:isCurrent?T.text:T.muted,fontWeight:isCurrent?700:400}},
+                    `${f.v}${f.suf||""}`,
+                    dd!=null&&dd!==0&&h("span",{style:{fontSize:8,color:good?T.success:T.danger,marginLeft:2,display:"block"}},`${dd>0?"+":""}${dd}`)
+                  );
+                })
+              );
+            })
           )
         )
       )
@@ -1054,6 +1421,7 @@ const TABS=[
 
 // ─── ScannerTab ───────────────────────────────────────────────────────────────
 function ScannerTab({patient,T}){
+  const [modo,setModo]=useState("prato");
   const [img,setImg]=useState(null);
   const [loading,setLoading]=useState(false);
   const [resultado,setResultado]=useState(null);
@@ -1068,143 +1436,589 @@ function ScannerTab({patient,T}){
     reader.readAsDataURL(file);
   }
 
+  function getMealContext(){
+    const now=new Date();
+    const mins=now.getHours()*60+now.getMinutes();
+    let closest=patient.plan[0],minDiff=Infinity;
+    patient.plan.forEach(function(m){
+      const p=m.time.split(":").map(Number);
+      const diff=Math.abs(mins-(p[0]*60+p[1]));
+      if(diff<minDiff){minDiff=diff;closest=m;}
+    });
+    return closest;
+  }
+
   async function analisar(){
     if(!img||loading)return;
     setLoading(true);setErro(null);setResultado(null);
     try{
-      // Comprimir imagem
-      const compressed=await new Promise(res=>{const c=document.createElement('canvas'),i=new Image();i.onload=()=>{const M=1024;let w=i.width,h=i.height;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M;}else{w=Math.round(w*M/h);h=M;}}c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);res(c.toDataURL('image/jpeg',0.8));};i.src=img;});
-      const base64=compressed.split(',')[1];
-      const mediaType='image/jpeg';
-      const system=`Você é um nutricionista especialista em análise de rótulos. Analise a tabela nutricional ou lista de ingredientes da imagem. Responda APENAS em JSON válido sem markdown, no formato:
-{"produto":"nome do produto","porcao":"tamanho da porção","macros":{"calorias":0,"proteinas":0,"carboidratos":0,"gorduras":0,"sodio":0,"fibras":0},"ingredientes_destaque":["lista dos principais ingredientes ou aditivos relevantes"],"veredito":"APROVADO|MODERADO|EVITAR","cor":"#4CAF7D|#C9A84C|#E07B7B","justificativa":"explicação curta em 2-3 frases","dicas":["dica 1","dica 2"]}`;
-      const body={
-        model:"claude-sonnet-4-6",
-        max_tokens:1000,
-        system,
+      const compressed=await new Promise(function(res){
+        const c=document.createElement("canvas"),i=new Image();
+        i.onload=function(){
+          const M=1200;let w=i.width,h=i.height;
+          if(w>M||h>M){if(w>h){h=h*M/w;w=M;}else{w=w*M/h;h=M;}}
+          c.width=w;c.height=h;
+          c.getContext("2d").drawImage(i,0,0,w,h);
+          res(c.toDataURL("image/jpeg",0.85));
+        };
+        i.src=img;
+      });
+      const base64=compressed.split(",")[1];
+      let system,userText;
+
+      if(modo==="prato"){
+        const mc=getMealContext();
+        const planStr=mc.options.slice(0,3).map(function(o,i){
+          return "Op"+(i+1)+": "+o.items.join(", ");
+        }).join("\n");
+        const hora=new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+        system='Você é nutricionista especialista em análise de refeições por foto. Analise e retorne SOMENTE JSON puro:\n'
+          +'{"refeicao":"nome da refeição","alimentos":[{"nome":"alimento","porcao":"estimativa de quantidade","status":"ok|alto|baixo"}],'
+          +'"kcal_estimado":0,"proteina_estimada":0,"aderencia":85,'
+          +'"status":"OTIMA","feedback":"2-3 frases empáticas e específicas","pontos_positivos":["item"],"pontos_atencao":["item"],'
+          +'"dica":"1 dica prática para a próxima refeição"}';
+        userText="Analise esta refeição de "+patient.name.split(" ")[0]+".\n"
+          +"Horário: "+hora+" — Refeição esperada: "+mc.meal+" ("+mc.time+")\n"
+          +"Objetivo: "+patient.goal+" | "+patient.kcal+" kcal/dia\n\n"
+          +"Plano previsto:\n"+planStr+"\n\n"
+          +"Identifique os alimentos, estime as porções e avalie a aderência ao plano. "
+          +"Seja específico com o que você vê na foto.";
+      }else{
+        system='Você é nutricionista especialista em análise de rótulos. Retorne SOMENTE JSON puro:\n'
+          +'{"produto":"nome","porcao":"porção","macros":{"calorias":0,"proteinas":0,"carboidratos":0,"gorduras":0,"sodio":0,"fibras":0},'
+          +'"veredito":"APROVADO","cor":"#4CAF7D","justificativa":"motivo","ingredientes_destaque":[],"dicas":[]}';
+        userText="Analise este rótulo para "+patient.name.split(" ")[0]+", objetivo: "+patient.goal+", "+patient.kcal+" kcal/dia.";
+      }
+
+      const body={model:"claude-sonnet-4-6",max_tokens:1000,system,
         messages:[{role:"user",content:[
-          {type:"image",source:{type:"base64",media_type:mediaType,data:base64}},
-          {type:"text",text:`Analise este rótulo para o paciente ${patient.name.split(' ')[0]}, objetivo: ${patient.goal}, ${patient.kcal} kcal/dia. Seja direto e prático.`}
-        ]}]
-      };
-      const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+          {type:"image",source:{type:"base64",media_type:"image/jpeg",data:base64}},
+          {type:"text",text:userText}
+        ]}]};
+      const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",
+        {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
       const d=await r.json();
       if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
-      const text=d.content?.find(b=>b.type==="text")?.text||"";
+      const text=d.content?.find(function(b){return b.type==="text";})?.text||"";
       const clean=text.replace(/```json|```/g,"").trim();
-      const parsed=JSON.parse(clean);
-      setResultado(parsed);
+      const match=clean.match(/\{[\s\S]*\}/);
+      setResultado(JSON.parse(match?match[0]:clean));
     }catch(e){
-      setErro(`Erro: ${e.message||"Tente novamente com uma foto mais nítida."}`);
+      setErro("Erro: "+(e.message||"Tente novamente com uma foto mais nítida."));
     }
     setLoading(false);
   }
 
   function resetar(){setImg(null);setResultado(null);setErro(null);if(inputRef.current)inputRef.current.value="";}
 
+  // ── Status config para modo prato ──
+  const PRATO_STATUS={
+    "OTIMA":{label:"Refeição ótima",cor:"#4CAF7D",bg:"#4CAF7D18"},
+    "BOA":{label:"Refeição boa",cor:"#4A9ECC",bg:"#4A9ECC18"},
+    "ADEQUADA":{label:"Refeição adequada",cor:"#C9A84C",bg:"#C9A84C18"},
+    "MELHORAR":{label:"Pode melhorar",cor:"#E07B7B",bg:"#E07B7B18"}
+  };
   const VEREDITO_ICON={APROVADO:"✓",MODERADO:"~",EVITAR:"✕"};
 
-  return h("div",{style:{padding:"0 0 90px"}},
-    // Header
+  const mc=getMealContext();
+
+  return h("div",{style:{padding:"0 0 90px",animation:"fadeIn .3s ease"}},
+
+    // ── Header ──
     h("div",{style:{padding:"20px 16px 0"}},
-      h("p",{style:{margin:"0 0 4px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:3,textTransform:"uppercase"}},"Análise de rótulos"),
-      h("h2",{style:{margin:"0 0 6px",fontSize:20,color:T.text,fontWeight:700}},"Scanner Nutricional"),
-      h("p",{style:{margin:"0 0 20px",fontSize:13,color:T.muted,lineHeight:1.5}},"Fotografe a tabela nutricional ou lista de ingredientes de qualquer produto.")
+      h("p",{style:{margin:"0 0 4px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:3,textTransform:"uppercase"}},"Scanner IA"),
+      h("h2",{style:{margin:"0 0 16px",fontSize:20,color:T.text,fontWeight:700}},"Analisar refeição"),
+
+      // Toggle modo
+      !resultado&&h("div",{style:{display:"flex",background:T.bgLight,borderRadius:12,padding:3,marginBottom:20,gap:3}},
+        ["prato","rotulo"].map(function(m){
+          const sel=modo===m;
+          return h("button",{key:m,onClick:function(){setModo(m);resetar();},
+            style:{flex:1,padding:"9px 0",borderRadius:9,border:"none",cursor:"pointer",fontSize:13,
+              fontFamily:"Georgia,serif",fontWeight:sel?700:400,transition:"all .15s",
+              background:sel?T.bgMid:"transparent",color:sel?T.text:T.muted,
+              boxShadow:sel?"0 1px 3px rgba(0,0,0,0.12)":"none"}},
+            m==="prato"?"📸  Foto do prato":"🏷️  Rótulo nutricional"
+          );
+        })
+      ),
+
+      // Dica contextual — modo prato
+      !resultado&&modo==="prato"&&h("div",{style:{background:TEAL+"12",border:"1px solid "+TEAL+"30",
+        borderRadius:12,padding:"10px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:10}},
+        h("div",{style:{width:8,height:8,borderRadius:"50%",background:TEAL,flexShrink:0}}),
+        h("p",{style:{margin:0,fontSize:12,color:T.muted,lineHeight:1.5}},
+          "Agora deve ser: ",
+          h("strong",{style:{color:T.text}},mc.meal)," · ",mc.time,
+          " — fotografe o prato completo com boa iluminação"
+        )
+      )
     ),
 
-    // Área de upload / preview
-    !img&&h("div",{style:{margin:"0 16px"},onClick:()=>inputRef.current?.click()},
-      h("div",{style:{border:`2px dashed ${T.border}`,borderRadius:16,padding:"40px 20px",textAlign:"center",cursor:"pointer",transition:"border-color .2s"},
-        onMouseEnter:e=>e.currentTarget.style.borderColor=T.gold,
-        onMouseLeave:e=>e.currentTarget.style.borderColor=T.border},
-        h("div",{style:{width:56,height:56,borderRadius:"50%",background:`${T.gold}15`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}},
-          h("svg",{width:26,height:26,viewBox:"0 0 24 24",fill:"none",stroke:T.gold,strokeWidth:1.8,strokeLinecap:"round"},
+    // ── Upload / câmera ──
+    !img&&h("div",{style:{margin:"0 16px"}},
+      h("div",{onClick:function(){inputRef.current?.click();},
+        style:{border:"2px dashed "+T.border,borderRadius:16,padding:"44px 20px",
+          textAlign:"center",cursor:"pointer",transition:"all .2s"},
+        onMouseEnter:function(e){e.currentTarget.style.borderColor=TEAL;e.currentTarget.style.background=TEAL+"08";},
+        onMouseLeave:function(e){e.currentTarget.style.borderColor=T.border;e.currentTarget.style.background="transparent";}},
+        h("div",{style:{width:60,height:60,borderRadius:"50%",background:TEAL+"15",
+          display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}},
+          h("svg",{width:28,height:28,viewBox:"0 0 24 24",fill:"none",stroke:TEAL,strokeWidth:1.8,strokeLinecap:"round"},
             h("path",{d:"M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"}),
             h("circle",{cx:12,cy:13,r:4})
           )
         ),
-        h("p",{style:{margin:"0 0 6px",fontSize:15,color:T.text,fontWeight:600}},"Tirar foto ou escolher da galeria"),
-        h("p",{style:{margin:0,fontSize:12,color:T.muted}},"Aponte para a tabela nutricional do produto")
+        h("p",{style:{margin:"0 0 6px",fontSize:15,color:T.text,fontWeight:600}},
+          modo==="prato"?"Fotografar o prato":"Fotografar o rótulo"),
+        h("p",{style:{margin:0,fontSize:12,color:T.muted}},
+          modo==="prato"?"Foto do prato inteiro, com boa iluminação":"Aponte para a tabela nutricional")
       ),
-      h("input",{ref:inputRef,type:"file",accept:"image/*",capture:"environment",onChange:handleFile,style:{display:"none"}})
+      h("input",{ref:inputRef,type:"file",accept:"image/*",capture:"environment",
+        onChange:handleFile,style:{display:"none"}})
     ),
 
-    // Preview da imagem
+    // ── Preview + botão analisar ──
     img&&!resultado&&h("div",{style:{margin:"0 16px"}},
       h("div",{style:{position:"relative",borderRadius:16,overflow:"hidden",marginBottom:14}},
-        h("img",{src:img,style:{width:"100%",maxHeight:280,objectFit:"cover",display:"block"}}),
-        h("button",{onClick:resetar,style:{position:"absolute",top:10,right:10,background:"rgba(0,0,0,0.6)",border:"none",borderRadius:20,width:32,height:32,color:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}},"×")
+        h("img",{src:img,style:{width:"100%",maxHeight:300,objectFit:"cover",display:"block"}}),
+        h("button",{onClick:resetar,
+          style:{position:"absolute",top:10,right:10,background:"rgba(0,0,0,0.55)",
+            border:"none",borderRadius:20,width:32,height:32,color:"#fff",
+            cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}},"✕")
       ),
-      h("button",{onClick:analisar,disabled:loading,style:{width:"100%",padding:"14px",borderRadius:12,background:loading?T.bgLight:`linear-gradient(135deg,${T.gold},#A67C2E)`,border:"none",color:loading?T.muted:"#0D1B2A",fontSize:14,fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"Georgia,serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}},
-        loading&&h("div",{style:{width:16,height:16,border:"2px solid #0D1B2A",borderTopColor:"transparent",borderRadius:"50%",animation:"spin .8s linear infinite"}}),
-        loading?"Analisando o rótulo...":"Analisar produto"
+      h("button",{onClick:analisar,disabled:loading,
+        style:{width:"100%",padding:"14px",borderRadius:12,
+          background:loading?T.bgLight:"linear-gradient(135deg,"+TEAL+",#1A9090)",
+          border:"none",color:loading?T.muted:"#fff",fontSize:14,fontWeight:700,
+          cursor:loading?"not-allowed":"pointer",fontFamily:"Georgia,serif",
+          display:"flex",alignItems:"center",justifyContent:"center",gap:10}},
+        loading&&h("div",{style:{width:16,height:16,border:"2px solid rgba(255,255,255,0.3)",
+          borderTopColor:"#fff",borderRadius:"50%",animation:"spin .8s linear infinite"}}),
+        loading
+          ?(modo==="prato"?"Analisando o prato...":"Lendo o rótulo...")
+          :(modo==="prato"?"Analisar refeição com IA":"Analisar produto")
       )
     ),
 
-    // Resultado
-    resultado&&h("div",{style:{padding:"0 16px"}},
-      // Imagem pequena + veredito
+    // ── Resultado — PRATO ──
+    resultado&&modo==="prato"&&h("div",{style:{padding:"0 16px",animation:"fadeIn .3s ease"}},
+      // Status badge + thumbnail
+      h("div",{style:{display:"flex",gap:12,alignItems:"center",marginBottom:16}},
+        h("img",{src:img,style:{width:72,height:72,objectFit:"cover",borderRadius:12,flexShrink:0}}),
+        h("div",{style:{flex:1}},
+          h("p",{style:{margin:"0 0 6px",fontSize:10,color:T.muted,fontFamily:"monospace",
+            letterSpacing:1,textTransform:"uppercase"}},resultado.refeicao||mc.meal),
+          (function(){
+            const cfg=PRATO_STATUS[resultado.status]||PRATO_STATUS["ADEQUADA"];
+            return h("div",{style:{display:"inline-flex",alignItems:"center",gap:6,
+              background:cfg.bg,border:"1px solid "+cfg.cor+"50",
+              borderRadius:20,padding:"5px 12px"}},
+              h("div",{style:{width:7,height:7,borderRadius:"50%",background:cfg.cor}}),
+              h("span",{style:{fontSize:11,fontWeight:700,color:cfg.cor,
+                fontFamily:"monospace",letterSpacing:1}},cfg.label)
+            );
+          })()
+        )
+      ),
+
+      // Macros estimados
+      h("div",{style:{background:T.bgMid,border:"1px solid "+T.border,borderRadius:14,
+        padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",
+          letterSpacing:2,textTransform:"uppercase"}},"Estimativa nutricional"),
+        h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}},
+          [
+            {label:"Kcal",val:resultado.kcal_estimado||"—",cor:T.gold},
+            {label:"Proteína",val:(resultado.proteina_estimada||"—")+"g",cor:"#4A9ECC"},
+            {label:"Aderência",val:(resultado.aderencia||"—")+"%",
+              cor:resultado.aderencia>=80?"#4CAF7D":resultado.aderencia>=60?"#C9A84C":"#E07B7B"}
+          ].map(function(m,i){
+            return h("div",{key:i,style:{textAlign:"center",padding:"10px 4px",
+              background:T.bgLight,borderRadius:10}},
+              h("p",{style:{margin:"0 0 2px",fontSize:15,fontWeight:700,color:m.cor,fontFamily:"monospace"}},m.val),
+              h("p",{style:{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",
+                letterSpacing:0.5,textTransform:"uppercase"}},m.label)
+            );
+          })
+        )
+      ),
+
+      // Alimentos identificados
+      resultado.alimentos&&resultado.alimentos.length>0&&h("div",{
+        style:{background:T.bgMid,border:"1px solid "+T.border,borderRadius:14,
+          padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",
+          letterSpacing:2,textTransform:"uppercase"}},"Alimentos identificados"),
+        h("div",{style:{display:"flex",flexDirection:"column",gap:8}},
+          resultado.alimentos.map(function(a,i){
+            const cor=a.status==="ok"?T.success:a.status==="alto"?"#E07B7B":"#C9A84C";
+            return h("div",{key:i,style:{display:"flex",alignItems:"center",
+              justifyContent:"space-between",gap:8}},
+              h("div",{style:{display:"flex",alignItems:"center",gap:8}},
+                h("div",{style:{width:6,height:6,borderRadius:"50%",background:cor,flexShrink:0}}),
+                h("span",{style:{fontSize:13,color:T.text}},a.nome)
+              ),
+              h("span",{style:{fontSize:12,color:T.muted,fontFamily:"monospace"}},a.porcao)
+            );
+          })
+        )
+      ),
+
+      // Feedback principal
+      h("div",{style:{background:T.bgMid,border:"1px solid "+T.border,
+        borderLeft:"3px solid "+TEAL,borderRadius:"0 14px 14px 0",
+        padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 6px",fontSize:10,color:TEAL,fontFamily:"monospace",
+          letterSpacing:1,fontWeight:700,textTransform:"uppercase"}},"Avaliação"),
+        h("p",{style:{margin:0,fontSize:14,color:T.text,lineHeight:1.75}},resultado.feedback)
+      ),
+
+      // Pontos positivos + atenção
+      (resultado.pontos_positivos?.length>0||resultado.pontos_atencao?.length>0)&&
+      h("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}},
+        resultado.pontos_positivos?.length>0&&h("div",{
+          style:{background:T.bgMid,border:"1px solid #4CAF7D30",borderRadius:14,padding:"12px 14px"}},
+          h("p",{style:{margin:"0 0 8px",fontSize:10,color:"#4CAF7D",fontFamily:"monospace",
+            letterSpacing:1,fontWeight:700,textTransform:"uppercase"}},"✓ Acertos"),
+          resultado.pontos_positivos.map(function(p,i){
+            return h("p",{key:i,style:{margin:i>0?"6px 0 0":"0",fontSize:12,color:T.muted,lineHeight:1.4}},p);
+          })
+        ),
+        resultado.pontos_atencao?.length>0&&h("div",{
+          style:{background:T.bgMid,border:"1px solid "+T.gold+"30",borderRadius:14,padding:"12px 14px"}},
+          h("p",{style:{margin:"0 0 8px",fontSize:10,color:T.gold,fontFamily:"monospace",
+            letterSpacing:1,fontWeight:700,textTransform:"uppercase"}},"→ Foco"),
+          resultado.pontos_atencao.map(function(p,i){
+            return h("p",{key:i,style:{margin:i>0?"6px 0 0":"0",fontSize:12,color:T.muted,lineHeight:1.4}},p);
+          })
+        )
+      ),
+
+      // Dica
+      resultado.dica&&h("div",{style:{background:"linear-gradient(135deg,"+T.gold+"12,"+T.gold+"04)",
+        border:"1px solid "+T.gold+"25",borderRadius:14,padding:"14px 16px",marginBottom:16}},
+        h("p",{style:{margin:"0 0 4px",fontSize:10,color:T.gold,fontFamily:"monospace",
+          letterSpacing:1,fontWeight:700,textTransform:"uppercase"}},"💡 Dica"),
+        h("p",{style:{margin:0,fontSize:13,color:T.text,lineHeight:1.6}},resultado.dica)
+      ),
+
+      h("button",{onClick:resetar,style:{width:"100%",padding:"12px",borderRadius:12,
+        background:"transparent",border:"1px solid "+T.border,
+        color:T.muted,fontSize:13,cursor:"pointer",fontFamily:"Georgia,serif"}},
+        "Analisar outro prato")
+    ),
+
+    // ── Resultado — RÓTULO (comportamento original) ──
+    resultado&&modo==="rotulo"&&h("div",{style:{padding:"0 16px"}},
       h("div",{style:{display:"flex",gap:12,alignItems:"flex-start",marginBottom:16}},
         h("img",{src:img,style:{width:70,height:70,objectFit:"cover",borderRadius:10,flexShrink:0}}),
         h("div",{style:{flex:1}},
           h("p",{style:{margin:"0 0 4px",fontSize:12,color:T.muted,fontFamily:"monospace",letterSpacing:1}},"PRODUTO ANALISADO"),
-          h("h3",{style:{margin:"0 0 8px",fontSize:16,color:T.text,fontWeight:700}}),resultado.produto,
-          h("div",{style:{display:"inline-flex",alignItems:"center",gap:6,background:`${resultado.cor}20`,border:`1px solid ${resultado.cor}`,borderRadius:20,padding:"4px 12px"}},
-            h("span",{style:{fontSize:14,fontWeight:700,color:resultado.cor}}),VEREDITO_ICON[resultado.veredito],
-            h("span",{style:{fontSize:11,fontWeight:700,color:resultado.cor,fontFamily:"monospace",letterSpacing:1}}),resultado.veredito
+          h("h3",{style:{margin:"0 0 8px",fontSize:16,color:T.text,fontWeight:700}},resultado.produto),
+          h("div",{style:{display:"inline-flex",alignItems:"center",gap:6,
+            background:resultado.cor+"20",border:"1px solid "+resultado.cor,
+            borderRadius:20,padding:"4px 12px"}},
+            h("span",{style:{fontSize:13,fontWeight:700,color:resultado.cor}},VEREDITO_ICON[resultado.veredito]),
+            h("span",{style:{fontSize:11,fontWeight:700,color:resultado.cor,fontFamily:"monospace",letterSpacing:1}},resultado.veredito)
           )
         )
       ),
-
-      // Macros
-      h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
-        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}}),`Por porção: ${resultado.porcao}`,
+      h("div",{style:{background:T.bgMid,border:"1px solid "+T.border,borderRadius:14,padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}},
+          "Por porção: "+(resultado.porcao||"")),
         h("div",{style:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}},
-          ...[
-            {label:"Calorias",val:`${resultado.macros.calorias} kcal`,cor:T.gold},
-            {label:"Proteínas",val:`${resultado.macros.proteinas}g`,cor:"#4A9ECC"},
-            {label:"Carboidratos",val:`${resultado.macros.carboidratos}g`,cor:"#C9A84C"},
-            {label:"Gorduras",val:`${resultado.macros.gorduras}g`,cor:"#E07B7B"},
-            {label:"Sódio",val:`${resultado.macros.sodio}mg`,cor:resultado.macros.sodio>600?"#E07B7B":T.muted},
-            {label:"Fibras",val:`${resultado.macros.fibras}g`,cor:"#4CAF7D"}
-          ].map((m,i)=>h("div",{key:i,style:{textAlign:"center",padding:"8px 4px",background:T.bgLight,borderRadius:8}},
-            h("p",{style:{margin:"0 0 2px",fontSize:13,fontWeight:700,color:m.cor,fontFamily:"monospace"}}),m.val,
-            h("p",{style:{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",letterSpacing:0.5,textTransform:"uppercase"}}),m.label
-          ))
+          [
+            {label:"Calorias",val:(resultado.macros?.calorias||0)+" kcal",cor:T.gold},
+            {label:"Proteínas",val:(resultado.macros?.proteinas||0)+"g",cor:"#4A9ECC"},
+            {label:"Carboidratos",val:(resultado.macros?.carboidratos||0)+"g",cor:"#C9A84C"},
+            {label:"Gorduras",val:(resultado.macros?.gorduras||0)+"g",cor:"#E07B7B"},
+            {label:"Sódio",val:(resultado.macros?.sodio||0)+"mg",cor:(resultado.macros?.sodio||0)>600?"#E07B7B":T.muted},
+            {label:"Fibras",val:(resultado.macros?.fibras||0)+"g",cor:"#4CAF7D"}
+          ].map(function(m,i){
+            return h("div",{key:i,style:{textAlign:"center",padding:"8px 4px",background:T.bgLight,borderRadius:8}},
+              h("p",{style:{margin:"0 0 2px",fontSize:13,fontWeight:700,color:m.cor,fontFamily:"monospace"}},m.val),
+              h("p",{style:{margin:0,fontSize:9,color:T.muted,fontFamily:"monospace",letterSpacing:0.5,textTransform:"uppercase"}},m.label)
+            );
+          })
         )
       ),
-
-      // Justificativa
-      h("div",{style:{background:`${resultado.cor}10`,border:`1px solid ${resultado.cor}30`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
-        h("p",{style:{margin:"0 0 6px",fontSize:10,color:resultado.cor,fontFamily:"monospace",letterSpacing:2,fontWeight:700,textTransform:"uppercase"}},"Avaliação do nutricionista"),
-        h("p",{style:{margin:0,fontSize:13,color:T.text,lineHeight:1.6}}),resultado.justificativa
+      h("div",{style:{background:resultado.cor+"10",border:"1px solid "+resultado.cor+"30",
+        borderRadius:14,padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 6px",fontSize:10,color:resultado.cor,fontFamily:"monospace",
+          letterSpacing:2,fontWeight:700,textTransform:"uppercase"}},resultado.veredito),
+        h("p",{style:{margin:0,fontSize:13,color:T.text,lineHeight:1.6}},resultado.justificativa)
       ),
-
-      // Ingredientes destaque
-      resultado.ingredientes_destaque?.length>0&&h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
-        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}},"Ingredientes em destaque"),
+      resultado.ingredientes_destaque?.length>0&&h("div",{style:{background:T.bgMid,
+        border:"1px solid "+T.border,borderRadius:14,padding:"14px 16px",marginBottom:12}},
+        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",
+          letterSpacing:2,textTransform:"uppercase"}},"Ingredientes em destaque"),
         h("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
-          ...resultado.ingredientes_destaque.map((ing,i)=>h("span",{key:i,style:{fontSize:11,background:T.bgLight,color:T.muted,padding:"4px 10px",borderRadius:20,fontFamily:"monospace",border:`1px solid ${T.border}`}},ing))
+          resultado.ingredientes_destaque.map(function(ing,i){
+            return h("span",{key:i,style:{fontSize:11,background:T.bgLight,color:T.muted,
+              padding:"4px 10px",borderRadius:20,fontFamily:"monospace"}},ing);
+          })
         )
       ),
-
-      // Dicas
-      resultado.dicas?.length>0&&h("div",{style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:16}},
-        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",letterSpacing:2,textTransform:"uppercase"}},"Dicas"),
-        ...resultado.dicas.map((d,i)=>h("div",{key:i,style:{display:"flex",gap:8,marginBottom:i<resultado.dicas.length-1?8:0}},
-          h("span",{style:{color:T.gold,flexShrink:0,fontSize:14}},"→"),
-          h("p",{style:{margin:0,fontSize:13,color:T.muted,lineHeight:1.5}}),d
-        ))
+      resultado.dicas?.length>0&&h("div",{style:{background:T.bgMid,
+        border:"1px solid "+T.border,borderRadius:14,padding:"14px 16px",marginBottom:16}},
+        h("p",{style:{margin:"0 0 10px",fontSize:10,color:T.muted,fontFamily:"monospace",
+          letterSpacing:2,textTransform:"uppercase"}},"Dicas"),
+        resultado.dicas.map(function(d,i){
+          return h("div",{key:i,style:{display:"flex",gap:8,marginBottom:i<resultado.dicas.length-1?8:0}},
+            h("span",{style:{color:T.gold,flexShrink:0,fontSize:14}},"→"),
+            h("p",{style:{margin:0,fontSize:13,color:T.muted,lineHeight:1.5}},d)
+          );
+        })
       ),
-
-      // Botão nova análise
-      h("button",{onClick:resetar,style:{width:"100%",padding:"12px",borderRadius:12,background:"transparent",border:`1px solid ${T.border}`,color:T.muted,fontSize:13,cursor:"pointer",fontFamily:"Georgia,serif"}},"Analisar outro produto")
+      h("button",{onClick:resetar,style:{width:"100%",padding:"12px",borderRadius:12,
+        background:"transparent",border:"1px solid "+T.border,
+        color:T.muted,fontSize:13,cursor:"pointer",fontFamily:"Georgia,serif"}},
+        "Analisar outro produto")
     ),
 
-    // Erro
-    erro&&h("div",{style:{margin:"0 16px",background:`${T.danger}15`,border:`1px solid ${T.danger}30`,borderRadius:14,padding:"14px 16px"}},
-      h("p",{style:{margin:"0 0 10px",fontSize:13,color:T.danger}}),erro,
-      h("button",{onClick:resetar,style:{background:"transparent",border:`1px solid ${T.border}`,borderRadius:8,padding:"6px 14px",color:T.muted,cursor:"pointer",fontSize:12,fontFamily:"monospace"}},"Tentar novamente")
+    // ── Erro ──
+    erro&&h("div",{style:{margin:"0 16px",background:T.danger+"15",
+      border:"1px solid "+T.danger+"30",borderRadius:14,padding:"14px 16px"}},
+      h("p",{style:{margin:"0 0 10px",fontSize:13,color:T.danger}},erro),
+      h("button",{onClick:resetar,style:{background:"transparent",
+        border:"1px solid "+T.border,borderRadius:8,padding:"6px 14px",
+        color:T.muted,cursor:"pointer",fontSize:12,fontFamily:"Georgia,serif"}},
+        "Tentar novamente")
+    )
+  );
+}
+
+
+// ─── getWeekKey ───────────────────────────────────────────────────────────────
+function getWeekKey(){
+  var d=new Date();
+  d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  var day=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-day);
+  var y=d.getUTCFullYear();
+  var s=new Date(Date.UTC(y,0,1));
+  var wk=Math.ceil(((d-s)/86400000+1)/7);
+  return y+"-W"+(wk<10?"0":"")+wk;
+}
+// ─── QuestionarioTab ─────────────────────────────────────────────────────────
+function QuestionarioTab({patient,T}){
+  const semKey="quiz_"+patient.id+"_"+getWeekKey();
+  const saved=store.get(semKey)||{};
+  const [respostas,setRespostas]=useState(saved._submitted?saved:{});
+  const [etapa,setEtapa]=useState(saved._insights?"resultado":"quiz");
+  const [insights,setInsights]=useState(saved._insights||null);
+
+  function responder(id,valor){
+    setRespostas(function(p){const n=Object.assign({},p);n[id]=valor;return n;});
+  }
+  const respondidas=PERGUNTAS.filter(function(p){
+    return respostas[p.id]!==undefined&&respostas[p.id]!=="";
+  }).length;
+  const isCompleto=respondidas===PERGUNTAS.length;
+  const progresso=Math.round((respondidas/PERGUNTAS.length)*100);
+
+  async function enviar(){
+    if(!isCompleto)return;
+    setEtapa("loading");
+    const quizData=Object.assign({},respostas,{_submitted:true,semana:getWeekKey()});
+    store.set(semKey,quizData);
+    try{await db.save(patient.id,"quiz",todayStr(),quizData);}catch(e){}
+
+    // Coletar dados reais dos últimos 7 dias
+    let totalRef=0,totalAgua=0;
+    for(let i=0;i<7;i++){
+      const d=new Date();d.setDate(d.getDate()-i);
+      const ds=d.toISOString().slice(0,10);
+      const ck=store.get("hoje_"+patient.id+"_"+ds)||{};
+      const ag=store.get("agua_"+patient.id+"_"+ds)||0;
+      totalRef+=patient.plan.filter(function(m){return ck[m.meal];}).length;
+      totalAgua+=ag;
+    }
+    const mRef=(totalRef/7).toFixed(1);
+    const mAg=(totalAgua/7/1000).toFixed(1);
+    const pAd=Math.round((totalRef/7/patient.plan.length)*100);
+    const nome=patient.name.split(" ")[0];
+
+    const rtxt=PERGUNTAS.map(function(p){
+      return p.label+": "+(respostas[p.id]||"—");
+    }).join("\n");
+
+    const prompt="Você é o assistente do nutricionista André Aragão (CRN 11-16678, Brasília). "
+      +"Gere uma análise semanal personalizada, empática e prática para "+patient.name+".\n\n"
+      +"PERFIL: "+patient.goal+", "+patient.kcal+" kcal/dia.\n"
+      +(patient.note?"Obs clínica: "+patient.note+"\n":"")
+      +"\nDADOS REAIS DA SEMANA (últimos 7 dias):\n"
+      +"- Aderência ao plano alimentar: "+pAd+"% (média "+mRef+"/"+patient.plan.length+" refeições/dia)\n"
+      +"- Hidratação média: "+mAg+"L/dia (meta: "+(patient.waterGoal/1000).toFixed(1)+"L)\n\n"
+      +"CHECK-IN DA PACIENTE:\n"+rtxt+"\n\n"
+      +"Responda SOMENTE com JSON puro, sem markdown:\n"
+      +'{"titulo":"título motivador personalizado (max 8 palavras)","destaque":"O que foi positivo nesta semana — 2 frases, use o nome '+nome+'","atencao":"Principal ponto de melhora, abordagem gentil e construtiva — 2 frases","dica":"1 dica prática e específica para a próxima semana","mensagem":"Frase motivadora final personalizada"}';
+
+    try{
+      const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:600,
+          messages:[{role:"user",content:prompt}]})
+      });
+      const json=await r.json();
+      const txt=(json.content||[]).find(function(b){return b.type==="text";});
+      if(txt){
+        const clean=txt.text.replace(/```json|```/g,"").trim();
+        const match=clean.match(/\{[\s\S]*\}/);
+        if(match){
+          const parsed=JSON.parse(match[0]);
+          setInsights(parsed);
+          store.set(semKey,Object.assign({},quizData,{_insights:parsed}));
+        }
+      }
+    }catch(e){}
+    setEtapa("resultado");
+  }
+
+  // ── Loading ──
+  if(etapa==="loading"){
+    return h("div",{style:{padding:"80px 20px",textAlign:"center"}},
+      h("div",{style:{width:48,height:48,border:"3px solid "+TEAL,borderTopColor:"transparent",
+        borderRadius:"50%",animation:"spin .8s linear infinite",margin:"0 auto 20px"}}),
+      h("p",{style:{color:T.text,fontSize:16,fontWeight:600,marginBottom:6}},"Analisando sua semana..."),
+      h("p",{style:{color:T.muted,fontSize:13}},"A IA está preparando seus insights personalizados")
+    );
+  }
+
+  // ── Resultado ──
+  if(etapa==="resultado"){
+    const ins=insights||{
+      titulo:"Check-in registrado!",
+      destaque:"Suas respostas foram salvas com sucesso.",
+      atencao:"Continue acompanhando seu progresso.",
+      dica:"Mantenha a consistência no próximo semana.",
+      mensagem:"Cada passo pequeno é uma vitória!"
+    };
+    const secs=[
+      {k:"destaque",l:"O que foi bem",ic:"✨",c:T.success},
+      {k:"atencao",l:"Foco da semana",ic:"🎯",c:T.gold},
+      {k:"dica",l:"Dica prática",ic:"💡",c:TEAL}
+    ];
+    return h("div",{style:{padding:"0 0 90px",animation:"fadeIn .3s ease"}},
+      h("div",{style:{padding:"20px 16px 16px",borderBottom:"1px solid "+T.border}},
+        h("p",{style:{margin:"0 0 4px",fontSize:10,color:TEAL,fontFamily:"monospace",
+          letterSpacing:2,textTransform:"uppercase"}},
+          "Análise semanal · "+new Date().toLocaleDateString("pt-BR",{day:"numeric",month:"long"})),
+        h("h2",{style:{margin:0,fontSize:21,color:T.text,fontWeight:700,letterSpacing:-0.3}},ins.titulo)
+      ),
+      h("div",{style:{padding:"16px 16px 0"}},
+        secs.map(function(s,i){
+          return h("div",{key:i,style:{background:T.bgMid,borderLeft:"3px solid "+s.c,
+            border:"1px solid "+s.c+"30",borderLeft:"3px solid "+s.c,
+            borderRadius:"0 14px 14px 0",padding:"14px 16px",marginBottom:12}},
+            h("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:8}},
+              h("span",{style:{fontSize:16}},s.ic),
+              h("p",{style:{margin:0,fontSize:10,color:s.c,fontFamily:"monospace",
+                letterSpacing:1,fontWeight:700,textTransform:"uppercase"}},s.l)
+            ),
+            h("p",{style:{margin:0,fontSize:14,color:T.text,lineHeight:1.75}},ins[s.k])
+          );
+        }),
+        h("div",{style:{background:"linear-gradient(135deg,"+T.gold+"18,"+T.gold+"06)",
+          border:"1px solid "+T.gold+"30",borderRadius:14,padding:"18px 20px",
+          marginBottom:20,textAlign:"center"}},
+          h("p",{style:{margin:0,fontSize:15,color:T.gold,fontStyle:"italic",lineHeight:1.75}},
+            "“"+ins.mensagem+"”")
+        ),
+        h("button",{
+          onClick:function(){store.set(semKey,null);setRespostas({});setInsights(null);setEtapa("quiz");},
+          style:{width:"100%",padding:"12px",borderRadius:12,background:"transparent",
+            border:"1px solid "+T.border,color:T.muted,fontSize:13,cursor:"pointer",
+            fontFamily:"Georgia,serif"}
+        },"Refazer check-in desta semana")
+      )
+    );
+  }
+
+  // ── Formulário ──
+  return h("div",{style:{padding:"0 0 90px",animation:"fadeIn .3s ease"}},
+    h("div",{style:{padding:"20px 16px 16px"}},
+      h("p",{style:{margin:"0 0 4px",fontSize:10,color:T.muted,fontFamily:"monospace",
+        letterSpacing:3,textTransform:"uppercase"}},"Semana "+getWeekKey()),
+      h("h2",{style:{margin:"0 0 16px",fontSize:20,color:T.text,fontWeight:700}},"Como foi sua semana?"),
+      h("div",null,
+        h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:6}},
+          h("p",{style:{margin:0,fontSize:11,color:T.muted,fontFamily:"monospace"}},
+            respondidas+"/"+PERGUNTAS.length+" respondidas"),
+          h("p",{style:{margin:0,fontSize:11,color:progresso===100?T.success:TEAL,
+            fontFamily:"monospace",fontWeight:700}},progresso+"%")
+        ),
+        h("div",{style:{height:4,background:T.bgLight,borderRadius:2,overflow:"hidden"}},
+          h("div",{style:{width:progresso+"%",height:"100%",
+            background:progresso===100?T.success:TEAL,borderRadius:2,transition:"width .4s"}})
+        )
+      )
+    ),
+    PERGUNTAS.map(function(p){
+      const resp=respostas[p.id];
+      const done=resp!==undefined&&resp!=="";
+      return h("div",{key:p.id,style:{padding:"0 16px",marginBottom:12}},
+        h("div",{style:{background:T.bgMid,border:"1px solid "+(done?TEAL+"60":T.border),
+          borderRadius:14,padding:"14px 16px",transition:"border-color .2s"}},
+          h("p",{style:{margin:"0 0 12px",fontSize:14,color:T.text,fontWeight:600,lineHeight:1.4}},p.label),
+          p.type==="scale"&&h("div",null,
+            h("div",{style:{display:"flex",justifyContent:"space-between",gap:4,marginBottom:8}},
+              Array.from({length:p.max-p.min+1},function(_,j){return j+p.min;}).map(function(val){
+                const sel=respostas[p.id]===val;
+                return h("button",{key:val,onClick:function(){responder(p.id,val);},
+                  style:{flex:1,height:40,borderRadius:8,
+                    border:"2px solid "+(sel?TEAL:T.border),
+                    background:sel?TEAL:"transparent",
+                    color:sel?"#fff":T.muted,cursor:"pointer",
+                    fontSize:14,fontWeight:sel?700:400,fontFamily:"monospace",
+                    transition:"all .15s"}},val);
+              })
+            ),
+            h("div",{style:{display:"flex",justifyContent:"space-between"}},
+              h("p",{style:{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}},p.labels[0]),
+              h("p",{style:{margin:0,fontSize:10,color:T.muted,fontFamily:"monospace"}},
+                p.labels[p.labels.length-1])
+            )
+          ),
+          p.type==="choice"&&h("div",{style:{display:"flex",flexDirection:"column",gap:8}},
+            p.options.map(function(opt,j){
+              const sel=respostas[p.id]===opt;
+              return h("button",{key:j,onClick:function(){responder(p.id,opt);},
+                style:{padding:"10px 14px",borderRadius:10,textAlign:"left",cursor:"pointer",
+                  border:"1.5px solid "+(sel?TEAL:T.border),
+                  background:sel?TEAL+"20":"transparent",
+                  color:sel?TEAL:T.muted,fontSize:13,fontFamily:"Georgia,serif",
+                  transition:"all .15s",fontWeight:sel?700:400}},opt);
+            })
+          ),
+          p.type==="text"&&h("textarea",{
+            value:respostas[p.id]||"",
+            onChange:function(e){responder(p.id,e.target.value);},
+            placeholder:p.placeholder,rows:3,
+            style:{width:"100%",background:T.bgLight,border:"1px solid "+T.border,
+              borderRadius:10,padding:"10px 12px",color:T.text,fontSize:13,
+              fontFamily:"Georgia,serif",outline:"none",resize:"none",boxSizing:"border-box"},
+            onFocus:function(e){e.target.style.borderColor=TEAL;},
+            onBlur:function(e){e.target.style.borderColor=T.border;}
+          })
+        )
+      );
+    }),
+    h("div",{style:{padding:"4px 16px 0"}},
+      h("button",{
+        onClick:enviar,disabled:!isCompleto,
+        style:{width:"100%",padding:"14px",borderRadius:12,
+          background:isCompleto?"linear-gradient(135deg,"+TEAL+",#1A9090)":T.bgLight,
+          border:"none",color:isCompleto?"#fff":T.muted,
+          fontSize:14,fontWeight:700,cursor:isCompleto?"pointer":"not-allowed",
+          fontFamily:"Georgia,serif",transition:"all .2s",
+          display:"flex",alignItems:"center",justifyContent:"center",gap:8}
+      },
+        isCompleto
+          ?"✨ Gerar análise semanal com IA"
+          :"Responda mais "+(PERGUNTAS.length-respondidas)+" pergunta(s)"
+      )
     )
   );
 }
@@ -1245,7 +2059,7 @@ function NutriPanel({T,onLogout}){
       ...Object.values(PATIENTS).map(p=>{
         const registros=dados[p.id]||[];
         const ultimo=registros[0];
-        const avalDados=p.id==="rubens"?RUBENS_AVAL:p.id==="preslavia"?PRESLAVIA_AVAL:null;
+        const avalDados=p.id==="rubens"?RUBENS_AVAL:p.id==="preslavia"?PRESLAVIA_AVAL:p.id==="rebeca"?REBECA_AVAL:null;
         const ultimaAval=avalDados?avalDados[avalDados.length-1]:null;
         return h("div",{key:p.id,style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
           h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}},
