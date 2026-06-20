@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta com André Aragão · Nutricionista</title>
+<meta name="description" content="Agende sua consulta com André Aragão, nutricionista em Fortaleza e online. Primeira consulta, acompanhamento e pacotes com suporte de 45 dias incluso.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D1B2A;--navy2:#14263A;--gold:#C9A84C;--gold-lt:#E2C87A;--cream:#F5F0E8;--cream2:#FAF7F2;--text:#1A2530;--muted:#6B7A8D;--line:rgba(13,27,42,.09);--r:14px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ── Nav ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:13px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--navy)}
+.nav-logo span{color:var(--gold)}
+.nav-cta{background:var(--gold);color:#fff;font-size:13px;font-weight:600;padding:9px 20px;border-radius:50px;display:flex;align-items:center;gap:7px;transition:opacity .2s,transform .15s}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+
+/* ── HERO: split layout ── */
+.hero{background:var(--navy);min-height:88vh;display:grid;grid-template-columns:1fr 420px;align-items:center;overflow:hidden;position:relative}
+@media(max-width:860px){.hero{grid-template-columns:1fr;min-height:auto}}
+.hero-left{padding:80px 48px 80px 60px;position:relative;z-index:1}
+@media(max-width:860px){.hero-left{padding:60px 24px 40px}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.32);color:var(--gold);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:7px 16px;border-radius:50px;margin-bottom:28px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(34px,4.5vw,56px);font-weight:900;color:#fff;line-height:1.06;margin-bottom:20px}
+.hero h1 em{font-style:italic;color:var(--gold);display:block}
+.hero-sub{font-size:16px;color:rgba(245,240,232,.68);max-width:440px;margin-bottom:36px;line-height:1.75}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{background:var(--gold);color:var(--navy);font-size:15px;font-weight:700;padding:14px 30px;border-radius:50px;display:inline-flex;align-items:center;gap:9px;transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(201,168,76,.4)}
+.btn-ghost{color:rgba(245,240,232,.7);font-size:14px;font-weight:500;padding:14px 22px;border:1px solid rgba(245,240,232,.2);border-radius:50px;display:inline-flex;align-items:center;gap:8px;transition:background .15s}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap}
+.hero-stat strong{display:block;font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;line-height:1}
+.hero-stat span{font-size:10px;color:rgba(245,240,232,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;display:block}
+.hero-stat+.hero-stat{padding-left:36px;border-left:1px solid rgba(255,255,255,.1)}
+
+/* Hero photo panel */
+.hero-photo-panel{height:100%;min-height:88vh;position:relative;overflow:hidden}
+@media(max-width:860px){.hero-photo-panel{height:480px;min-height:0}}
+.hero-photo-panel img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:brightness(.92)}
+.hero-photo-panel::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--navy) 0%,transparent 30%);z-index:1}
+@media(max-width:860px){.hero-photo-panel::before{background:linear-gradient(to bottom,transparent 60%,var(--navy) 100%)}}
+
+/* ── Sections ── */
+section{padding:72px 0}
+.container{max-width:740px;margin:0 auto;padding:0 24px}
+.container-wide{max-width:1000px;margin:0 auto;padding:0 24px}
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:4px 14px;border-radius:50px}
+.sec-tag{text-align:center;margin-bottom:12px}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,40px);font-weight:900;color:var(--navy);line-height:1.12;text-align:center;margin-bottom:14px}
+.sec-sub{font-size:15px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto 48px;line-height:1.75}
+.gold-line{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);width:60px;border-radius:2px;margin:0 auto 40px}
+
+/* ── O que inclui ── */
+.includes-bg{background:var(--cream2)}
+.inc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.inc-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px 20px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .2s,transform .2s}
+.inc-card:hover{box-shadow:0 8px 28px rgba(13,27,42,.08);transform:translateY(-2px)}
+.inc-icon{width:46px;height:46px;border-radius:12px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center}
+.inc-card h3{font-size:14px;font-weight:600;color:var(--navy);line-height:1.3}
+.inc-card p{font-size:12.5px;color:var(--muted);line-height:1.65}
+
+/* ── Modalidades: taller portrait-friendly ── */
+.mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:580px){.mod-grid{grid-template-columns:1fr}}
+.mod-card{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);transition:box-shadow .2s}
+.mod-card:hover{box-shadow:0 12px 36px rgba(13,27,42,.1)}
+.mod-photo{height:320px;background-size:cover;background-position:center top;position:relative}
+.mod-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(13,27,42,.7) 0%,transparent 50%)}
+.mod-badge{position:absolute;bottom:18px;left:18px;z-index:1;background:rgba(13,27,42,.75);backdrop-filter:blur(8px);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:50px;border:1px solid rgba(255,255,255,.15)}
+.mod-body{padding:24px 22px}
+.mod-body h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.mod-body p{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ── Preços ── */
+.pricing-bg{background:var(--navy)}
+.pricing-bg .sec-title{color:var(--cream)}
+.pricing-bg .sec-sub{color:rgba(245,240,232,.6)}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.price-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:26px 22px;transition:border-color .2s,background .2s}
+.price-card:hover{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.05)}
+.price-card.featured{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.38)}
+.price-badge{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.price-card h3{font-family:'Playfair Display',serif;font-size:18px;color:#fff;margin-bottom:4px;line-height:1.2}
+.price-val{font-size:30px;font-weight:700;color:var(--gold);margin:10px 0 8px;letter-spacing:-0.5px}
+.price-val small{font-size:15px;font-weight:400;color:rgba(201,168,76,.65)}
+.price-card p{font-size:12px;color:rgba(245,240,232,.52);line-height:1.65}
+.price-note{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:16px 20px;text-align:center;color:rgba(245,240,232,.72);font-size:13px;line-height:1.6}
+.price-note strong{color:var(--gold)}
+.packs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+@media(max-width:560px){.packs-grid{grid-template-columns:1fr}}
+.pack-card{background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.22);border-radius:var(--r);padding:26px 22px}
+.pack-card h3{font-family:'Playfair Display',serif;font-size:20px;color:#fff;margin-bottom:6px}
+.pack-val{font-size:28px;font-weight:700;color:var(--gold);margin-bottom:14px}
+.pack-card ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.pack-card li{font-size:12.5px;color:rgba(245,240,232,.62);display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.pack-card li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+
+/* ── André: split layout ── */
+.andre-bg{background:var(--cream2)}
+.andre-inner{display:grid;grid-template-columns:360px 1fr;gap:60px;align-items:center}
+@media(max-width:760px){.andre-inner{grid-template-columns:1fr;gap:32px}}
+.andre-photo-wrap{position:relative}
+.andre-photo{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;border-radius:var(--r);display:block;box-shadow:0 20px 60px rgba(13,27,42,.18)}
+.andre-photo-frame{position:absolute;inset:-8px -8px auto auto;width:calc(100% - 16px);height:calc(100% - 16px);border:2px solid var(--gold);border-radius:var(--r);pointer-events:none;opacity:.4}
+@media(max-width:760px){.andre-photo-wrap{max-width:280px;margin:0 auto}}
+.andre-body h2{font-family:'Playfair Display',serif;font-size:32px;color:var(--navy);margin-bottom:6px;line-height:1.1}
+.andre-crm{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;display:block}
+.andre-body p{font-size:14px;color:var(--muted);line-height:1.8}
+.andre-edu{display:flex;flex-direction:column;gap:12px;margin-top:22px;border-top:1px solid var(--line);padding-top:20px}
+.edu-item{display:flex;align-items:flex-start;gap:12px}
+.edu-icon{font-size:18px;margin-top:1px;flex-shrink:0}
+.edu-item strong{display:block;font-size:13px;font-weight:600;color:var(--navy);line-height:1.3}
+.edu-item span{font-size:12px;color:var(--muted);line-height:1.5}
+.andre-feats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.andre-feat{background:#fff;border:1px solid var(--line);border-radius:50px;font-size:11px;font-weight:500;color:var(--text);padding:6px 14px}
+
+/* ── Para quem é ── */
+.fw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.fw-card{background:var(--cream2);border-radius:var(--r);padding:22px;display:flex;gap:14px;align-items:flex-start;transition:background .2s}
+.fw-card:hover{background:#f0ece4}
+.fw-dot{width:36px;height:36px;border-radius:10px;background:rgba(201,168,76,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.fw-card h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.fw-card p{font-size:12.5px;color:var(--muted);line-height:1.65}
+
+/* ── Galeria de fotos ── */
+.gallery-strip{display:grid;grid-template-columns:repeat(5,1fr);height:320px;overflow:hidden}
+@media(max-width:640px){.gallery-strip{grid-template-columns:repeat(3,1fr);height:220px}}
+.gallery-strip div{background-size:cover;background-position:center top;transition:transform .4s;overflow:hidden}
+.gallery-strip div:hover{transform:scale(1.04)}
+
+/* ── Depoimentos ── */
+.dep-bg{background:var(--navy)}
+.dep-bg .sec-title{color:var(--cream)}
+.dep-bg .sec-sub{color:rgba(245,240,232,.55)}
+.dep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.dep-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:28px 24px;display:flex;flex-direction:column;gap:16px;transition:border-color .2s}
+.dep-card:hover{border-color:rgba(201,168,76,.3)}
+.dep-stars{color:var(--gold);font-size:14px;letter-spacing:2px}
+.dep-text{font-size:13.5px;color:rgba(245,240,232,.75);line-height:1.8;font-style:italic}
+.dep-text::before{content:'"';font-family:'Playfair Display',serif;font-size:36px;color:var(--gold);opacity:.4;line-height:0;vertical-align:-14px;margin-right:3px}
+.dep-author{display:flex;align-items:center;gap:12px;margin-top:auto}
+.dep-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8B6914);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--navy);flex-shrink:0}
+.dep-name{font-size:13px;font-weight:600;color:#fff}
+.dep-loc{font-size:11px;color:rgba(245,240,232,.4);margin-top:1px}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:3px;max-width:700px;margin:0 auto}
+.faq-item{border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:18px 20px;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:background .15s;font-family:inherit}
+.faq-q:hover{background:var(--cream2)}
+.faq-arr{font-size:18px;color:var(--gold);transition:transform .25s;flex-shrink:0}
+.faq-item.open .faq-arr{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a p{padding:0 20px 18px;font-size:13px;color:var(--muted);line-height:1.8}
+
+/* ── CTA final ── */
+.cta-final{position:relative;overflow:hidden;text-align:center;padding:100px 24px}
+.cta-final-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%;filter:brightness(.3) saturate(.8)}
+.cta-final-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,27,42,.82),rgba(13,27,42,.92))}
+.cta-final-content{position:relative;z-index:1}
+.cta-final h2{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,48px);color:#fff;margin-bottom:16px;line-height:1.08}
+.cta-final h2 em{font-style:italic;color:var(--gold)}
+.cta-final p{font-size:16px;color:rgba(245,240,232,.62);max-width:460px;margin:0 auto 38px}
+.btn-wa{background:#25D366;color:#fff;font-size:16px;font-weight:700;padding:16px 38px;border-radius:50px;display:inline-flex;align-items:center;gap:10px;transition:transform .15s,box-shadow .15s}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,211,102,.4)}
+
+/* ── Floating WA ── */
+.float-wa{position:fixed;bottom:24px;right:22px;z-index:200;background:#25D366;color:#fff;font-size:13px;font-weight:600;padding:13px 20px;border-radius:50px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 24px rgba(37,211,102,.5);transition:transform .15s}
+.float-wa:hover{transform:scale(1.05)}
+@media(max-width:480px){.float-wa span.label{display:none}.float-wa{padding:14px;border-radius:50%;width:52px;height:52px;justify-content:center}}
+
+footer{background:var(--navy2);padding:24px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+footer p{font-size:12px;color:rgba(245,240,232,.3)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">André <span>Aragão</span></div>
+  <a href="#precos" class="nav-cta">Ver valores</a>
+</nav>
+
+<!-- HERO: texto esquerda, foto direita -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Nutricionista · Fortaleza & Online
+    </div>
+    <h1>Nutrição que<br><em>transforma de verdade</em></h1>
+    <p class="hero-sub">Consulta personalizada com André Aragão. Sem dietas genéricas, sem lista de proibições. Só o que funciona para você.</p>
+    <div class="hero-btns">
+      <a href="#precos" class="btn-primary">Ver investimento ↓</a>
+      <a href="#andre" class="btn-ghost">Conhecer André ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>+2000</strong><span>Pacientes</span></div>
+      <div class="hero-stat"><strong>12</strong><span>Países atendidos</span></div>
+      <div class="hero-stat"><strong>CE &<br>Mundo</strong><span>Fortaleza & Online</span></div>
+    </div>
+  </div>
+  <div class="hero-photo-panel">
+    <img src="https://images.pixieset.com/874013611/49f772a299ed440280d4152f9e3827c4-large.jpg" alt="André Aragão, Nutricionista" loading="eager">
+  </div>
+</section>
+
+<!-- O QUE INCLUI -->
+<section class="includes-bg">
+  <div class="container">
+    <p class="sec-tag"><span class="tag">Em toda consulta</span></p>
+    <h2 class="sec-title" style="margin-top:12px">O que você recebe</h2>
+    <div class="gold-line"></div>
+    <div class="inc-grid">
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3>Plano alimentar personalizado</h3>
+        <p>Montado para a sua rotina, preferências e objetivo. Nada de cardápio genérico de internet.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>45 dias de acompanhamento</h3>
+        <p>Suporte direto no WhatsApp por 45 dias após cada consulta, para ajustes e dúvidas.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        <h3>Anamnese completa</h3>
+        <p>Avaliação detalhada do histórico, exames, sintomas e estilo de vida.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Orientações práticas</h3>
+        <p>Substituições reais, dicas de supermercado e como montar o prato no dia a dia.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Análise de exames</h3>
+        <p>Interpretação nutricional dos seus exames para personalizar o plano com precisão.</p>
+      </div>
+      <div class="inc-card">
+        <div class="inc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Individual ou casal</h3>
+        <p>Atendimento individual ou em casal, presencial em Fortaleza ou online.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODALIDADES -->
+<section>
+  <div class="container">
+    <p class="sec-tag"><span class="tag">Modalidades</span></p>
+    <h2 class="sec-title" style="margin-top:12px">Online ou presencial</h2>
+    <p class="sec-sub">A qualidade é a mesma. Só muda o formato.</p>
+    <div class="mod-grid">
+      <div class="mod-card">
+        <div class="mod-photo" style="background-image:url('https://images.pixieset.com/874013611/2fe9be823b92c125f30d64af8a09e8d3-large.jpg')">
+          <span class="mod-badge">🌍 Online · 12 países</span>
+        </div>
+        <div class="mod-body">
+          <h3>Online · Pelo mundo</h3>
+          <p>Já atendi pacientes em 12 países. Pelo Google Meet, de onde você estiver. Mesma qualidade, mesmo resultado.</p>
+        </div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-photo" style="background-image:url('83f40461-6740-44ac-8585-ac41f5c1b9b2.png');background-position:center center">
+          <span class="mod-badge">📍 Av. Santos Dumont, 6740 · Cocó</span>
+        </div>
+        <div class="mod-body">
+          <h3>Presencial · Fortaleza</h3>
+          <p>Consultório em área nobre de Fortaleza, no coração do Cocó. Edifício moderno na Av. Santos Dumont, 6740, com fácil acesso e estacionamento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇOS -->
+<section class="pricing-bg" id="precos">
+  <div class="container">
+    <p class="sec-tag"><span class="tag" style="border-color:rgba(201,168,76,.32)">Investimento</span></p>
+    <h2 class="sec-title" style="margin-top:12px">Consultas avulsas</h2>
+    <p class="sec-sub">Todos os valores incluem 45 dias de acompanhamento pós-consulta.</p>
+    <div class="price-grid">
+      <div class="price-card featured">
+        <span class="price-badge">⭐ Mais procurada</span>
+        <h3>Primeira consulta</h3>
+        <div class="price-val">R$ 380<small>,00</small></div>
+        <p>Anamnese completa, plano alimentar e 45 dias de suporte incluso.</p>
+      </div>
+      <div class="price-card">
+        <span class="price-badge">Retorno</span>
+        <h3>Acompanhamento</h3>
+        <div class="price-val">R$ 330<small>,00</small></div>
+        <p>Para quem já é paciente. Revisão do plano, ajustes e continuidade.</p>
+      </div>
+      <div class="price-card">
+        <span class="price-badge">Para dois</span>
+        <h3>Casal</h3>
+        <div class="price-val">R$ 700<small>,00</small></div>
+        <p>R$ 350 por pessoa. Mesma sessão, planos individualizados para cada um.</p>
+      </div>
+    </div>
+    <h2 class="sec-title" style="margin-top:56px">Pacotes</h2>
+    <p class="sec-sub" style="margin-bottom:0">Mais consultas + acompanhamento estendido = resultados mais consistentes.</p>
+    <div class="packs-grid">
+      <div class="pack-card">
+        <span class="price-badge">Trimestral</span>
+        <h3>Plano 3 meses</h3>
+        <div class="pack-val">R$ 630<small style="font-size:14px;font-weight:400;color:rgba(201,168,76,.65)">,00</small></div>
+        <ul>
+          <li>2 consultas incluídas</li>
+          <li>3 meses de acompanhamento entre consultas</li>
+          <li>45 dias de suporte após cada sessão</li>
+        </ul>
+      </div>
+      <div class="pack-card" style="border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.06)">
+        <span class="price-badge">⭐ Semestral</span>
+        <h3>Plano 6 meses</h3>
+        <div class="pack-val">R$ 1.150<small style="font-size:14px;font-weight:400;color:rgba(201,168,76,.65)">,00</small></div>
+        <ul>
+          <li>4 consultas incluídas</li>
+          <li>6 meses de acompanhamento entre consultas</li>
+          <li>45 dias de suporte após cada sessão</li>
+          <li>Prioridade no agendamento</li>
+        </ul>
+      </div>
+    </div>
+    <div class="price-note" style="margin-top:20px"><strong>Acompanhamento de 45 dias incluso em todas as modalidades</strong><br>Dúvidas, ajustes no plano e suporte direto no WhatsApp após a consulta.</div>
+  </div>
+</section>
+
+<!-- ANDRÉ -->
+<section class="andre-bg" id="andre">
+  <div class="container-wide">
+    <div class="andre-inner">
+      <div class="andre-photo-wrap">
+        <img class="andre-photo" src="https://images.pixieset.com/874013611/924ca3d03a703c69bb862a0ea46a69db-large.jpg" alt="André Aragão Nutricionista" loading="lazy">
+        <div class="andre-photo-frame"></div>
+      </div>
+      <div class="andre-body">
+        <span class="tag" style="margin-bottom:16px;display:inline-block">Sobre André</span>
+        <h2>André Aragão</h2>
+        <span class="andre-crm">Nutricionista · CRN 11 · 16678 · Fortaleza, CE</span>
+        <p>Nutricionista com experiência em comportamento alimentar e emagrecimento sustentável. Acredito que a melhor dieta é a que você consegue seguir, e trabalho para descobrir exatamente essa com cada paciente.</p>
+        <p style="margin-top:12px">Criador do <strong>@andrearagaonutri</strong> no Instagram, onde compartilho nutrição sem enrolação para milhares de seguidores.</p>
+
+        <div class="andre-edu">
+          <div class="edu-item">
+            <div class="edu-icon">🎓</div>
+            <div>
+              <strong>Bacharelado em Nutrição</strong>
+              <span>Universidade de Fortaleza (Unifor) · 2019</span>
+            </div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-icon">📚</div>
+            <div>
+              <strong>Pós-graduação em Obesidade</strong>
+              <span>Universidade de São Paulo (USP) · Em andamento</span>
+            </div>
+          </div>
+          <div class="edu-item">
+            <div class="edu-icon">🌍</div>
+            <div>
+              <strong>Estágio em Nutrição</strong>
+              <span>Dublin, Irlanda</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="andre-feats">
+          <span class="andre-feat">🥗 Emagrecimento</span>
+          <span class="andre-feat">🤰 Saúde feminina</span>
+          <span class="andre-feat">🏃 Performance</span>
+          <span class="andre-feat">🧬 Nutrição funcional</span>
+          <span class="andre-feat">💊 Suplementação</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section style="padding:0;overflow:hidden">
+  <div class="gallery-strip">
+    <div style="background-image:url('https://images.pixieset.com/874013611/1524c6846fb88fa46ffdc904829da980-large.jpg')"></div>
+    <div style="background-image:url('https://images.pixieset.com/874013611/a66a94b51e70130b9f7e4422602962b7-large.jpg')"></div>
+    <div style="background-image:url('https://images.pixieset.com/874013611/5f161f20d72c5270d54d20d014d04884-large.jpg')"></div>
+    <div style="background-image:url('https://images.pixieset.com/874013611/d742497ca1dfad59dd6818090cd9c074-large.jpg')"></div>
+    <div style="background-image:url('https://images.pixieset.com/874013611/172f849e8ad970d6d76ee1ad7419aa68-large.jpg')"></div>
+  </div>
+</section>
+
+<!-- PARA QUEM É -->
+<section>
+  <div class="container">
+    <p class="sec-tag"><span class="tag">Para quem é</span></p>
+    <h2 class="sec-title" style="margin-top:12px">Você se identifica<br>com alguma dessas situações?</h2>
+    <p class="sec-sub" style="margin-bottom:32px">Se sim, uma consulta pode mudar muito coisa.</p>
+    <div class="fw-grid">
+      <div class="fw-card"><div class="fw-dot">😮‍💨</div><div><h3>Tenta emagrecer há anos</h3><p>Já fez várias dietas, perde e recupera. Quer entender o que realmente está travando.</p></div></div>
+      <div class="fw-card"><div class="fw-dot">🤔</div><div><h3>Não sabe o que comer</h3><p>Muita informação contraditória. Fica perdido na hora de montar o prato.</p></div></div>
+      <div class="fw-card"><div class="fw-dot">😴</div><div><h3>Cansaço e sem energia</h3><p>Dorme, mas acorda cansado. Quer saber se a alimentação tem relação com isso.</p></div></div>
+      <div class="fw-card"><div class="fw-dot">🤰</div><div><h3>Saúde feminina</h3><p>Ciclo irregular, TPM intensa, SOP, gestação ou menopausa.</p></div></div>
+      <div class="fw-card"><div class="fw-dot">🏋️</div><div><h3>Quer ganhar músculo</h3><p>Treina, mas não vê resultado. Quer otimizar a alimentação para hipertrofia.</p></div></div>
+      <div class="fw-card"><div class="fw-dot">🫁</div><div><h3>Problemas digestivos</h3><p>Barriga inchada, gases, intestino preso. Quer identificar as causas.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="dep-bg">
+  <div class="container">
+    <p class="sec-tag"><span class="tag" style="border-color:rgba(201,168,76,.32)">Resultados reais</span></p>
+    <h2 class="sec-title" style="margin-top:12px">O que os pacientes dizem</h2>
+    <p class="sec-sub">Mais de 2.000 pessoas já transformaram a relação com a alimentação.</p>
+    <div class="dep-grid">
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Tentei emagrecer por anos sozinha e nunca consegui manter. Com o André entendi que o problema não era falta de força de vontade: era falta de um plano que coubesse na minha vida. Em 4 meses perdi 12 kg sem abrir mão do final de semana.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">RC</div>
+          <div><div class="dep-name">Renata C.</div><div class="dep-loc">Fortaleza, CE · Emagrecimento</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Moro em Lisboa e achei que teria que ir presencialmente. A consulta online foi incrível: o André é extremamente atencioso e o acompanhamento pelo WhatsApp fez toda a diferença. Nunca me senti tão bem com minha alimentação.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">FM</div>
+          <div><div class="dep-name">Felipe M.</div><div class="dep-loc">Lisboa, Portugal · Online</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Fui por causa da SOP e síndrome do intestino irritável. O André foi o único nutricionista que realmente olhou para os dois juntos. Em 3 meses minha menstruação regularizou e a barriga parou de inchar. Não acreditava que fosse possível.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">AL</div>
+          <div><div class="dep-name">Amanda L.</div><div class="dep-loc">Fortaleza, CE · Saúde feminina</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Treino há 5 anos e nunca tive resultado de verdade na hipertrofia. O André ajustou minha alimentação de acordo com meu treino, meu horário e minha rotina. Em 6 meses ganhei mais músculo do que nos últimos 3 anos.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">GS</div>
+          <div><div class="dep-name">Gabriel S.</div><div class="dep-loc">São Paulo, SP · Performance</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Fizemos a consulta de casal com meu marido. Recebi meu plano individual e ele o dele: tudo na mesma sessão. Saímos com direção clara e os dois conseguiram manter. Super recomendo para casais que querem mudar juntos.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">PB</div>
+          <div><div class="dep-name">Patricia B.</div><div class="dep-loc">Fortaleza, CE · Consulta casal</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="dep-stars">★★★★★</div>
+        <p class="dep-text">Estava sempre cansada, dormia mal, com a pele seca. Achei que era estresse. Depois de 2 meses seguindo o plano do André, a energia voltou, durmo melhor e a pele melhorou. Só mudei a alimentação: foi a diferença que faltava.</p>
+        <div class="dep-author">
+          <div class="dep-avatar">JS</div>
+          <div><div class="dep-name">Juliana S.</div><div class="dep-loc">Recife, PE · Online</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--cream2)">
+  <div class="container">
+    <p class="sec-tag"><span class="tag">Dúvidas</span></p>
+    <h2 class="sec-title" style="margin-top:12px">Perguntas frequentes</h2>
+    <p class="sec-sub">O que as pessoas mais perguntam antes de agendar.</p>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Quanto tempo dura a consulta? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>A primeira consulta dura entre 50 e 60 minutos. As de acompanhamento, entre 30 e 45 minutos.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Como funciona o acompanhamento de 45 dias? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>Você tem acesso direto ao André pelo WhatsApp por 45 dias. Pode tirar dúvidas, pedir ajustes no cardápio e reportar como está se sentindo.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Preciso levar exames? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>Não é obrigatório, mas se tiver exames recentes (últimos 6 meses), traga: ajuda a personalizar o plano. A consulta acontece normalmente sem eles.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Como funciona a consulta online? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>Pelo Google Meet ou plataforma de sua preferência. Você recebe o link com antecedência. A qualidade é idêntica à presencial.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Qual a forma de pagamento? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>PIX, transferência bancária ou cartão de crédito. Combinado diretamente pelo WhatsApp no agendamento.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Posso cancelar ou remarcar? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>Sim. Pedimos apenas 24 horas de antecedência pelo WhatsApp.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">A consulta de casal é separada ou junto? <span class="faq-arr">⌄</span></button><div class="faq-a"><p>Juntos no mesmo horário. Os dois são avaliados e recebem planos individualizados na mesma sessão.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cta-final-bg" style="background-image:url('https://images.pixieset.com/874013611/e69620a67ce72013c3bc9f5ad555f4ac-large.jpg')"></div>
+  <div class="cta-final-overlay"></div>
+  <div class="cta-final-content container">
+    <h2>Pronto para começar<br>de <em>verdade?</em></h2>
+    <p>Responda esta mensagem e agendamos a sua consulta. Sem burocracia.</p>
+    <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);border-radius:50px;padding:14px 28px;font-size:15px;color:var(--gold-lt);font-weight:600">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Responda esta mensagem para agendar
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 André Aragão · Nutricionista · Fortaleza, CE &amp; Online · CRN 11 · 16678</p>
+</footer>
+
+
+<script>
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+</script>
+</body>
+</html>
