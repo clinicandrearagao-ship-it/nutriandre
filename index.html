@@ -287,6 +287,14 @@ const PRESLAVIA_AVAL=[
   {data:"05/05/2026",peso:68,imc:27.2,gordura:22.4,massaGordura:15.2,massaMagra:52.8,massaResidual:14.2,somatorio:102,densidade:1.047,rcq:0.80,cmb:24.5,cintura:83,quadril:104,abdomen:83,pescoco:31,torax:93,ombro:96,bracoRelaxado:29.8,bracoContraido:29.9,antebraco:20,coxaProximal:null,coxaMedial:53,coxaDistal:null,panturrilha:34,dobraTricipital:17,dobraAbdominal:16,dobraSubescapular:14,dobraAxilar:10,dobraCoxa:20,dobraToraxica:7,dobraSuprailíaca:18}
 ];
 
+
+const CARLOS_AVAL=[
+  {data:"04/07/2023",peso:57.7,imc:19.3,gordura:13.6,massaGordura:7.9,massaMagra:49.8,massaResidual:13.9,somatorio:89,densidade:1.068,rcq:0.87,cmb:22.5,cintura:77,quadril:89,abdomen:75,pescoco:37,torax:93,ombro:110,bracoRelaxado:26,bracoContraido:29,antebraco:24,coxaProximal:47,coxaMedial:45,coxaDistal:40,panturrilha:30,dobraTricipital:11,dobraAbdominal:18,dobraSubescapular:12,dobraAxilar:10,dobraCoxa:15,dobraToraxica:8,dobraSuprailíaca:15},
+  {data:"16/08/2023",peso:61.2,imc:20.4,gordura:15.6,massaGordura:9.6,massaMagra:51.6,massaResidual:14.7,somatorio:104,densidade:1.063,rcq:0.90,cmb:24.4,cintura:81,quadril:90,abdomen:77,pescoco:37.5,torax:93,ombro:110,bracoRelaxado:28.5,bracoContraido:30.2,antebraco:24,coxaProximal:49,coxaMedial:45,coxaDistal:39,panturrilha:32,dobraTricipital:13,dobraAbdominal:25,dobraSubescapular:14,dobraAxilar:11,dobraCoxa:16,dobraToraxica:9,dobraSuprailíaca:16},
+  {data:"05/12/2023",peso:57.2,imc:19.1,gordura:13.8,massaGordura:7.9,massaMagra:49.3,massaResidual:13.8,somatorio:89,densidade:1.068,rcq:0.92,cmb:22.2,cintura:80,quadril:87,abdomen:75,pescoco:36,torax:90,ombro:110,bracoRelaxado:26,bracoContraido:27.5,antebraco:23.5,coxaProximal:45,coxaMedial:42,coxaDistal:40,panturrilha:31,dobraTricipital:12,dobraAbdominal:20,dobraSubescapular:12,dobraAxilar:10,dobraCoxa:15,dobraToraxica:8,dobraSuprailíaca:12},
+  {data:"18/06/2026",peso:61.1,imc:20.4,gordura:12.5,massaGordura:7.6,massaMagra:53.5,massaResidual:14.7,somatorio:78,densidade:1.071,rcq:0.90,cmb:26.8,cintura:81,quadril:90,abdomen:81,pescoco:37,torax:92,ombro:109,bracoRelaxado:29,bracoContraido:31,antebraco:26,coxaProximal:49,coxaMedial:46,coxaDistal:39,panturrilha:33,dobraTricipital:7,dobraAbdominal:15,dobraSubescapular:14,dobraAxilar:8,dobraCoxa:13,dobraToraxica:7,dobraSuprailíaca:14}
+];
+
 const PERGUNTAS=[
   {id:"alimentacao",label:"Como você avalia sua alimentação essa semana?",type:"scale",min:1,max:5,labels:["Péssima","Ruim","Regular","Boa","Ótima"]},
   {id:"plano",label:"Conseguiu seguir o plano alimentar?",type:"choice",options:["Sim, totalmente","Parcialmente","Não consegui"]},
@@ -922,7 +930,7 @@ const AVAL_METRICAS=[
   {id:"soma",label:"Σ Dobras",unit:"mm",positivo:false},
 ];
 function AvaliacaoTab({patient,T}){
-  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:null;
+  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:patient.id==="carlos"?CARLOS_AVAL:null;
   const [metric,setMetric]=useState("peso");
   if(patient.id==="rebeca")return h(InBodyTab,{patient,T});
   if(!dados)return h("div",{style:{padding:"40px 14px",textAlign:"center"}},
@@ -1941,7 +1949,7 @@ function NutriPanel({T,onLogout}){
       ...Object.values(PATIENTS).map(p=>{
         const registros=dados[p.id]||[];
         const ultimo=registros[0];
-        const avalDados=p.id==="rubens"?RUBENS_AVAL:p.id==="preslavia"?PRESLAVIA_AVAL:p.id==="rebeca"?REBECA_AVAL:null;
+        const avalDados=p.id==="rubens"?RUBENS_AVAL:p.id==="preslavia"?PRESLAVIA_AVAL:p.id==="rebeca"?REBECA_AVAL:p.id==="carlos"?CARLOS_AVAL:null;
         const ultimaAval=avalDados?avalDados[avalDados.length-1]:null;
         return h("div",{key:p.id,style:{background:T.bgMid,border:`1px solid ${T.border}`,borderRadius:14,padding:"14px 16px",marginBottom:12}},
           h("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}},
