@@ -71,7 +71,94 @@ preslavia:{
     ]}
   ]
 },
-rubens:{
+// ── BLOCO 1: colar dentro de getCreds() ──────────────────────────────────────
+// Busca: rubens:{senha:"rubens123",role:"patient"},
+// Cola ANTES dessa linha:
+
+renata:{senha:"Renata123",role:"patient"},
+
+// ── BLOCO 2: colar dentro do objeto PATIENTS ─────────────────────────────────
+// Busca: rubens:{
+// Cola ANTES dessa linha:
+
+renata:{
+  id:"renata",name:"Renata Mont'alverne Barreto de Paula Pessoa",initials:"RM",
+  goal:"Perda de gordura",kcal:1500,waterGoal:2000,
+  note:"Mora na Escócia. Alimentos disponíveis em Tesco, M&S, Lidl e Sainsbury's. Julho e Agosto 2026.",
+  supplements:[
+    {name:"Whey Protein Concentrado Baunilha",dose:"1 dosador (30g) em 250ml leite semi-desnatado",times:["09:00","16:00"]}
+  ],
+  plan:[
+    {meal:"Café da manhã",time:"09:00",options:[
+      {label:"Opção 1",items:["Porridge de aveia com mel e banana","Aveia Tesco 60g + leite semi-desnatado 200ml + banana fatiada + 1 col. chá mel"]},
+      {label:"Opção 2",items:["Skyr de baunilha com granola e mirtilo","Skyr Tesco 150g + granola Tesco 30g + punhado de mirtilo"]},
+      {label:"Opção 3",items:["Torrada com ovo mexido e tomate","Pão integral Tesco 2 fatias + 2 ovos mexidos + tomate fatiado + manteiga"]},
+      {label:"Opção 4",items:["Iogurte grego com mel, nozes e banana","Iogurte grego Tesco 200g + nozes Tesco 20g + meia banana + mel"]},
+      {label:"Opção 5",items:["Overnight oats com frutas","Aveia 50g + leite 150ml + iogurte natural Tesco 100g + mel + morango ou mirtilo"]},
+      {label:"Opção 6",items:["Ovo mexido com salmão defumado e torrada","2 ovos + salmão defumado Tesco 40g + pão integral Tesco 1 fatia + manteiga"]},
+      {label:"Opção 7",items:["Cereal com leite e morango","Special K ou Corn Flakes Tesco 45g + leite 200ml + 5 morangos fatiados + café ou chá"]},
+      {label:"Opção 8",items:["Pão com manteiga de amendoim e banana","Pão integral Tesco 2 fatias + manteiga de amendoim Tesco 30g + banana fatiada"]},
+      {label:"Opção 9",items:["Bagel com cream cheese e pepino","Bagel Tesco 1 un. + cream cheese light Tesco 60g + pepino fatiado + café ou chá"]},
+      {label:"Opção 10",items:["Muesli com leite e banana","Muesli Tesco 50g + leite semi-desnatado 200ml + meia banana + café ou chá"]},
+      {label:"Opção 11",items:["Porridge de aveia com whey e mirtilo","Aveia Tesco 60g + leite 200ml + whey protein baunilha 30g (após tirar do fogo) + mirtilo"]},
+      {label:"Opção 12",items:["Torrada com cream cheese e tomate","Pão integral Tesco 2 fatias + cream cheese light Tesco 60g + tomate fatiado + café ou chá"]},
+      {label:"Opção 13",items:["Torrada com ricotta e mel","Pão integral Tesco 2 fatias + ricotta Tesco 60g + mel + morango ou banana"]},
+      {label:"Opção 14",items:["Smoothie de banana com leite e whey","1 banana + leite semi-desnatado 250ml + whey protein baunilha 30g + mel"]},
+      {label:"Opção 15",items:["Panqueca de banana e ovo","1 banana grande amassada + 2 ovos + mel e canela + mirtilo ou morango para servir. Frigideira antiaderente com manteiga, 2 min cada lado."]}
+    ]},
+    {meal:"Almoço",time:"12:00",options:[
+      {label:"Opção 1",items:["Frango grelhado com arroz e salada","Filé de frango 130g + arroz branco cozido 120g + alface e tomate cereja à vontade + azeite e sal"]},
+      {label:"Opção 2",items:["Sanduíche de frango Meal Deal","Sanduíche de frango M&S ou Tesco 160g + 1 fruta (maçã, banana ou uva) + água ou suco sem açúcar"]},
+      {label:"Opção 3",items:["Jacket potato com atum e cream cheese","1 batata grande no microondas 8 min + meia lata de atum + cream cheese light Tesco 40g + salada verde"]},
+      {label:"Opção 4",items:["Macarrão com frango e molho de tomate","Macarrão penne Tesco 150g + frango de churrasco Tesco fatiado 100g + molho de tomate Tesco 80ml + parmesão ralado"]},
+      {label:"Opção 5",items:["Frango tikka masala pronto com arroz","Frango tikka masala M&S ou Tesco 300g + arroz branco cozido 120g"]},
+      {label:"Opção 6",items:["Wrap de frango com houmous e salada","Tortilla integral Tesco + frango de churrasco Tesco fatiado 80g + houmous Tesco 40g + alface e tomate cereja"]},
+      {label:"Opção 7",items:["Atum com arroz e salada","Atum ao natural Tesco 1 lata (120g) + arroz branco cozido 120g + tomate cereja e pepino + azeite e sal"]},
+      {label:"Opção 8",items:["Salmão com arroz e brócolis","Filé de salmão Tesco 150g (forno 200°C 15 min) + arroz branco cozido 120g + brócolis congelado cozido 80g + molho de soja"]},
+      {label:"Opção 9",items:["Omelete de queijo e presunto com salada","3 ovos + presunto fatiado Tesco 40g + queijo cheddar Tesco 20g + salada verde à vontade"]},
+      {label:"Opção 10",items:["Frango desfiado com batata cozida e salada","Filé de frango cozido e desfiado 130g + batata cozida 120g + alface e tomate + azeite e sal"]},
+      {label:"Opção 11",items:["Sanduíche de atum com tomate","Pão integral Tesco 2 fatias + meia lata de atum + cream cheese light 1 col. sopa + tomate fatiado"]},
+      {label:"Opção 12",items:["Curry de frango pronto com arroz","Curry de frango M&S ou Tesco 300g + arroz branco cozido 120g"]},
+      {label:"Opção 13",items:["Poke bowl pronto","Poke bowl pronto Tesco ou M&S 380g. Come frio mesmo, prefere molho de soja ao cremoso."]},
+      {label:"Opção 14",items:["Macarrão com carne moída e molho de tomate","Macarrão penne Tesco 150g + carne moída bovina Tesco 100g + molho de tomate Tesco 80ml + parmesão"]},
+      {label:"Opção 15",items:["Peixe assado com purê e ervilha","Haddock ou pollock Tesco 150g (forno 200°C 15 min) + purê de batata com manteiga 120g + ervilha congelada cozida 80g"]}
+    ]},
+    {meal:"Lanche da tarde",time:"16:00",options:[
+      {label:"Opção 1",items:["Skyr com mirtilo e mel","Skyr Tesco 150g + mirtilo ou framboesa 50g + 1 col. chá mel"]},
+      {label:"Opção 2",items:["Iogurte grego com mel e castanhas","Iogurte grego natural Tesco 150g + castanhas mistas Tesco 20g + mel"]},
+      {label:"Opção 3",items:["Ryvita com houmous e pepino","2 Ryvita (torrada de centeio) + houmous Tesco 40g + pepino fatiado à vontade"]},
+      {label:"Opção 4",items:["Smoothie de whey com leite e banana","Whey protein baunilha 30g + leite semi-desnatado 250ml + 1 banana. Bate ou agita na coqueteleira."]},
+      {label:"Opção 5",items:["Cottage cheese com tomate cereja","Queijo cottage Tesco 90g + 6 tomates cereja + sal e pimenta"]},
+      {label:"Opção 6",items:["Ovos cozidos com tomate cereja","2 ovos cozidos + 6 tomates cereja + sal e pimenta. Cozinha vários no início da semana."]},
+      {label:"Opção 7",items:["Castanhas mistas com uva","Castanhas mistas Tesco 25g + uva fresca 1 cacho pequeno (100g)"]},
+      {label:"Opção 8",items:["Maçã com manteiga de amendoim","1 maçã fatiada + manteiga de amendoim Tesco 20g"]},
+      {label:"Opção 9",items:["Pão com manteiga de amendoim e banana","Pão integral Tesco 1 fatia + manteiga de amendoim Tesco 20g + banana fatiada"]},
+      {label:"Opção 10",items:["Babybel com peito de peru fatiado","2 Babybel mini Tesco + 3 fatias peito de peru Tesco + 2 crackers de arroz Tesco"]},
+      {label:"Opção 11",items:["Smoothie Innocent com maçã","Smoothie Innocent Tesco 250ml + 1 maçã ou pera"]},
+      {label:"Opção 12",items:["Torrada com cream cheese e pepino","2 Ryvita ou pão integral tostado + cream cheese light Tesco 30g + pepino fatiado"]},
+      {label:"Opção 13",items:["Iogurte grego com granola e morango","Iogurte grego natural Tesco 150g + granola Tesco 20g + 5 morangos fatiados"]},
+      {label:"Opção 14",items:["Atum com crackers de arroz","Meia lata de atum ao natural Tesco + 4 crackers de arroz Tesco + 5 tomates cereja"]},
+      {label:"Opção 15",items:["Café com leite e brownie do M&S","Café com leite ou cappuccino 250ml + brownie pequeno M&S 45g"]}
+    ]},
+    {meal:"Jantar",time:"20:00",options:[
+      {label:"Opção 1",items:["Frango grelhado com batata cozida e salada","Filé de frango 130g + batata cozida 120g + salada de alface e tomate à vontade + azeite e sal"]},
+      {label:"Opção 2",items:["Salmão assado com brócolis e arroz","Filé de salmão Tesco 150g (forno 200°C 15 min) + brócolis congelado cozido 80g + arroz branco cozido 120g + azeite e limão"]},
+      {label:"Opção 3",items:["Macarrão com atum e tomate cereja","Macarrão penne Tesco 150g + meia lata de atum + 8 tomates cereja + azeite e queijo parmesão"]},
+      {label:"Opção 4",items:["Frango ao molho de tomate com arroz","Filé de frango 130g + molho de tomate Tesco 100ml + arroz branco cozido 120g + salada de alface. Frita o frango, joga o molho, apura 5 min."]},
+      {label:"Opção 5",items:["Curry de frango pronto com arroz","Curry de frango M&S ou Tesco 300g + arroz branco cozido 120g"]},
+      {label:"Opção 6",items:["Peixe assado com purê e ervilha","Haddock ou pollock Tesco 150g (forno 200°C 15 min) + purê de batata com manteiga 120g + ervilha congelada cozida 80g"]},
+      {label:"Opção 7",items:["Omelete de presunto e queijo com torrada","3 ovos + presunto Tesco 40g + queijo cheddar Tesco 20g + pão integral tostado + tomate fatiado"]},
+      {label:"Opção 8",items:["Wrap de frango com queijo e salada","Tortilla integral Tesco + frango de churrasco Tesco fatiado 100g + queijo cheddar Tesco 20g + alface e tomate cereja"]},
+      {label:"Opção 9",items:["Hambúrguer no pão com queijo e salada","Hambúrguer bovino Tesco 130g + pão de hambúrguer Tesco + queijo cheddar Tesco 20g + alface, tomate e ketchup. 3 min cada lado sem óleo."]},
+      {label:"Opção 10",items:["Stir fry de frango com legumes e arroz","Frango fatiado 100g + legumes congelados mistos Tesco 150g + arroz branco cozido 120g + molho de soja Tesco. Fogo alto, 10 min."]},
+      {label:"Opção 11",items:["Ovos mexidos com salmão defumado e torrada","3 ovos mexidos (fogo baixo) + salmão defumado Tesco 50g + pão integral tostado 2 fatias + tomate fatiado"]},
+      {label:"Opção 12",items:["Lasanha pronta do M&S com salada","Lasanha M&S 350g + salada verde com azeite à vontade"]},
+      {label:"Opção 13",items:["Carne moída com macarrão e molho de tomate","Carne moída bovina Tesco 100g + macarrão Tesco 150g + molho de tomate Tesco 80ml + parmesão ralado"]},
+      {label:"Opção 14",items:["Frango cozido com batata e legumes","Filé de frango cozido 130g + batata cozida 80g + brócolis ou ervilha congelada cozida 80g + azeite e sal"]},
+      {label:"Opção 15",items:["Wrap de carne moída com queijo","Tortilla integral Tesco + carne moída bovina Tesco 80g (cominho e páprica) + queijo cheddar Tesco 20g + alface, tomate e iogurte natural"]}
+    ]}
+  ]
+},rubens:{
   id:"rubens",name:"Rubens Oliveira De Couto",initials:"RO",
   goal:"Recomposição corporal — ganho de massa + perda de gordura",kcal:2600,waterGoal:3000,
   note:"Academia + corrida · treino noturno. Pré-treino às 18h, jantar pós-treino às 20:30.",
@@ -379,7 +466,7 @@ const THEMES={
 (function(){
   try{
     var saved=JSON.parse(localStorage.getItem("creds"));
-    if(saved&&(!saved.rebeca||!saved.carlos||!saved.cristina)){localStorage.removeItem("creds");}
+    if(saved&&(!saved.rebeca||!saved.carlos||!saved.cristina||!saved.renata)){localStorage.removeItem("creds");}
   }catch(e){}
 })();
 
@@ -412,7 +499,7 @@ const db={
 };
 
 const todayStr=()=>new Date().toISOString().slice(0,10);
-function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},rubens:{senha:"rubens123",role:"patient"},rebeca:{senha:"rebeca123",role:"patient"},carlos:{senha:"carlos123",role:"patient"},cristina:{senha:"cristina123",role:"patient"}};}
+function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},renata:{senha:"Renata123",role:"patient"},rubens:{senha:"rubens123",role:"patient"},rebeca:{senha:"rebeca123",role:"patient"},carlos:{senha:"carlos123",role:"patient"},cristina:{senha:"cristina123",role:"patient"}};}
 
 const {useState,useRef,useEffect}=React;
 const h=React.createElement;
