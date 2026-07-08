@@ -35,7 +35,75 @@ input,textarea,button{font-family:Georgia,serif}
 </div>
 <script>
 const PATIENTS={
-preslavia:{
+rejane:{
+  id:"rejane",name:"Rejane Amorim Arruda Sudario",initials:"RA",
+  goal:"Perda de gordura + ganho de massa muscular, com reforço imunológico",kcal:1800,waterGoal:2500,
+  note:"Treino no período noturno. Sem frutos do mar e sem cuscuz de milho. Atenção a episódios de urticária: plano com foco em vitamina C, zinco, selênio e ômega-3 vegetal.",
+  supplements:[],
+  plan:[
+    {meal:"Café da manhã",time:"07:00",options:[
+      {label:"Opção 1",items:["Ovo mexido 2 unidades","Pão de forma integral 3 fatias","Requeijão light 1 col. chá","Mamão 1 fatia média"]},
+      {label:"Opção 2",items:["Goma de tapioca 4 col. sopa","Ovo mexido 2 unidades","Queijo coalho 1 fatia","Suco de laranja natural 1 copo (250ml)","Mel ½ col. chá"]},
+      {label:"Opção 3",items:["Ovo 3 unidades","Cenoura, abobrinha e pimentão picados 5 col. sopa","Queijo coalho ralado 1 fatia"]},
+      {label:"Opção 4",items:["Iogurte grego natural 1 pote","Granola sem açúcar 3 col. sopa","Morango fatiado 6 unidades"]},
+      {label:"Opção 5",items:["Banana amassada 1 unidade","Ovo 1 unidade","Aveia em flocos 3 col. sopa","Mel 1 col. chá","Queijo mussarela 1 fatia"]},
+      {label:"Opção 6",items:["Pão de forma integral 3 fatias","Frango desfiado 4 col. sopa","Requeijão light 1 col. chá","Alface e tomate à vontade","Mamão 1 fatia"]},
+      {label:"Opção 7",items:["Ovo 2 unidades","Goma de tapioca 4 col. sopa","Queijo coalho 1 fatia","Kiwi 2 unidades","Mel ½ col. chá"]},
+      {label:"Opção 8",items:["Aveia em flocos 4 col. sopa","Leite desnatado 1 copo","Banana fatiada 1 unidade","Castanha de caju 10 unidades"]},
+      {label:"Opção 9",items:["Pão de queijo assado 3 unidades","Ovo cozido 1 unidade","Mamão 1 fatia grande"]},
+      {label:"Opção 10",items:["Leite desnatado 1 copo (200ml)","Banana 1 unidade grande","Couve picada 1 folha","Mel 1 col. chá","Ovo cozido 1 unidade (à parte)"]}
+    ]},
+    {meal:"Lanche da manhã",time:"10:00",options:[
+      {label:"Opção 1",items:["Iogurte grego natural 1 pote","Morango fatiado 6 unidades","Mel ½ col. chá"]},
+      {label:"Opção 2",items:["Mamão 1 fatia grande","Chia 1 col. sopa","Castanha de caju 7 unidades"]},
+      {label:"Opção 3",items:["Laranja 2 unidades","Castanha de caju 10 unidades","Mel ½ col. chá"]},
+      {label:"Opção 4",items:["Kiwi 2 unidades","Castanha de caju 14 unidades"]},
+      {label:"Opção 5",items:["Iogurte natural 1 pote","Granola 2 col. sopa","Mel ½ col. chá"]},
+      {label:"Opção 6",items:["Whey protein concentrado 1 dose","Banana 1 unidade"]},
+      {label:"Opção 7",items:["Ovo cozido 2 unidades","Mamão 1 fatia grande"]},
+      {label:"Opção 8",items:["Queijo coalho grelhado 1 fatia grande","Goiaba 1 unidade grande"]},
+      {label:"Opção 9",items:["Iogurte grego zero 1 pote","Morango fatiado 6 unidades","Mel ½ col. chá"]},
+      {label:"Opção 10",items:["Mamão 1 fatia grande","Leite desnatado ½ copo","Chia 1 col. sopa","Mel ½ col. chá"]}
+    ]},
+    {meal:"Almoço",time:"13:00",options:[
+      {label:"Opção 1",items:["Peito de frango grelhado 1 filé grande","Arroz integral cozido 3 col. arroz","Feijão carioca 1 concha rasa","Salada de folhas, tomate e pepino à vontade","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 2",items:["Patinho ou alcatra grelhada 1 bife médio","Batata-doce cozida 2 col. servir","Legumes salteados 1 porção","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 3",items:["Carne moída magra refogada com tomate 1 concha","Arroz branco cozido 3 col. arroz","Feijão carioca 1 concha rasa","Salada verde à vontade","Azeite de oliva 1 fio"]},
+      {label:"Opção 4",items:["Frango desfiado 1 porção","Legumes refogados 1 porção","Macaxeira cozida 1 pedaço","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 5",items:["Ovo 3 unidades","Frango desfiado 3 col. sopa","Legumes picados 1 porção","Arroz integral 2 col. arroz","Azeite de oliva 1 fio"]},
+      {label:"Opção 6",items:["Frango em cubos ao curry 1 porção","Cúrcuma e gengibre a gosto","Arroz integral cozido 3 col. arroz","Legumes salteados 1 porção","Azeite de oliva 1 fio"]},
+      {label:"Opção 7",items:["Carne de panela (patinho) 1 porção","Legumes cozidos junto à carne 1 porção","Arroz branco cozido 2 col. arroz","Feijão carioca 1 concha rasa","Azeite de oliva 1 fio"]},
+      {label:"Opção 8",items:["Peito de frango grelhado 1 filé","Abacaxi em cubos 1 fatia","Salada verde à vontade","Batata-doce cozida 1 col. servir","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 9",items:["Almôndegas de carne moída magra ao molho de tomate 5 unidades","Arroz branco cozido 2 col. arroz","Salada verde à vontade","Legumes salteados 1 porção","Azeite de oliva 1 fio"]},
+      {label:"Opção 10",items:["Proteína grelhada (frango, carne ou ovo) 130g","Arroz branco ou integral 2 col. arroz","Feijão ou lentilha 1 concha rasa","Saladas e vegetais metade do prato","Azeite de oliva 1 col. sopa cheia"]}
+    ]},
+    {meal:"Lanche pré-treino",time:"17:30",options:[
+      {label:"Opção 1",items:["Banana 1 unidade","Mel 1 col. sopa","Aveia em flocos 4 col. sopa"]},
+      {label:"Opção 2",items:["Goma de tapioca 7 col. sopa","Banana fatiada 1 unidade","Suco de laranja natural ½ copo"]},
+      {label:"Opção 3",items:["Banana 1 unidade","Leite desnatado 1 copo","Whey protein concentrado ½ dose"]},
+      {label:"Opção 4",items:["Pão francês 1 unidade","Requeijão light 1 col. sopa","Banana ½ unidade"]},
+      {label:"Opção 5",items:["Batata-doce cozida 2 col. servir","Ovo cozido 1 unidade"]},
+      {label:"Opção 6",items:["Aveia em flocos 3 col. sopa","Leite desnatado 1 copo","Mel ½ col. chá"]},
+      {label:"Opção 7",items:["Pão de queijo assado 3 unidades","Água de coco 1 copo"]},
+      {label:"Opção 8",items:["Banana amassada 1 unidade grande","Aveia em flocos 1 col. sopa"]},
+      {label:"Opção 9",items:["Suco de laranja natural 1 copo","Mel 1 col. sopa","Banana ½ unidade"]},
+      {label:"Opção 10",items:["Iogurte natural 1 pote","Mel 1 col. sopa","Banana ½ unidade"]}
+    ]},
+    {meal:"Jantar pós-treino",time:"21:30",options:[
+      {label:"Opção 1",items:["Peito de frango grelhado 1 filé grande","Batata-doce cozida 2 col. servir","Salada verde à vontade","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 2",items:["Ovo 3 unidades","Queijo coalho 1 fatia","Legumes picados 1 porção","Pão de forma integral 1 fatia","Azeite de oliva 1 fio"]},
+      {label:"Opção 3",items:["Carne moída magra refogada 1 porção","Legumes salteados 1 porção","Arroz integral cozido 2 col. arroz","Azeite de oliva 1 fio"]},
+      {label:"Opção 4",items:["Frango desfiado 1 porção","Purê de batata-doce 2 col. servir","Legumes cozidos 1 porção","Azeite de oliva 1 fio generoso"]},
+      {label:"Opção 5",items:["Peito de frango grelhado com gengibre e cúrcuma 1 filé","Legumes no vapor 1 porção","Arroz branco cozido 2 col. arroz","Azeite de oliva 1 fio"]},
+      {label:"Opção 6",items:["Ovo 2 unidades","Carne moída magra 3 col. sopa","Salada verde à vontade","Batata-doce cozida 1 col. servir"]},
+      {label:"Opção 7",items:["Patinho grelhado 1 bife médio","Legumes no vapor 1 porção","Macaxeira cozida 1 pedaço"]},
+      {label:"Opção 8",items:["Ovo 1 unidade","Goma de tapioca 5 col. sopa","Frango desfiado 4 col. sopa","Queijo coalho 1 fatia pequena","Alface e tomate à vontade"]},
+      {label:"Opção 9",items:["Frango desfiado 1 porção","Legumes variados 1 porção generosa","Batata-doce em cubos 1 col. servir","Azeite de oliva 1 fio"]},
+      {label:"Opção 10",items:["Ovo 3 unidades","Queijo mussarela 1 fatia","Legumes picados 1 porção","Pão de forma integral 1 fatia"]}
+    ]}
+  ]
+},
+  preslavia:{
   id:"preslavia",name:"Preslavia Colares Aguiar",initials:"PC",
   goal:"Perda de gordura + massa muscular",kcal:1600,waterGoal:2500,
   note:"Mounjaro (tirzepatida) — uso semanal. Treino de manhã antes das 12h.",
@@ -506,7 +574,13 @@ const CRISTINA_AVAL=[
   {data:"19/03/2026",peso:78.3,imc:27.7,gordura:17.1,massaGordura:13.4,massaMagra:64.9,massaResidual:16.4,somatorio:76,densidade:1.060,rcq:0.67,cmb:22.9,cintura:74,quadril:110,abdomen:75,pescoco:29,torax:87,ombro:97,bracoRelaxado:27,bracoContraido:34,antebraco:24,coxaProximal:null,coxaMedial:54,coxaDistal:null,panturrilha:38,dobraTricipital:13,dobraAbdominal:12,dobraSubescapular:10,dobraAxilar:11,dobraCoxa:13,dobraToraxica:4,dobraSuprailíaca:13},
   {data:"25/05/2026",peso:77.0,imc:27.3,gordura:16.1,massaGordura:12.4,massaMagra:64.6,massaResidual:16.1,somatorio:70,densidade:1.062,rcq:0.64,cmb:22.5,cintura:69,quadril:108,abdomen:71,pescoco:30,torax:84,ombro:102,bracoRelaxado:26,bracoContraido:32,antebraco:25,coxaProximal:null,coxaMedial:61,coxaDistal:null,panturrilha:38,dobraTricipital:11,dobraAbdominal:10,dobraSubescapular:9,dobraAxilar:10,dobraCoxa:15,dobraToraxica:4,dobraSuprailíaca:11}
 ];
-
+const REJANE_AVAL=[
+  {data:"01/07/2025",peso:74,imc:27.9,gordura:15,massaGordura:11.1,massaMagra:62.9,massaResidual:15.5,somatorio:59,densidade:1.065,rcq:0.62,cmb:24.2,cintura:70,quadril:113,abdomen:74,pescoco:32,torax:84,ombro:96,bracoRelaxado:27,bracoContraido:35.5,antebraco:26,coxaProximal:68,coxaMedial:65,coxaDistal:60,panturrilha:38,dobraTricipital:9,dobraAbdominal:9,dobraSubescapular:8,dobraAxilar:9,dobraCoxa:12,dobraToraxica:4,dobraSuprailíaca:8},
+  {data:"10/10/2025",peso:72.5,imc:27.3,gordura:18.5,massaGordura:13.4,massaMagra:59.1,massaResidual:15.2,somatorio:81,densidade:1.056,rcq:0.71,cmb:24.6,cintura:76,quadril:107,abdomen:78,pescoco:32,torax:92,ombro:98,bracoRelaxado:29,bracoContraido:33,antebraco:25,coxaProximal:64,coxaMedial:62,coxaDistal:58,panturrilha:37,dobraTricipital:14,dobraAbdominal:13,dobraSubescapular:12,dobraAxilar:10,dobraCoxa:15,dobraToraxica:5,dobraSuprailíaca:12},
+  {data:"24/10/2025",peso:71.6,imc:26.9,gordura:18.3,massaGordura:13.1,massaMagra:58.5,massaResidual:15,somatorio:80,densidade:1.057,rcq:0.67,cmb:24.9,cintura:72,quadril:107,abdomen:73,pescoco:32,torax:91,ombro:97,bracoRelaxado:29,bracoContraido:34,antebraco:26,coxaProximal:64,coxaMedial:61,coxaDistal:57,panturrilha:38,dobraTricipital:13,dobraAbdominal:12,dobraSubescapular:12,dobraAxilar:10,dobraCoxa:15,dobraToraxica:5,dobraSuprailíaca:13},
+  {data:"05/03/2026",peso:69.8,imc:26.3,gordura:15.2,massaGordura:10.6,massaMagra:59.2,massaResidual:14.6,somatorio:60,densidade:1.064,rcq:0.64,cmb:27.7,cintura:70,quadril:110,abdomen:70,pescoco:30,torax:87,ombro:95,bracoRelaxado:31.2,bracoContraido:33,antebraco:25,coxaProximal:65,coxaMedial:60,coxaDistal:55,panturrilha:37,dobraTricipital:11,dobraAbdominal:9,dobraSubescapular:8,dobraAxilar:5,dobraCoxa:12,dobraToraxica:5,dobraSuprailíaca:10},
+  {data:"03/07/2026",peso:66.6,imc:25.1,gordura:12.9,massaGordura:8.6,massaMagra:58,massaResidual:13.9,somatorio:46,densidade:1.07,rcq:0.6,cmb:26.5,cintura:67,quadril:112,abdomen:67,pescoco:31,torax:85,ombro:93,bracoRelaxado:29,bracoContraido:31,antebraco:24,coxaProximal:62,coxaMedial:57,coxaDistal:52,panturrilha:36,dobraTricipital:8,dobraAbdominal:7,dobraSubescapular:7,dobraAxilar:4,dobraCoxa:9,dobraToraxica:4,dobraSuprailíaca:7}
+];
 const PERGUNTAS=[
   {id:"alimentacao",label:"Como você avalia sua alimentação essa semana?",type:"scale",min:1,max:5,labels:["Péssima","Ruim","Regular","Boa","Ótima"]},
   {id:"plano",label:"Conseguiu seguir o plano alimentar?",type:"choice",options:["Sim, totalmente","Parcialmente","Não consegui"]},
@@ -564,7 +638,7 @@ const db={
 };
 
 const todayStr=()=>new Date().toISOString().slice(0,10);
-function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},renata:{senha:"Renata123",role:"patient"},marilton:{senha:"Marilton2026",role:"patient"},rubens:{senha:"rubens123",role:"patient"},rebeca:{senha:"rebeca123",role:"patient"},carlos:{senha:"carlos123",role:"patient"},cristina:{senha:"cristina123",role:"patient"}};}
+function getCreds(){return store.get("creds")||{nutri:{senha:"andre2024",role:"nutri"},preslavia:{senha:"preslavia123",role:"patient"},renata:{senha:"Renata123",role:"patient"},marilton:{senha:"Marilton2026",role:"patient"},rubens:{senha:"rubens123",role:"patient"},rebeca:{senha:"rebeca123",role:"patient"},carlos:{senha:"carlos123",role:"patient"},cristina:{senha:"cristina123",role:"patient"},rejane:{senha:"rejane123",role:"patient"}};}
 
 const {useState,useRef,useEffect}=React;
 const h=React.createElement;
@@ -1142,7 +1216,7 @@ const AVAL_METRICAS=[
   {id:"soma",label:"Σ Dobras",unit:"mm",positivo:false},
 ];
 function AvaliacaoTab({patient,T}){
-  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:patient.id==="marilton"?MARILTON_AVAL:patient.id==="carlos"?CARLOS_AVAL:patient.id==="cristina"?CRISTINA_AVAL:null;
+  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:patient.id==="marilton"?MARILTON_AVAL:patient.id==="carlos"?CARLOS_AVAL:patient.id==="cristina"?CRISTINA_AVAL:patient.id==="rejane"?REJANE_AVAL:null;
   const [metric,setMetric]=useState("peso");
   if(patient.id==="rebeca")return h(InBodyTab,{patient,T});
   if(!dados)return h("div",{style:{padding:"40px 14px",textAlign:"center"}},
