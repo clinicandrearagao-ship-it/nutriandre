@@ -1566,7 +1566,7 @@ function ChatTab({patient,T}){
     setMsgs(p=>[...p,{role:"assistant",content:reply}]);setLoading(false);
   }
   const initials=patient.name.split(" ").map(w=>w[0]).slice(0,2).join("");
- if(modoView==="restaurante")return RestauranteView({patient,T,onVoltar:function(){setModoView("chat");}});
+if(modoView==="restaurante")return h(RestauranteView,{patient,T,onVoltar:function(){setModoView("chat");}});
   return h("div",{style:{display:"flex",flexDirection:"column",height:"calc(100vh - 130px)"}},
     // Header do chat
     h("div",{style:{padding:"12px 16px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:12,background:T.bgMid}},
