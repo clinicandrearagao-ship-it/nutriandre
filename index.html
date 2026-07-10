@@ -1555,6 +1555,7 @@ function ChatTab({patient,T}){
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
+  const [modoView,setModoView]=useState("chat");
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
   async function send(){
     const text=input.trim();if(!text||loading)return;
@@ -1565,9 +1566,11 @@ function ChatTab({patient,T}){
     setMsgs(p=>[...p,{role:"assistant",content:reply}]);setLoading(false);
   }
   const initials=patient.name.split(" ").map(w=>w[0]).slice(0,2).join("");
+ if(modoView==="restaurante")return RestauranteView({patient,T,onVoltar:function(){setModoView("chat");}});
   return h("div",{style:{display:"flex",flexDirection:"column",height:"calc(100vh - 130px)"}},
     // Header do chat
     h("div",{style:{padding:"12px 16px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:12,background:T.bgMid}},
+      h("button",{onClick:function(){setModoView("restaurante");},style:{background:"none",border:"1px solid "+T.border,borderRadius:20,padding:"6px 12px",color:T.text,fontSize:11,cursor:"pointer",fontFamily:"Georgia,serif",marginRight:4}},"🍽️ Restaurante"),
       h("div",{style:{width:46,height:46,borderRadius:"50%",overflow:"hidden",border:`2px solid ${TEAL}`,flexShrink:0},dangerouslySetInnerHTML:{__html:NUTRI_IA_AVATAR}}),
       h("div",{style:{flex:1}},
         h("p",{style:{margin:0,fontSize:14,fontWeight:700,color:T.text}},"Nutri IA"),
@@ -1631,7 +1634,177 @@ const TABS=[
   {id:"quiz",label:"Quiz"},
   {id:"chat",label:"Chat IA"}
 ];
-// ─── ScannerTab ───────────────────────────────────────────────────────────────
+function RestauranteView({patient,T,onVoltar}){
+  const [busca,setBusca]=useState("");
+  const [objetivo,setObjetivo]=useState("emagrecimento");
+  const [img,setImg]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [resultado,setResultado]=useState(null);
+  const [erro,setErro]=useState(null);
+  const inputRef=useRef();
+
+  function handleFile(e){
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{setImg(ev.target.result);setResultado(null);setErro(null);};
+    reader.readAsDataURL(file);
+  }
+  function resetarFoto(){setImg(null);if(inputRef.current)inputRef.current.value="";}
+
+  async function buscarNaBase(){
+    const r=await fetch(
+      `${SUPABASE_URL}/rest/v1/restaurantes?nome=ilike.*${encodeURIComponent(busca.trim())}*&select=id,nome,bairro,pratos(nome_prato,descricao,calorias,proteina_g,carbo_g,gordura_g,tags,fonte_dado)`,
+      {headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`}}
+    );
+    const data=await r.json();
+    return (data&&data[0])?data[0]:null;
+  }
+
+  async function analisarFoto(){
+    const compressed=await new Promise(function(res){
+      const c=document.createElement("canvas"),i=new Image();
+      i.onload=function(){
+        const M=1200;let w=i.width,h=i.height;
+        if(w>M||h>M){if(w>h){h=h*M/w;w=M;}else{w=w*M/h;h=M;}}
+        c.width=w;c.height=h;
+        c.getContext("2d").drawImage(i,0,0,w,h);
+        res(c.toDataURL("image/jpeg",0.85));
+      };
+      i.src=img;
+    });
+    const base64=compressed.split(",")[1];
+    const objetivoTexto={
+      emagrecimento:"emagrecimento, priorizando déficit calórico e saciedade",
+      ganho_de_massa:"ganho de massa muscular, priorizando proteína",
+      manutencao:"manutenção do peso e equilíbrio nutricional"
+    }[objetivo];
+    const system='Você é nutricionista do consultório de André Aragão (CRN 11-16678). '
+      +'Analise a imagem (cardápio de restaurante ou prato já servido). '
+      +'Nunca use as palavras destrave, mindset, transformação ou fórmula mágica. Nunca use travessão. '
+      +'Sem terrorismo nutricional. Priorize linguagem de permissão, não de proibição. '
+      +'Retorne SOMENTE JSON puro:\n'
+      +'{"tipo":"cardapio|prato","opcoes":[{"nome":"...","kcal":0,"proteina":0,"carboidrato":0,"gordura":0,"motivo":"..."}],"observacao":"..."}';
+    const userText="Paciente: "+patient.name.split(" ")[0]+". Objetivo: "+objetivoTexto+". "
+      +"Se for cardápio, ranqueie as 2-3 melhores opções pro objetivo. Se for prato servido, avalie a composição e diga se está alinhado.";
+    const body={model:"claude-sonnet-4-6",max_tokens:1000,system,
+      messages:[{role:"user",content:[
+        {type:"image",source:{type:"base64",media_type:"image/jpeg",data:base64}},
+        {type:"text",text:userText}
+      ]}]};
+    const r=await fetch("https://nutriandre-proxy.vercel.app/api/chat",
+      {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const d=await r.json();
+    if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+    const text=d.content?.find(function(b){return b.type==="text";})?.text||"";
+    const clean=text.replace(/```json|```/g,"").trim();
+    const match=clean.match(/\{[\s\S]*\}/);
+    return JSON.parse(match?match[0]:clean);
+  }
+
+  async function buscar(){
+    if(!busca.trim()&&!img)return;
+    setLoading(true);setErro(null);setResultado(null);
+    try{
+      if(busca.trim()){
+        const rest=await buscarNaBase();
+        if(rest&&rest.pratos&&rest.pratos.length>0){
+          const filtrados=rest.pratos.filter(function(p){return (p.tags||[]).indexOf(objetivo)!==-1;});
+          setResultado({fonte:"base",nome:rest.nome,bairro:rest.bairro,pratos:filtrados.length?filtrados:rest.pratos});
+          setLoading(false);
+          return;
+        }
+      }
+      if(img){
+        const analise=await analisarFoto();
+        setResultado(Object.assign({fonte:"foto"},analise));
+        setLoading(false);
+        return;
+      }
+      setErro("Não encontrei esse restaurante na nossa base. Envie uma foto do cardápio ou do prato.");
+    }catch(e){
+      setErro("Erro: "+(e.message||"Tente novamente."));
+    }
+    setLoading(false);
+  }
+
+  const OBJETIVOS=[{v:"emagrecimento",l:"Emagrecimento"},{v:"ganho_de_massa",l:"Ganho de massa"},{v:"manutencao",l:"Manutenção"}];
+
+  return h("div",{style:{padding:"0 0 90px",animation:"fadeIn .3s ease"}},
+    h("div",{style:{padding:"20px 16px 0"}},
+      h("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:10}},
+        h("button",{onClick:onVoltar,style:{background:"none",border:"none",color:T.muted,fontSize:20,cursor:"pointer",padding:0}},"←"),
+        h("h2",{style:{margin:0,fontSize:20,color:T.text,fontWeight:700}},"O que comer no restaurante")
+      ),
+      h("div",{style:{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}},
+        OBJETIVOS.map(function(o){
+          const sel=objetivo===o.v;
+          return h("button",{key:o.v,onClick:function(){setObjetivo(o.v);},
+            style:{padding:"8px 14px",borderRadius:20,border:sel?"2px solid "+T.gold:"1px solid "+T.border,
+              background:sel?T.gold:"transparent",color:sel?"#0D1B2A":T.text,fontWeight:sel?700:400,
+              cursor:"pointer",fontSize:13,fontFamily:"Georgia,serif"}},o.l);
+        })
+      ),
+      h("input",{value:busca,onChange:function(e){setBusca(e.target.value);},
+        placeholder:"Nome do restaurante (ex: Verdelima)",
+        style:{width:"100%",padding:12,borderRadius:8,border:"1px solid "+T.border,background:T.bgMid,
+          color:T.text,fontSize:15,marginBottom:10,fontFamily:"Georgia,serif",boxSizing:"border-box"}}),
+      h("p",{style:{textAlign:"center",color:T.muted,fontSize:12,margin:"4px 0 10px"}},"ou"),
+      !img&&h("div",{onClick:function(){inputRef.current?.click();},
+        style:{border:"2px dashed "+T.border,borderRadius:12,padding:"18px 20px",textAlign:"center",cursor:"pointer",marginBottom:12}},
+        h("p",{style:{margin:0,fontSize:13,color:T.text}},"📷 Enviar foto do cardápio ou do prato")
+      ),
+      h("input",{ref:inputRef,type:"file",accept:"image/*",capture:"environment",onChange:handleFile,style:{display:"none"}}),
+      img&&h("div",{style:{position:"relative",marginBottom:12,borderRadius:12,overflow:"hidden"}},
+        h("img",{src:img,style:{width:"100%",maxHeight:220,objectFit:"cover",display:"block"}}),
+        h("button",{onClick:resetarFoto,style:{position:"absolute",top:8,right:8,background:"rgba(0,0,0,0.55)",
+          border:"none",borderRadius:20,width:28,height:28,color:"#fff",cursor:"pointer"}},"✕")
+      ),
+      h("button",{onClick:buscar,disabled:loading,
+        style:{width:"100%",padding:14,borderRadius:8,border:"none",
+          background:loading?T.bgLight:T.gold,color:"#0D1B2A",fontWeight:700,fontSize:15,
+          cursor:loading?"default":"pointer",fontFamily:"Georgia,serif"}},
+        loading?"Analisando...":"O que devo comer?"),
+      erro&&h("p",{style:{color:"#E07B7B",fontSize:13,marginTop:10}},erro)
+    ),
+    resultado&&h("div",{style:{padding:"18px 16px 0"}},
+      resultado.fonte==="base"&&h("div",null,
+        h("p",{style:{color:T.text,fontWeight:700,marginBottom:10}},resultado.nome+(resultado.bairro?" · "+resultado.bairro:"")),
+        resultado.pratos.map(function(p,i){
+          return h("div",{key:i,style:{background:T.bgMid,borderRadius:8,padding:14,marginBottom:10,border:"1px solid "+T.border}},
+            h("p",{style:{margin:0,fontWeight:700,color:T.text,fontSize:15}},p.nome_prato),
+            p.descricao&&h("p",{style:{margin:"4px 0 0",color:T.muted,fontSize:13}},p.descricao),
+            h("div",{style:{display:"flex",gap:12,marginTop:8,fontSize:13,color:T.gold}},
+              h("span",null,p.calorias+" kcal"),
+              h("span",null,"P: "+p.proteina_g+"g"),
+              h("span",null,"C: "+p.carbo_g+"g"),
+              h("span",null,"G: "+p.gordura_g+"g")
+            ),
+            p.fonte_dado==="estimado"&&h("p",{style:{margin:"6px 0 0",color:T.muted,fontSize:11}},"* valor estimado")
+          );
+        })
+      ),
+      resultado.fonte==="foto"&&h("div",null,
+        h("p",{style:{color:T.text,fontWeight:700,marginBottom:10}},resultado.tipo==="cardapio"?"Análise do cardápio":"Análise do prato"),
+        (resultado.opcoes||[]).map(function(o,i){
+          return h("div",{key:i,style:{background:T.bgMid,borderRadius:8,padding:14,marginBottom:10,border:"1px solid "+T.border}},
+            h("p",{style:{margin:0,fontWeight:700,color:T.text,fontSize:15}},o.nome),
+            h("div",{style:{display:"flex",gap:12,marginTop:8,fontSize:13,color:T.gold}},
+              h("span",null,o.kcal+" kcal"),
+              h("span",null,"P: "+o.proteina+"g"),
+              h("span",null,"C: "+o.carboidrato+"g"),
+              h("span",null,"G: "+o.gordura+"g")
+            ),
+            o.motivo&&h("p",{style:{margin:"6px 0 0",color:T.muted,fontSize:13}},o.motivo)
+          );
+        }),
+        resultado.observacao&&h("p",{style:{color:T.muted,fontSize:12,marginTop:8,fontStyle:"italic"}},resultado.observacao),
+        h("p",{style:{color:T.muted,fontSize:11,marginTop:8}},"Valores estimados a partir da imagem, não são medições exatas.")
+      )
+    )
+  );
+}
+  // ─── ScannerTab ───────────────────────────────────────────────────────────────
 function ScannerTab({patient,T}){
   const [modo,setModo]=useState("prato");
   const [img,setImg]=useState(null);
