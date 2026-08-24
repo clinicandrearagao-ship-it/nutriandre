@@ -757,6 +757,10 @@ camila:{
 }
 };
 
+const CAMILA_AVAL=[
+  {data:"20/08/2026",peso:59.5,imc:23.2,gordura:20.5,massaGordura:12.2,massaMagra:47.3,massaResidual:12.4,somatorio:103,densidade:1.051,rcq:0.68,cmb:21.4,cintura:66,quadril:97,abdomen:70,pescoco:30,torax:83,ombro:96,bracoRelaxado:28,bracoContraido:30,antebraco:22.5,coxaProximal:52,coxaMedial:47,coxaDistal:41,panturrilha:35,dobraTricipital:21,dobraAbdominal:18,dobraSubescapular:14,dobraAxilar:9,dobraCoxa:22,dobraToraxica:5,dobraSuprailíaca:14}
+];
+
 const RUBENS_AVAL=[
   {data:"11/07/2025",peso:115.7,imc:34.5,gordura:22.2,massaGordura:25.6,massaMagra:90.1,massaResidual:27.9,somatorio:150,densidade:1.047,rcq:0.94,cmb:36.5,cintura:110,quadril:117,abdomen:112,pescoco:44,torax:120,ombro:136,bracoRelaxado:40,bracoContraido:44,antebraco:32,coxaProximal:70,coxaMedial:67,coxaDistal:60,panturrilha:44,dobraTricipital:11,dobraAbdominal:25,dobraSubescapular:23,dobraAxilar:23,dobraCoxa:15,dobraToraxica:13,dobraSuprailíaca:40},
   {data:"21/08/2025",peso:114.5,imc:34.2,gordura:18.7,massaGordura:21.4,massaMagra:93.1,massaResidual:27.6,somatorio:120,densidade:1.056,rcq:0.93,cmb:38.7,cintura:105,quadril:113,abdomen:107,pescoco:43,torax:120,ombro:134,bracoRelaxado:41.2,bracoContraido:45.2,antebraco:32,coxaProximal:68,coxaMedial:58,coxaDistal:53,panturrilha:45,dobraTricipital:8,dobraAbdominal:21,dobraSubescapular:20,dobraAxilar:19,dobraCoxa:14,dobraToraxica:8,dobraSuprailíaca:30},
@@ -1454,7 +1458,7 @@ const AVAL_METRICAS=[
   {id:"soma",label:"Σ Dobras",unit:"mm",positivo:false},
 ];
 function AvaliacaoTab({patient,T}){
-  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:patient.id==="marilton"?MARILTON_AVAL:patient.id==="carlos"?CARLOS_AVAL:patient.id==="cristina"?CRISTINA_AVAL:patient.id==="rejane"?REJANE_AVAL:patient.id==="emanoel"?EMANOEL_AVAL:patient.id==="ingrid"?INGRID_AVAL:null;
+  const dados=patient.id==="rubens"?RUBENS_AVAL:patient.id==="preslavia"?PRESLAVIA_AVAL:patient.id==="rebeca"?REBECA_AVAL:patient.id==="marilton"?MARILTON_AVAL:patient.id==="carlos"?CARLOS_AVAL:patient.id==="cristina"?CRISTINA_AVAL:patient.id==="rejane"?REJANE_AVAL:patient.id==="emanoel"?EMANOEL_AVAL:patient.id==="ingrid"?INGRID_AVAL:patient.id==="camila"?CAMILA_AVAL:null;
   const [metric,setMetric]=useState("peso");
   if(patient.id==="rebeca")return h(InBodyTab,{patient,T});
   if(!dados)return h("div",{style:{padding:"40px 14px",textAlign:"center"}},
